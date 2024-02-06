@@ -4,7 +4,7 @@ import Courses from "./Components/Courses";
 import Result from "./Components/Result";
 import { useEffect, useState } from "react";
 import ErrorAlert from "./ErrorAlert";
-import { generatePaymentPlan } from "./helpers/payment-plan";
+import { generatePaymentPlan } from "./logic/payment-plan";
 import useSWR from 'swr';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());

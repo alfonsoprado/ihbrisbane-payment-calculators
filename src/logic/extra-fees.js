@@ -1,5 +1,5 @@
-import { formatDate } from "./dates";
-import { getSpecialCases } from "./tools";
+import { formatDate } from "../helpers/dates";
+import { getSpecialCases } from "../helpers/tools";
 
 export function generateExtraFees(data, courses, specialCasesSelected) {
   const allSpecialCasesAvailable = getSpecialCases(data, courses);

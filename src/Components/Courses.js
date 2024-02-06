@@ -26,8 +26,6 @@ function Courses({ courses, removeCourse, updateCourse }) {
     updateCourse(id, "startDate", value);
   };
 
-  console.log(courses);
-
   return (
     <Card>
       <Card.Header><h5>Courses</h5></Card.Header>

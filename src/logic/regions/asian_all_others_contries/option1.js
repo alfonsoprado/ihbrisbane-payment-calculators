@@ -2,10 +2,10 @@ import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
   formatDate
-} from "../helpers/dates";
-import { discount } from "./discount";
-import { generateTotalPayments } from "./total";
-import { getOptionParameters } from "./tools";
+} from "../../../helpers/dates";
+import { discount } from "../../../helpers/discount";
+import { generateTotalPayments } from "../../total";
+import { getOptionParameters } from "../../../helpers/tools";
 
 function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
   const {
@@ -90,27 +90,27 @@ export function option1(data, extraFees, courses, specialCases) {
     }
   ];
 
-  const totalTuitions = [];
-  for (const [index, course] of courses.entries()) {
-    let { startDate } = course;
-    let { tuition_fee } = course?.coursePricing;
-    let { name } = course?.coursePricing?.course;
-    if (index === courses.length - 1) {
-      // Last discount: include amount and percentage
-      tuition_fee = discount(tuition_fee, specialCases, true).finalPrice;
-    } else {
-      // Other discounts: only include percentage
-      tuition_fee = discount(tuition_fee, specialCases).finalPrice;
-    }
-    totalTuitions.push(tuition_fee);
-    // Remove amount of the first tuition of the first price
-    if (index === 0) {
-      tuition_fee -= firstTuition;
-    }
-    result = [...result, ...generatePaymentsOption1(data, name, startDate, tuition_fee)];
-  }
+  // const totalTuitions = [];
+  // for (const [index, course] of courses.entries()) {
+  //   let { startDate } = course;
+  //   let { tuition_fee } = course?.coursePricing;
+  //   let { name } = course?.coursePricing?.course;
+  //   if (index === courses.length - 1) {
+  //     // Last discount: include amount and percentage
+  //     tuition_fee = discount(data, tuition_fee, specialCases, true).finalPrice;
+  //   } else {
+  //     // Other discounts: only include percentage
+  //     tuition_fee = discount(data, tuition_fee, specialCases).finalPrice;
+  //   }
+  //   totalTuitions.push(tuition_fee);
+  //   // Remove amount of the first tuition of the first price
+  //   if (index === 0) {
+  //     tuition_fee -= firstTuition;
+  //   }
+  //   result = [...result, ...generatePaymentsOption1(data, name, startDate, tuition_fee)];
+  // }
 
-  result = generateTotalPayments(result, totalTuitions);
+  // result = generateTotalPayments(result, totalTuitions);
 
   return result;
 }

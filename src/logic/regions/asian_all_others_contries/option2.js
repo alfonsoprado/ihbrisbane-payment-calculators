@@ -2,10 +2,10 @@ import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
   formatDate
-} from "../helpers/dates";
-import { discount } from "./discount";
-import { generateTotalPayments } from "./total";
-import { generateExtraFees } from "./extra-fees";
+} from "../../../helpers/dates";
+import { discount } from "../../../helpers/discount";
+import { generateTotalPayments } from "../../total";
+import { generateExtraFees } from "../../extra-fees";
 
 function generatePaymentSingleCourse(course, specialCases, result) {
   let { name, startDate, price } = course;

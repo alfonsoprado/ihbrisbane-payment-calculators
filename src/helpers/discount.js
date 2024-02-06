@@ -4,11 +4,12 @@
   with fixed discounts (not percentages) to first deduct these from the total value, 
   and then apply the percentage discounts to the adjusted total.
 */
-export function discount(price, specialCases, lastCourse = false) {
+// Separar por region los descuentos usar condicionales, lo mismo para las opciones (quizas crear carpetas)
+export function discount(tuition, specialCases, lastCourse = false) {
   const discount = {
     percent: { type: "No discount", value: 0 },
     amount: { type: "No discount", value: 0 },
-    finalPrice: price,
+    finalPrice: tuition,
     value: 0
   };
   if (specialCases?.formalStudent) {
@@ -22,6 +23,7 @@ export function discount(price, specialCases, lastCourse = false) {
         value: 500
       };
     }
+  // Poner caso de Horticulture package special
   } else if (specialCases?.multipleCourses) {
     if (lastCourse) {
       discount.amount = {
@@ -31,16 +33,17 @@ export function discount(price, specialCases, lastCourse = false) {
     }
   }
 
-  if (specialCases?.payAtOnce) {
-    discount.percent = {
-      type: "Pay at once",
-      value: 0.1
-    };
-  }
+  // Es otra opcion
+  // if (specialCases?.payAtOnce) {
+  //   discount.percent = {
+  //     type: "Pay at once",
+  //     value: 0.1
+  //   };
+  // }
   console.debug("Discounts", discount);
 
   discount.finalPrice =
-    (price - discount?.amount?.value) * (1 - discount?.percent?.value);
-  discount.value = price - discount.finalPrice;
+    (tuition - discount?.amount?.value) * (1 - discount?.percent?.value);
+  discount.value = tuition - discount.finalPrice;
   return discount;
 }

@@ -1,6 +1,7 @@
 import { generateExtraFees } from "./extra-fees";
-import { option1 } from "./option1";
-import { option2 } from "./option2";
+import { option1 } from "./regions/asian_all_others_contries/option1";
+import { option2 } from "./regions/asian_all_others_contries/option2";
+import { discountsAAOC } from "./regions/asian_all_others_contries/discounts";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -42,13 +43,22 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   console.debug("Payment Type", paymentType);
   console.debug("Special Cases", specialCases);
 
-  let result = generateExtraFees(data, courses, specialCases);
+  discountsAAOC(data, courses, specialCases);
+
+  
+  const extraFees = generateExtraFees(data, courses, specialCases);
+
+  let result = [
+    ...extraFees
+  ];
   if (paymentType === "option_1") {
+    // Modificar result, sacar de parametros y que la funcion retorne solo result
     result = option1(data, result, courses, specialCases);
   } else if (paymentType === "option_2") {
     result = option2(data, result, courses, specialCases);
   } else {
     throw new Error("Option doesn't exists");
   }
+  // Poner calculo de total aca y agregar a result
   return addIdToArray(result);
 }
