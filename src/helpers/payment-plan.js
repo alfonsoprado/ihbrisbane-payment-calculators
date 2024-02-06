@@ -36,18 +36,19 @@ function addIdToArray(result) {
       paymentAmount: '$500',
     }]
   */
-export function generatePaymentPlan(courses, paymentType, specialCases) {
+export function generatePaymentPlan(data, courses, paymentType, specialCases) {
+  console.debug("Data", data);
   console.debug("Courses", courses);
   console.debug("Payment Type", paymentType);
   console.debug("Special Cases", specialCases);
 
-  let result = [];
-  if (paymentType === "option1") {
-    result = option1(courses, specialCases);
-  } else if (paymentType === "option2") {
-    result = option2(courses, specialCases);
+  let result = generateExtraFees(data, courses, specialCases);
+  if (paymentType === "option_1") {
+    result = option1(data, result, courses, specialCases);
+  } else if (paymentType === "option_2") {
+    result = option2(data, result, courses, specialCases);
   } else {
-    throw new Error("Not option was selected");
+    throw new Error("Option doesn't exists");
   }
   return addIdToArray(result);
 }

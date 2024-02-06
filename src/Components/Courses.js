@@ -7,7 +7,6 @@ import {
   startOfWeek,
   addDays,
   addWeeks,
-  subWeeks,
   format
 } from "date-fns";
 
@@ -22,14 +21,12 @@ export function findFridayOfFollowingWeeks(dateInitial, weeksInTheFuture = 0) {
 }
 
 function Courses({ courses, removeCourse, updateCourse }) {
-  const handleChangeDuration = (e, id) => {
-    const { name, value } = e.target;
-    updateCourse(id, name, value);
-  };
   const handleChangeStartDate = (e, id) => {
     const { value } = e;
     updateCourse(id, "startDate", value);
   };
+
+  console.log(courses);
 
   return (
     <Card>
@@ -52,12 +49,12 @@ function Courses({ courses, removeCourse, updateCourse }) {
           )}
           {courses.map((course) => (
             <tr key={course?.id}>
-              <td>
+              <td className="text-center align-middle">
                 <b>
                   {course?.coursePricing?.course?.name}
                 </b>
               </td>
-              <td>
+              <td className="text-center align-middle">
               <Select 
                 options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
                   return {
@@ -69,27 +66,13 @@ function Courses({ courses, removeCourse, updateCourse }) {
                 onChange={(e) => handleChangeStartDate(e, course.id)} 
                 />
               </td>
-              <td>
-                <Form.Control
-                  name="duration"
-                  value={course?.duration}
-                  isInvalid={!course?.duration}
-                  onChange={(e) =>
-                    handleChangeDuration(e, course.id)
-                  }
-                  type="number"
-                  min="1"
-                  step="1"
-                  placeholder="Weeks"
-                ></Form.Control>
-                <Form.Control.Feedback type="invalid">
-                  The field is required.
-                </Form.Control.Feedback>
+              <td className="text-center align-middle">
+              {course?.coursePricing?.course?.duration_weeks}
               </td>
-              <td>
+              <td className="text-center align-middle">
                 {course ? findFridayOfFollowingWeeks(course?.startDate, course?.duration) : ""}
               </td>
-              <td>
+              <td className="text-center align-middle">
                 <Button
                   variant="danger"
                   onClick={() => removeCourse(course.id)}

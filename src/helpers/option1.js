@@ -5,82 +5,109 @@ import {
 } from "../helpers/dates";
 import { discount } from "./discount";
 import { generateTotalPayments } from "./total";
-import { generateExtraFees } from "./extra-fees";
+import { getOptionParameters } from "./tools";
 
-function generatePaymentsOption1(courseName, startDate, coursePrice) {
+function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
+  const {
+    tuition_installments_amount: TIA, // $1000 AUS
+    third_tuition_installment_n_weeks_after_course_start: TTIWACS, // 10 weeks
+    tuition_installments_interval_weeks_after_third_tuition: TIIWATT, // Month = 4 weeks
+  } = getOptionParameters(data, 'option_1');
+
   const payments = [];
 
-  // 3 days before friday payment
-  const fridayBeforeStartClass = findFridayOfPreviousWeeks(startDate, 1);
-  payments.push({
-    dueDate: formatDate(fridayBeforeStartClass),
-    courseName,
-    feeDescription: "Tuition",
-    paymentAmount: 1000
-  });
+  let remainingAmount = coursePrice;
 
-  // Every 4 weeks payment
-  let paymentDate = startDate;
-  for (let i = 1000; i <= coursePrice - 1000; i += 1000) {
-    paymentDate = findFridayOfFollowingWeeks(paymentDate, 4);
+  if (TIA <= remainingAmount) {
+    // Second tuition: 3 days before friday payment
+    const fridayBeforeStartClass = findFridayOfPreviousWeeks(startDate, 1);
+    payments.push({
+      dueDate: formatDate(fridayBeforeStartClass),
+      courseName,
+      feeDescription: "Tuition installment",
+      paymentAmount: TIA
+    });
+    remainingAmount -= TIA;
+  }
+
+  let paymentDate = findFridayOfFollowingWeeks(startDate, TTIWACS);
+  if (TIA <= remainingAmount) {
+    // Third tuition: n weeks after course start date, n = TTIWACS = 10 weeks
     payments.push({
       dueDate: formatDate(paymentDate),
       courseName,
-      feeDescription: "Tuition",
-      paymentAmount: 1000
+      feeDescription: "Tuition installment",
+      paymentAmount: TIA
     });
+    remainingAmount -= TIA;
   }
 
-  // Last week, if there is a residual payment
-  const lastPayment = coursePrice % 1000;
-  if (lastPayment !== 0) {
+  // Every month payment
+  while (TIA <= remainingAmount) {
+    paymentDate = findFridayOfFollowingWeeks(paymentDate, TIIWATT);
     payments.push({
-      dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, 4)),
+      dueDate: formatDate(paymentDate),
       courseName,
-      feeDescription: "Tuition",
-      paymentAmount: lastPayment
+      feeDescription: "Tuition installment",
+      paymentAmount: TIA
+    });
+    remainingAmount -= TIA;
+  }
+
+  // Last month, if there is a residual payment
+  if(remainingAmount !== 0) {
+    payments.push({
+      dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, TIIWATT)),
+      courseName,
+      feeDescription: "Tuition installment",
+      paymentAmount: remainingAmount
     });
   }
 
   return payments;
 }
 
-export function option1(courses, specialCases) {
-  let result = generateExtraFees();
+export function option1(data, extraFees, courses, specialCases) {
+  const {
+    first_tuition_installment_single_course_amount: FTISCA, // $300 AUS
+    first_tuition_installment_multiple_courses_amount: FTIMCA, // $500 AUS
+  } = getOptionParameters(data, 'option_1');
 
   // First tuition
-  let firstTuition = 300;
+  let firstTuition = FTISCA;
   if (courses.length > 1) {
-    firstTuition = 500;
+    firstTuition = FTIMCA;
     specialCases = { ...specialCases, multipleCourses: true };
   }
 
-  result = [
-    ...result,
+  let result = [
+    ...extraFees,
     {
       dueDate: formatDate(new Date()),
-      feeDescription: "Tuition",
-      courseName: courses[0].name,
+      feeDescription: "Tuition installment",
+      courseName: courses[0]?.coursePricing?.course?.name,
       paymentAmount: firstTuition
     }
   ];
 
   const totalTuitions = [];
   for (const [index, course] of courses.entries()) {
-    let { name, startDate, price } = course;
+    let { startDate } = course;
+    let { tuition_fee } = course?.coursePricing;
+    let { name } = course?.coursePricing?.course;
     if (index === courses.length - 1) {
       // Last discount: include amount and percentage
-      price = discount(price, specialCases, true).finalPrice;
+      tuition_fee = discount(tuition_fee, specialCases, true).finalPrice;
     } else {
       // Other discounts: only include percentage
-      price = discount(price, specialCases).finalPrice;
+      tuition_fee = discount(tuition_fee, specialCases).finalPrice;
     }
-    totalTuitions.push(price);
+    totalTuitions.push(tuition_fee);
     // Remove amount of the first tuition of the first price
     if (index === 0) {
-      price -= firstTuition;
+      tuition_fee -= firstTuition;
     }
-    result = [...result, ...generatePaymentsOption1(name, startDate, price)];
+    result = [...result, ...generatePaymentsOption1(data, name, startDate, tuition_fee)];
   }
 
   result = generateTotalPayments(result, totalTuitions);

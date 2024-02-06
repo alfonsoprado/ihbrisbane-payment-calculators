@@ -1,17 +1,6 @@
 import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
-
-const getPaymentOptions = (data) => {
-  return Array.from(new Map(data?.payment_options?.map(obj => [obj.code, { name: obj.name, code: obj.code, order: obj.order }])).values()).sort((a, b) => a.order - b.order)
-}
-
-const getSpecialCases = (data, courses) => {
-  return [
-    ...data?.payment_calculator?.pricing_modifiers,
-    ...data?.pricing_modifiers,
-    ...courses?.map((course) => course?.coursePricing?.pricing_modifiers).flat()
-  ];
-}
+import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
 
 function Options({ data, errorMessages, createPaymentPlan, courses }) {
   const [paymentType, setPaymentType] = useState("");

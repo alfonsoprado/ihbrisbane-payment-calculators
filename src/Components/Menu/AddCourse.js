@@ -31,24 +31,18 @@ function AddCourse({ data, createCourse, courses }) {
     setStartDate({ label: value, value});
   }
 
-  const handleChangeDuration = (e) => {
-    const { value } = e.target;
-    setDuration(value);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const form = {
       coursePricing: coursePricing?.value,
-      startDate: startDate?.value,
-      duration
+      startDate: startDate?.value
     };
     createCourse(form);
     // Clean values
     setCoursePricing("");
     setStartDate("");
-    setDuration("")
+    setDuration("");
     console.log("AddCourse", form);
   };
 
@@ -87,15 +81,13 @@ function AddCourse({ data, createCourse, courses }) {
               onChange={handleChangeStartDate} />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Duration:</Form.Label>
+            <Form.Label>Duration weeks:</Form.Label>
             <Form.Control
               name="duration"
+              readOnly
               required
-              onChange={handleChangeDuration}
               value={duration}
               type="number"
-              min="1"
-              step="1"
               placeholder="Number of weeks"
             ></Form.Control>
           </Form.Group>
@@ -103,8 +95,7 @@ function AddCourse({ data, createCourse, courses }) {
             <Button 
                 disabled={
                   !coursePricing ||
-                  !startDate ||
-                  !duration
+                  !startDate
                 }
               className="mt-2" variant="dark" type="submit">
               Add Course

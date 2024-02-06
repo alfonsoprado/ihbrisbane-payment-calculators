@@ -62,6 +62,7 @@ function App() {
 
   const removeCourse = (id) => {
     setCourses(courses.filter((course) => course.id !== id));
+    setPaymentPlan([]);
   };
 
   // Calculation here
@@ -70,7 +71,7 @@ function App() {
     specialCases -> { formalStudent: false, payAtOnce: false }
   */
   const createPaymentPlan = (paymentType, specialCases) => {
-    const paymentPlan = generatePaymentPlan(courses, paymentType, specialCases);
+    const paymentPlan = generatePaymentPlan(data, courses, paymentType, specialCases);
     setPaymentPlan(paymentPlan);
   };
 

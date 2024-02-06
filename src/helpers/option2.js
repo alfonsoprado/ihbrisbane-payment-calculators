@@ -123,8 +123,8 @@ function generatePaymentMultipleCourses(courses, specialCases, result) {
   return result;
 }
 
-export function option2(courses, specialCases) {
-  let result = generateExtraFees();
+export function option2(data, extraFees, courses, specialCases) {
+  let result = extraFees;
 
   if (courses.length === 1) {
     result = generatePaymentSingleCourse(courses[0], specialCases, result);
