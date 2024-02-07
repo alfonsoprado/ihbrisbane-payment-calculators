@@ -57,12 +57,12 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     // Modificar result, sacar de parametros y que la funcion retorne solo result
     result = [
       ...result,
-      ...option1(data, courses, specialCases)
+      ...option1(data, courses)
     ];
   } else if (paymentType === "option_2") {
     result = [
       ...result,
-      ...option2(data, result, courses, specialCases)
+      ...option2(data, courses)
     ];
   } else {
     throw new Error("Option doesn't exists");

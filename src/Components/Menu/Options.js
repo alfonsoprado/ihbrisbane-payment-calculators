@@ -24,6 +24,8 @@ function Options({ data, errorMessages, createPaymentPlan, courses }) {
     createPaymentPlan(paymentType, specialCases);
   };
 
+  console.log(data);
+
   return (
     <Card className="mb-3">
       <Card.Header>
@@ -36,7 +38,20 @@ function Options({ data, errorMessages, createPaymentPlan, courses }) {
               <Form.Group>
                 <Form.Label><b>Payment Type</b></Form.Label>
                 {
-                  getPaymentOptions(data).map((option) => {
+                  courses.length > 1 ? getPaymentOptions(data, true).map(option => {
+                    return (
+                      <Form.Check
+                        key={option.code}
+                        type="radio"
+                        value={option.code}
+                        checked={paymentType === option.code}
+                        onChange={handlePaymentType}
+                        label={option.name}
+                        name="radios"
+                        id={option.code}
+                      />
+                    )
+                  }) : getPaymentOptions(data, false).map((option) => {
                     return (
                       <Form.Check
                         key={option.code}

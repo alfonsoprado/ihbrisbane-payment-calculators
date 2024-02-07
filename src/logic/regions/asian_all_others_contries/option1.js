@@ -65,17 +65,16 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
   return payments;
 }
 
-export function option1(data, courses, specialCases) {
+export function option1(data, courses) {
   const {
-    first_tuition_installment_single_course_amount: FTISCA, // $300 AUS
-    first_tuition_installment_multiple_courses_amount: FTIMCA, // $500 AUS
+    first_tuition_installment_single_course_amount, // $300 AUS
+    first_tuition_installment_multiple_courses_amount, // $500 AUS
   } = getOptionParameters(data, 'option_1');
 
   // First tuition
-  let firstTuitionInstallment = FTISCA;
+  let firstTuitionInstallment = first_tuition_installment_single_course_amount;
   if (courses.length > 1) {
-    firstTuitionInstallment = FTIMCA;
-    specialCases = { ...specialCases, multipleCourses: true };
+    firstTuitionInstallment = first_tuition_installment_multiple_courses_amount;
   }
 
   let result = [

@@ -10,6 +10,10 @@ export function getSpecialCases(data, courses) {
     ];
 }
 
-export function getPaymentOptions(data) {
-    return Array.from(new Map(data?.payment_options?.map(obj => [obj.code, { name: obj.name, code: obj.code, order: obj.order }])).values()).sort((a, b) => a.order - b.order)
+export function getPaymentOptions(data, plural = false) {
+    let types = ['single', 'both'];
+    if (plural) {
+        types = ['multiple', 'both'];
+    }
+    return data?.payment_options?.filter(option => types.includes(option?.type)).sort((a, b) => a.order - b.order);
 }
