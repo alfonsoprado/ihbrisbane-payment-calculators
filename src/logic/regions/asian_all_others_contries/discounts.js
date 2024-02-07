@@ -65,6 +65,5 @@ export function discountsAAOC(data, paymentType, courses, specialCases) {
             console.debug("A discount was applied to:", course);
         }
     }
-    console.debug("Courses after discounts were applied:", courses);
-    
+    console.debug("Courses after discounts were applied:", courses); 
 }
