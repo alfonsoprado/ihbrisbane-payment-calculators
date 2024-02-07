@@ -12,33 +12,6 @@ function addIdToArray(result) {
   });
 }
 
-/*
-    input:
-    courses -> [{
-      name: "Certificate I in Retail", 
-      startDate: "2023-10-30", 
-      // duration: "33", 
-      price: "5000"
-    }]
-    paymentType -> option1, option2
-    specialCases -> { formalStudent: false, payAtOnce: false }
-    
-    output: 
-    [{
-      id: 1,
-      dueDate: '30/10/2023',
-      feeDescription: 'Payment Plan',
-      courseName: '',
-      paymentAmount: '$100',
-    },
-    {
-      id: 2,
-      dueDate: '30/10/2023',
-      feeDescription: 'Tuition',
-      courseName: 'Certificate I in Retail',
-      paymentAmount: '$500',
-    }]
-  */
 export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   console.debug("Data", data);
   console.debug("Courses", courses);
@@ -55,7 +28,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
 
   // Condicional aqui por regiones
   if (paymentType === "option_1") {
-    // Modificar result, sacar de parametros y que la funcion retorne solo result
     result = [
       ...result,
       ...option1(data, courses)
@@ -70,15 +42,12 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       ...result,
       ...option3(data, courses)
     ];
-  } else if (paymentType === "pay_upfront") {
-  } else {
-    throw new Error("Option doesn't exists");
   }
   //termina condicional
 
   result = [
     ...result,
-    ...generateTotalPayments(result, courses)
+    ...generateTotalPayments(result, courses, paymentType)
   ];
 
   return addIdToArray(result);

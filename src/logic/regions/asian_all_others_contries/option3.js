@@ -1,5 +1,4 @@
 import {
-  findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
   formatDate
 } from "../../../helpers/dates";
@@ -22,7 +21,7 @@ export function option3(data, courses) {
 
     paymentsS1[0].paymentAmount += finalTuition * parameters?.first_tuition_installment_percentage;
     paymentsS1.push({
-      dueDate: formatDate(findFridayOfPreviousWeeks(startDate, parameters?.second_tuition_installment_interval_weeks)),
+      dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.second_tuition_installment_interval_weeks)),
       courseName: name,
       feeDescription: "Tuition installment",
       paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage
