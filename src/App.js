@@ -67,6 +67,11 @@ function App() {
     setPaymentPlan([]);
   };
 
+  const removeAllCourses = () => {
+    setCourses([]);
+    setPaymentPlan([]);
+  }
+
   // Calculation here
   /*
     paymentType -> option1, option2
@@ -116,6 +121,7 @@ function App() {
             courses={courses}
             updateCourse={updateCourse}
             removeCourse={removeCourse}
+            removeAllCourses={removeAllCourses}
           />
         </Col>
       </Row>

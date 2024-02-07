@@ -20,7 +20,7 @@ export function findFridayOfFollowingWeeks(dateInitial, weeksInTheFuture = 0) {
   return format(fridayOfFutureWeek, "yyyy-MM-dd");
 }
 
-function Courses({ courses, removeCourse, updateCourse }) {
+function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
   const handleChangeStartDate = (e, id) => {
     const { value } = e;
     updateCourse(id, "startDate", value);
@@ -29,7 +29,7 @@ function Courses({ courses, removeCourse, updateCourse }) {
   return (
     <Card>
       <Card.Header><h5>Courses</h5></Card.Header>
-      <Table striped bordered hover>
+      <Table className="mb-0" striped bordered hover>
         <thead className="table-dark">
           <tr>
             <th>Name</th>
@@ -53,19 +53,19 @@ function Courses({ courses, removeCourse, updateCourse }) {
                 </b>
               </td>
               <td className="text-center align-middle">
-              <Select 
-                options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
-                  return {
-                    value: start_date,
-                    label: start_date
-                  }
-                })}
-                value={{ label: course?.startDate, value: course?.startDate }}
-                onChange={(e) => handleChangeStartDate(e, course.id)} 
+                <Select
+                  options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
+                    return {
+                      value: start_date,
+                      label: start_date
+                    }
+                  })}
+                  value={{ label: course?.startDate, value: course?.startDate }}
+                  onChange={(e) => handleChangeStartDate(e, course.id)}
                 />
               </td>
               <td className="text-center align-middle">
-              {course?.coursePricing?.course?.duration_weeks}
+                {course?.coursePricing?.course?.duration_weeks}
               </td>
               <td className="text-center align-middle">
                 {course ? findFridayOfFollowingWeeks(course?.startDate, course?.coursePricing?.course?.duration_weeks) : ""}
@@ -82,6 +82,13 @@ function Courses({ courses, removeCourse, updateCourse }) {
           ))}
         </tbody>
       </Table>
+      {courses?.length > 0 && <Button
+        className="rounded-botton"
+        variant="danger"
+        onClick={() => removeAllCourses()}
+      >
+        Remove All
+      </Button>}
     </Card>
   );
 }
