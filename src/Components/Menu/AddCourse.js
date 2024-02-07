@@ -43,7 +43,6 @@ function AddCourse({ data, createCourse, courses }) {
     setCoursePricing("");
     setStartDate("");
     setDuration("");
-    console.log("AddCourse", form);
   };
 
   return (

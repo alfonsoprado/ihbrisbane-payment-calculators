@@ -68,7 +68,7 @@ function Courses({ courses, removeCourse, updateCourse }) {
               {course?.coursePricing?.course?.duration_weeks}
               </td>
               <td className="text-center align-middle">
-                {course ? findFridayOfFollowingWeeks(course?.startDate, course?.duration) : ""}
+                {course ? findFridayOfFollowingWeeks(course?.startDate, course?.coursePricing?.course?.duration_weeks) : ""}
               </td>
               <td className="text-center align-middle">
                 <Button

@@ -11,7 +11,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 
 function App() {
-  const { data, error, isLoading } = useSWR('http://localhost/apps/public/api/paymentcalculator/9b448570-87a2-4ccd-be7c-7a38cc42fe7b?internal=d1efad72dc5b17dc66a46767c32fff40', fetcher)
+  const { data, error, isLoading } = useSWR('http://localhost/apps/public/api/paymentcalculator/9b4660b1-d9a5-4fed-82eb-1f466e57fecd?internal=d1efad72dc5b17dc66a46767c32fff40', fetcher)
 
   //
   const [errorMessages, setErrorMessage] = useState([]);
@@ -47,7 +47,9 @@ function App() {
   const [paymentPlan, setPaymentPlan] = useState([]);
 
   const createCourse = (course) => {
-    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }].sort((a, b) => a?.coursePricing?.course?.order - b?.coursePricing?.course?.order));
+    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }]
+      //.sort((a, b) => a?.coursePricing?.course?.order - b?.coursePricing?.course?.order)
+    );
   };
 
   const updateCourse = (id, propName, newValue) => {
