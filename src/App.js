@@ -5,6 +5,7 @@ import Result from "./Components/Result";
 import { useEffect, useState } from "react";
 import ErrorAlert from "./ErrorAlert";
 import { generatePaymentPlan } from "./logic/payment-plan";
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -12,6 +13,8 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function App() {
   const { data, error, isLoading } = useSWR('http://localhost/apps/public/api/paymentcalculator/9b4834ce-0070-448b-a59a-3a1c993a5bd4?internal=d1efad72dc5b17dc66a46767c32fff40', fetcher)
+  let { param } = useParams();
+  console.log(param);
 
   //
   const [errorMessages, setErrorMessage] = useState([]);

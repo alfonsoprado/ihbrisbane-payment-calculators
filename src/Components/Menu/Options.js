@@ -15,7 +15,7 @@ function Options({ data, errorMessages, createPaymentPlan, courses }) {
     if(checked && !specialCases.includes(name)) {
       setSpecialCases([...specialCases, name]);
     } else {
-      setSpecialCases(specialCases?.filter(specialCase => specialCase != name));
+      setSpecialCases(specialCases?.filter(specialCase => specialCase !== name));
     }
   };
 

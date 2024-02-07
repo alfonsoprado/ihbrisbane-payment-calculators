@@ -8,11 +8,14 @@ function Menu({ data, createCourse, errorMessages, createPaymentPlan, courses })
         data={data} 
         createCourse={createCourse} 
         courses={courses} />
-      <Options
+      {
+        courses.length > 0 && <Options
         data={data}
         errorMessages={errorMessages}
         createPaymentPlan={createPaymentPlan}
         courses={courses} />
+      }
+      
     </>
   );
 }
