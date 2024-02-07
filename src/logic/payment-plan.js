@@ -1,6 +1,7 @@
 import { generateExtraFees } from "./extra-fees";
 import { option1 } from "./regions/asian_all_others_contries/option1";
 import { option2 } from "./regions/asian_all_others_contries/option2";
+import { option3 } from "./regions/asian_all_others_contries/option3";
 import { discountsAAOC } from "./regions/asian_all_others_contries/discounts";
 import { generateTotalPayments } from "./total";
 
@@ -64,6 +65,12 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       ...result,
       ...option2(data, courses)
     ];
+  } else if (paymentType === "option_3") {
+    result = [
+      ...result,
+      ...option3(data, courses)
+    ];
+  } else if (paymentType === "pay_upfront") {
   } else {
     throw new Error("Option doesn't exists");
   }

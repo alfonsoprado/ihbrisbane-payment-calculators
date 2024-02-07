@@ -24,8 +24,6 @@ function Options({ data, errorMessages, createPaymentPlan, courses }) {
     createPaymentPlan(paymentType, specialCases);
   };
 
-  console.log(data);
-
   return (
     <Card className="mb-3">
       <Card.Header>

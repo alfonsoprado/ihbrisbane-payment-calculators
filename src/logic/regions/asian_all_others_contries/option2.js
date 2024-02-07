@@ -41,8 +41,7 @@ function generatePaymentSingleCourse(data, course) {
 }
 
 function generatePaymentMultipleCourses(data, courses) {
-
-
+  const parameters = JSON.parse(data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'multiple')?.parameters);
 
   // Stage 1 - Internal & external
   const paymentsS1 = [
@@ -57,24 +56,24 @@ function generatePaymentMultipleCourses(data, courses) {
     const { startDate, finalTuition } = course;
     const name = course?.coursePricing?.course?.name;
 
-    paymentsS1[0].paymentAmount += finalTuition * 0.2;
+    paymentsS1[0].paymentAmount += finalTuition * parameters?.first_tuition_installment_percentage;
     paymentsS1.push({
       dueDate: formatDate(findFridayOfPreviousWeeks(startDate, 1)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * 0.2
+      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage
     });
     paymentsS1.push({
-      dueDate: formatDate(findFridayOfFollowingWeeks(startDate, 10)),
+      dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.third_tuition_installment_n_weeks_after_course_start)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * 0.3
+      paymentAmount: finalTuition * parameters?.third_tuition_installment_percentage
     });
     paymentsS1.push({
-      dueDate: formatDate(findFridayOfFollowingWeeks(startDate, 14)),
+      dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.fourth_tuition_installment_n_weeks_after_course_start)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * 0.3
+      paymentAmount: finalTuition * parameters?.fourth_tuition_installment_percentage
     });
   }
 
