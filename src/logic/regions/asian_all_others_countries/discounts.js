@@ -1,5 +1,12 @@
 import { getSpecialCases } from "../../../helpers/tools";
 
+/*
+    Do not forget, when applying discounts using percentages, 
+    the rule is to use the largest percentage, it is not cumulative. 
+    That is, if we have a 5% discount but we also have another discount of 10%, 
+    then the final discount is 10%, not 15%.
+
+*/
 export function asianAllOthersCountriesDiscounts(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
     const horticulturePackageSpecial = JSON.parse(data?.course_pricings?.find(cp => cp?.course?.cricos_code === '113194A')?.discount_promotions?.find(dp => dp.code === 'horticulture_package_special')?.parameters)?.courses;
@@ -18,7 +25,7 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
         const payUpfrontEnable = paymentType === 'pay_upfront';
 
         // Extension Student
-        if(extensionStudentEnable) {
+        if(extensionStudentEnable && !horticulturePackageSpecialEnable && !payUpfrontEnable) {
             console.debug("Discount: Extension Student");
             const specialCaseES = allSpecialCasesAvailable?.find(sc => sc?.code === 'es');
             // Every course
@@ -29,7 +36,7 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
         } 
 
         // Multiple courses
-        if(multipleCoursesEnable && (!horticulturePackageSpecialEnable || payUpfrontEnable)) {
+        if(multipleCoursesEnable && !horticulturePackageSpecialEnable) {
             console.debug("Discount: Multiple courses");
             // It is the last course
             if(i === courses.length - 1) {
@@ -41,7 +48,7 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
         }
         
         // Horticulture Package Special
-        if(horticulturePackageSpecialEnable && !extensionStudentEnable && !payUpfrontEnable) {
+        if(horticulturePackageSpecialEnable) {
             console.debug("Discount: Horticulture Package Special");
             const cricos_code = course?.coursePricing?.course?.cricos_code;
             // It is course in the Horticulture Package Special and is standard course
@@ -56,7 +63,7 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
         }
 
         // PaymentType: Pay upfront and 2 course o more
-        if(payUpfrontEnable && courses.length > 1) {
+        if(payUpfrontEnable && courses.length > 1 && !horticulturePackageSpecialEnable) {
             console.debug("PaymentType: Pay upfront");
             const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'pay_upfront_discount');
             const discountPercentage = discountPromotionLastCourse.percentage;

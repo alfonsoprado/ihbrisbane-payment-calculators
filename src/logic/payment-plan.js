@@ -34,7 +34,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   
   // Generate Extra Fees
   let result = [
-    ...generateExtraFees(data, courses, specialCases)
+    ...generateExtraFees(data, paymentType, courses, specialCases)
   ];
 
   // Options by region

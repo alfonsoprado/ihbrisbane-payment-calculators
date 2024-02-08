@@ -1,7 +1,7 @@
 import { formatDate } from "../helpers/dates";
 import { getSpecialCases } from "../helpers/tools";
 
-export function generateExtraFees(data, courses, specialCasesSelected) {
+export function generateExtraFees(data, paymentType, courses, specialCasesSelected) {
   const allSpecialCasesAvailable = getSpecialCases(data, courses);
   let enrolmentFee = 0;
   let materialFee = 0;
@@ -19,19 +19,19 @@ export function generateExtraFees(data, courses, specialCasesSelected) {
       dueDate: formatDate(new Date()),
       feeDescription: "Enrolment Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('ew') ? allSpecialCasesAvailable?.find(sc => sc?.code === 'ew')?.value : enrolmentFee 
+      paymentAmount: specialCasesSelected?.includes('ew') || specialCasesSelected?.includes('es') ? 0 : enrolmentFee 
     },
     {
       dueDate: formatDate(new Date()),
       feeDescription: "Material Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('mw') ? allSpecialCasesAvailable?.find(sc => sc?.code === 'mw')?.value : materialFee 
+      paymentAmount: specialCasesSelected?.includes('mw') ? 0 : materialFee 
     },
     {
       dueDate: formatDate(new Date()),
       feeDescription: "Payment Plan Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('pfw') ? allSpecialCasesAvailable?.find(sc => sc?.code === 'pfw')?.value : data?.payment_plan_fee 
+      paymentAmount: specialCasesSelected?.includes('pfw') || paymentType === 'pay_upfront' ? 0 : data?.payment_plan_fee 
     }
   ];
 
