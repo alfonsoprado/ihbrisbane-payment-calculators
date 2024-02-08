@@ -1,6 +1,6 @@
 import { getSpecialCases } from "../../../helpers/tools";
 
-export function discountsAAOC(data, paymentType, courses, specialCases) {
+export function asianAllOthersCountriesDiscounts(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
     const horticulturePackageSpecial = JSON.parse(data?.course_pricings?.find(cp => cp?.course?.cricos_code === '113194A')?.discount_promotions?.find(dp => dp.code === 'horticulture_package_special')?.parameters)?.courses;
     const horticultureCoursesCricosCodes = Object.keys(horticulturePackageSpecial);

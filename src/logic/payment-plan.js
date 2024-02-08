@@ -2,8 +2,9 @@ import { generateExtraFees } from "./extra-fees";
 import { option1 } from "./regions/asian_all_others_contries/option1";
 import { option2 } from "./regions/asian_all_others_contries/option2";
 import { option3 } from "./regions/asian_all_others_contries/option3";
-import { discountsAAOC } from "./regions/asian_all_others_contries/discounts";
+import { asianAllOthersCountriesDiscounts } from "./regions/asian_all_others_contries/discounts";
 import { generateTotalPayments } from "./total";
+import { openVetDiscounts } from "./regions/open_vet/discounts";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -13,37 +14,50 @@ function addIdToArray(result) {
 }
 
 export function generatePaymentPlan(data, courses, paymentType, specialCases) {
-  console.debug("Data", data);
   console.debug("Courses", courses);
   console.debug("Payment Type", paymentType);
   console.debug("Special Cases", specialCases);
 
-  // Condicional aqui por regiones -> regiones tiene codigo
-  discountsAAOC(data, paymentType, courses, specialCases);
-  // Termina condicional
-
+  
+  // Discounts by regions
+  if(data?.region?.code === "asian_all_other_countries") {
+    asianAllOthersCountriesDiscounts(data, paymentType, courses, specialCases);
+  } else if(data?.region?.code === "latin_america_europe") {
+    // Latin discount
+  } else if(data?.region?.code === "open_vet") {
+    openVetDiscounts(data, paymentType, courses, specialCases);
+  } else {
+    // Lanzar error region no existe
+  }
+  
+  // Generate Extra Fees
   let result = [
     ...generateExtraFees(data, courses, specialCases)
   ];
 
-  // Condicional aqui por regiones
-  if (paymentType === "option_1") {
-    result = [
-      ...result,
-      ...option1(data, courses)
-    ];
-  } else if (paymentType === "option_2") {
-    result = [
-      ...result,
-      ...option2(data, courses)
-    ];
-  } else if (paymentType === "option_3") {
-    result = [
-      ...result,
-      ...option3(data, courses)
-    ];
+  // Options by region
+  if(["asian_all_other_countries", "open_vet"].includes(data?.region?.code)) {
+    if (paymentType === "option_1") {
+      result = [
+        ...result,
+        ...option1(data, courses)
+      ];
+    } else if (paymentType === "option_2") {
+      result = [
+        ...result,
+        ...option2(data, courses)
+      ];
+    } else if (paymentType === "option_3") {
+      result = [
+        ...result,
+        ...option3(data, courses)
+      ];
+    }
+  } else if(data?.region?.code === "latin_america_europe") {
+    // Latin Options
+  } else {
+    // Lanza error region no existe
   }
-  //termina condicional
 
   result = [
     ...result,
