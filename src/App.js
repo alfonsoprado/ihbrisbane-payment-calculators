@@ -74,10 +74,6 @@ function App() {
 
   if (error) return <div>failed to load</div>
   if (isLoading) return <div>loading...</div>
-  
-  if (!isLoading && !error) {
-    console.debug("Data", data);
-  }
 
   return (
     <Container>

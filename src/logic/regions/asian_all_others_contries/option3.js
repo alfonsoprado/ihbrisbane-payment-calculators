@@ -3,7 +3,7 @@ import {
   formatDate
 } from "../../../helpers/dates";
 
-export function option3(data, courses) {
+export function asianAllOthersCountriesOption3(data, courses) {
   const parameters = JSON.parse(data?.payment_options?.find(option => option?.code === 'option_3' && option?.type === 'multiple')?.parameters);
 
   // Stage 1 - Internal & external
