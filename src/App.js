@@ -10,10 +10,12 @@ import useSWR from 'swr';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
+const API_URL = "http://localhost/apps/public/api/paymentcalculator";
+
 const options = {
-  asian_all_other_countries: '9b4834ce-0070-448b-a59a-3a1c993a5bd4?internal=d1efad72dc5b17dc66a46767c32fff40',
-  latin_america_europe: '9b4834ce-0e31-4c65-8363-4c38e84468a3?internal=d1efad72dc5b17dc66a46767c32fff40',
-  open_vet: '9b4834ce-10b1-492b-8a09-f32f73569d0e?internal=d1efad72dc5b17dc66a46767c32fff40',
+  asian_all_other_countries: '9b48d755-1591-4c53-ba16-5e7976bc5c9e?internal=d1efad72dc5b17dc66a46767c32fff40',
+  latin_america_europe: '9b48d755-212a-43f6-8a42-9516fe40421d?internal=d1efad72dc5b17dc66a46767c32fff40',
+  open_vet: '9b48d755-2402-43f1-bda1-9aeced406148?internal=d1efad72dc5b17dc66a46767c32fff40',
 };
 
 function App() {
@@ -21,7 +23,7 @@ function App() {
   const [courses, setCourses] = useState([]);
   const [paymentPlan, setPaymentPlan] = useState([]);
   const { option } = useParams();
-  const { data, error, isLoading } = useSWR(`http://localhost/apps/public/api/paymentcalculator/${options[option]}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_URL}/${options[option]}`, fetcher)
 
   useEffect(() => {
     let errors = [];

@@ -19,7 +19,7 @@ export function generateExtraFees(data, paymentType, courses, specialCasesSelect
       dueDate: formatDate(new Date()),
       feeDescription: "Enrolment Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('ew') || specialCasesSelected?.includes('es') ? 0 : enrolmentFee 
+      paymentAmount: specialCasesSelected?.includes('ew') || (specialCasesSelected?.includes('es') && !data?.region?.code === "open_vet") ? 0 : enrolmentFee 
     },
     {
       dueDate: formatDate(new Date()),
