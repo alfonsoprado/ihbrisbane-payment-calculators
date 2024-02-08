@@ -1,8 +1,8 @@
 import { generateExtraFees } from "./extra-fees";
-import { asianAllOthersCountriesOption1 } from "./regions/asian_all_others_contries/option1";
-import { asianAllOthersCountriesOption2 } from "./regions/asian_all_others_contries/option2";
-import { asianAllOthersCountriesOption3 } from "./regions/asian_all_others_contries/option3";
-import { asianAllOthersCountriesDiscounts } from "./regions/asian_all_others_contries/discounts";
+import { asianAllOthersCountriesOption1 } from "./regions/asian_all_others_countries/option1";
+import { asianAllOthersCountriesOption2 } from "./regions/asian_all_others_countries/option2";
+import { asianAllOthersCountriesOption3 } from "./regions/asian_all_others_countries/option3";
+import { asianAllOthersCountriesDiscounts } from "./regions/asian_all_others_countries/discounts";
 import { generateTotalPayments } from "./total";
 import { openVetDiscounts } from "./regions/open_vet/discounts";
 
