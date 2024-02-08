@@ -5,6 +5,8 @@ import { asianAllOthersCountriesOption3 } from "./regions/asian_all_others_count
 import { asianAllOthersCountriesDiscounts } from "./regions/asian_all_others_countries/discounts";
 import { generateTotalPayments } from "./total";
 import { openVetDiscounts } from "./regions/open_vet/discounts";
+import { latinAmericaEuropeDiscounts } from "./regions/latin_europe/discounts";
+import { latinAmericaEuropeOption1 } from "./regions/latin_europe/option1";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -23,7 +25,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   if(data?.region?.code === "asian_all_other_countries") {
     asianAllOthersCountriesDiscounts(data, paymentType, courses, specialCases);
   } else if(data?.region?.code === "latin_america_europe") {
-    // Latin discount
+    latinAmericaEuropeDiscounts(data, paymentType, courses, specialCases);
   } else if(data?.region?.code === "open_vet") {
     openVetDiscounts(data, paymentType, courses, specialCases);
   } else {
@@ -57,7 +59,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     if (paymentType === "option_1") {
       result = [
         ...result,
-        ...asianAllOthersCountriesOption1(data, courses)
+        ...latinAmericaEuropeOption1(data, courses)
       ];
     }
   } else {

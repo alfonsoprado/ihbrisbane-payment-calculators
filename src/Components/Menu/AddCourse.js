@@ -48,7 +48,7 @@ function AddCourse({ data, createCourse, courses }) {
   return (
     <Card className="mb-3">
       <Card.Header>
-        <h4>Add course</h4>
+        <h4>Add Course</h4>
       </Card.Header>
       <Card.Body>
         <Form onSubmit={handleSubmit}>
