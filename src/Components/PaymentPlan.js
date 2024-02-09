@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap";
 
-function Result({ data, paymentPlan }) {
+function PaymentPlan({ data, paymentPlan }) {
   if (paymentPlan?.length === 0) {
     return;
   }
@@ -36,4 +36,4 @@ function Result({ data, paymentPlan }) {
   );
 }
 
-export default Result;
+export default PaymentPlan;

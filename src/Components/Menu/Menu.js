@@ -1,8 +1,7 @@
-import { forwardRef } from "react";
 import AddCourse from "./AddCourse";
-import Options from "./Options";
+import PaymentOptions from "./PaymentOptions";
 
-function Menu({ data, createCourse, errorMessages, createPaymentPlan, courses, scrollTo }) {
+function Menu({ data, createCourse, errorMessages, createPaymentPlan, courses }) {
   return (
     <>
       <AddCourse 
@@ -10,7 +9,7 @@ function Menu({ data, createCourse, errorMessages, createPaymentPlan, courses, s
         createCourse={createCourse} 
         courses={courses} />
       {
-        courses.length > 0 && <Options
+        courses.length > 0 && <PaymentOptions
         data={data}
         errorMessages={errorMessages}
         createPaymentPlan={createPaymentPlan}

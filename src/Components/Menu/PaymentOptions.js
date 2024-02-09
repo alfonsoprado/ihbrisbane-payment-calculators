@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
 
-function Options({ data, errorMessages, createPaymentPlan, courses }) {
+function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
   const [paymentType, setPaymentType] = useState("");
   const [specialCases, setSpecialCases] = useState([]);
 
@@ -117,4 +117,4 @@ function Options({ data, errorMessages, createPaymentPlan, courses }) {
   );
 }
 
-export default Options;
+export default PaymentOptions;

@@ -1,8 +1,8 @@
 import { Container, Row, Col, Card, Image } from "react-bootstrap";
 import Menu from "./Components/Menu/Menu";
 import Courses from "./Components/Courses";
-import Result from "./Components/Result";
-import { useEffect, useState, useRef } from "react";
+import PaymentPlan from "./Components/PaymentPlan";
+import { useEffect, useState } from "react";
 import ErrorAlert from "./ErrorAlert";
 import { generatePaymentPlan } from "./logic/payment-plan";
 import { useParams } from 'react-router-dom';
@@ -33,18 +33,31 @@ function App() {
   const [paymentPlan, setPaymentPlan] = useState([]);
   const { payment_calculator } = useParams();
   const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
-  const paymentPlanRef = useRef(null);
 
   useEffect(() => {
     let errors = [];
 
+
+    
+    let intensiveCourse = 0;
+    let standardCourse = 0;
+    let notEmpty = true;
     // Check for required inputs
     for (const course of courses) {
-      const notEmpty = Object.entries(course).every((field) => field[1]);
       if (!notEmpty) {
-        errors.push("The fields of the courses cannot be empty.");
-        break;
+        notEmpty = Object.entries(course).every((field) => field[1]);
       }
+      
+      if(course?.coursePricing?.course?.type === 'intensive') intensiveCourse += 1;
+      if(course?.coursePricing?.course?.type === 'standard') standardCourse += 1
+    }
+
+    if (!notEmpty) {
+      errors.push("The fields of the courses cannot be empty.");
+    }
+
+    if (data?.region?.code === 'open_vet' && intensiveCourse > 0 && standardCourse === 0) {
+      errors.push("Open VET doesn't accept standalone INTENSIVE course.");
     }
 
     // startDate1 < startDate2
@@ -135,7 +148,7 @@ function App() {
         </Col>
       </Row>
       <Row id="payment_plan">
-        <Result data={data} paymentPlan={paymentPlan}></Result>
+        <PaymentPlan data={data} paymentPlan={paymentPlan}></PaymentPlan>
       </Row>
     </Container>
   );
