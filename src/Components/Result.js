@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap";
 
-function Result({ paymentPlan }) {
+function Result({ data, paymentPlan }) {
   if (paymentPlan?.length === 0) {
     return;
   }
@@ -13,7 +13,9 @@ function Result({ paymentPlan }) {
           <tr>
             <th>Due date</th>
             <th>Fee Description</th>
-            <th>Course Name</th>
+            {
+              (data?.payment_calculator?.type === 'internal' || data?.region?.code === 'latin_america_europe') && <th>Course Name</th>
+            }
             <th>Payment Amount</th>
           </tr>
         </thead>
@@ -22,7 +24,9 @@ function Result({ paymentPlan }) {
             <tr key={row.id}>
               <td>{row.dueDate}</td>
               <td>{row.feeDescription}</td>
-              <td>{row.courseName}</td>
+              {
+                (data?.payment_calculator?.type === 'internal' || data?.region?.code === 'latin_america_europe') && <td>{row.courseName}</td>
+              }
               <td>${row.paymentAmount}</td>
             </tr>
           ))}

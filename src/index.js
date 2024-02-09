@@ -9,11 +9,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-const internal = "?internal=d1efad72dc5b17dc66a46767c32fff4";
-
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/:option" element={<App internal={internal} />} />
+    <Route path="/:payment_calculator" element={<App />} />
   )
 );
 

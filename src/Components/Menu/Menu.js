@@ -1,7 +1,8 @@
+import { forwardRef } from "react";
 import AddCourse from "./AddCourse";
 import Options from "./Options";
 
-function Menu({ data, createCourse, errorMessages, createPaymentPlan, courses }) {
+function Menu({ data, createCourse, errorMessages, createPaymentPlan, courses, scrollTo }) {
   return (
     <>
       <AddCourse 

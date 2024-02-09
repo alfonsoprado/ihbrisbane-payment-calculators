@@ -1,5 +1,3 @@
-import { getSpecialCases } from "../../../helpers/tools";
-
 export function latinAmericaEuropeDiscounts(data, paymentType, courses, specialCases) {
     for (let i = 0; i < courses.length; i++) {
         const course = courses[i];

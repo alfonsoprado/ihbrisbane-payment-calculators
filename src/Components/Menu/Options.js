@@ -25,7 +25,7 @@ function Options({ data, errorMessages, createPaymentPlan, courses }) {
   };
 
   return (
-    <Card className="mb-3">
+    <Card id="payment_options" className="mb-3">
       <Card.Header>
         <h4>Payment Options</h4>
       </Card.Header>

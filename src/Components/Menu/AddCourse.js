@@ -18,6 +18,8 @@ function AddCourse({ data, createCourse, courses }) {
   const [coursePricing, setCoursePricing] = useState("");
   const [startDate, setStartDate] = useState("");
   const [duration, setDuration] = useState("");
+  // use one time
+  const [scrollToPaymentOptions, setScrollToPaymentOptions] = useState(true);
 
   const handleChangeCoursePricing = (e) => {
     const value = e.value;
@@ -43,6 +45,13 @@ function AddCourse({ data, createCourse, courses }) {
     setCoursePricing("");
     setStartDate("");
     setDuration("");
+    // scroll to payment_options
+    if(scrollToPaymentOptions) {
+      setTimeout(() => {
+        window.location.hash = "payment_options";
+      }, 0);
+      setScrollToPaymentOptions(false);
+    }
   };
 
   return (

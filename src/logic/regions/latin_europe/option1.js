@@ -17,6 +17,13 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
 
   // Monthly instalments starting from one week before the course start date
   let paymentDate = findFridayOfPreviousWeeks(startDate, 1);
+  payments.push({
+    dueDate: formatDate(paymentDate),
+    courseName,
+    feeDescription: "Tuition installment",
+    paymentAmount: tuition_installments_amount
+  });
+  remainingAmount -= tuition_installments_amount;
   // Every month payment
   while (tuition_installments_amount <= remainingAmount) {
     paymentDate = findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks);

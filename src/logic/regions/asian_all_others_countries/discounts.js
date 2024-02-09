@@ -25,7 +25,7 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
         const payUpfrontEnable = paymentType === 'pay_upfront';
 
         // Extension Student
-        if(extensionStudentEnable && !horticulturePackageSpecialEnable && !payUpfrontEnable) {
+        if (extensionStudentEnable && !horticulturePackageSpecialEnable && !payUpfrontEnable) {
             console.debug("Discount: Extension Student");
             const specialCaseES = allSpecialCasesAvailable?.find(sc => sc?.code === 'es');
             // Every course
@@ -33,37 +33,25 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
             course.finalTuition = course.finalTuition * (1 - discountPercentage);
             course.discountsApplied.push(specialCaseES);
             console.debug("A discount was applied to:", course);
-        } 
-
-        // Multiple courses
-        if(multipleCoursesEnable && !horticulturePackageSpecialEnable) {
-            console.debug("Discount: Multiple courses");
-            // It is the last course
-            if(i === courses.length - 1) {
-                const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'multi_course_last_discount');
-                course.finalTuition -= discountPromotionLastCourse?.amount;
-                course.discountsApplied.push(discountPromotionLastCourse);
-                console.debug("A discount was applied to:", course);
-            }
         }
-        
+
         // Horticulture Package Special
-        if(horticulturePackageSpecialEnable) {
+        if (horticulturePackageSpecialEnable) {
             console.debug("Discount: Horticulture Package Special");
             const cricos_code = course?.coursePricing?.course?.cricos_code;
             // It is course in the Horticulture Package Special and is standard course
-            if(horticultureCoursesCricosCodes?.includes(cricos_code) && course?.coursePricing?.course?.type === 'standard') {
+            if (horticultureCoursesCricosCodes?.includes(cricos_code) && course?.coursePricing?.course?.type === 'standard') {
                 // Doesn't exists a course with more weight than the current course 
-                if(!courses?.some(item => horticulturePackageSpecial[item?.coursePricing?.course?.cricos_code]?.weight > horticulturePackageSpecial[cricos_code]?.weight)) {
+                if (!courses?.some(item => horticulturePackageSpecial[item?.coursePricing?.course?.cricos_code]?.weight > horticulturePackageSpecial[cricos_code]?.weight)) {
                     course.finalTuition = horticulturePackageSpecial[cricos_code]?.value;
                     course.discountsApplied.push(horticulturePackageSpecial[cricos_code]);
                     console.debug("A discount was applied to:", course);
-                } 
+                }
             }
         }
 
         // PaymentType: Pay upfront and 2 course o more
-        if(payUpfrontEnable && courses.length > 1 && !horticulturePackageSpecialEnable) {
+        if (payUpfrontEnable && courses.length > 1 && !horticulturePackageSpecialEnable) {
             console.debug("PaymentType: Pay upfront");
             const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'pay_upfront_discount');
             const discountPercentage = discountPromotionLastCourse.percentage;
@@ -71,6 +59,18 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
             course.discountsApplied.push(discountPromotionLastCourse);
             console.debug("A discount was applied to:", course);
         }
+
+        // Multiple courses
+        if (multipleCoursesEnable && !horticulturePackageSpecialEnable) {
+            console.debug("Discount: Multiple courses");
+            // It is the last course
+            if (i === courses.length - 1) {
+                const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'multi_course_last_discount');
+                course.finalTuition -= discountPromotionLastCourse?.amount;
+                course.discountsApplied.push(discountPromotionLastCourse);
+                console.debug("A discount was applied to:", course);
+            }
+        }
     }
-    console.debug("Courses after discounts were applied:", courses); 
+    console.debug("Courses after discounts were applied:", courses);
 }
