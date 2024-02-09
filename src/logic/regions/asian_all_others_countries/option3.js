@@ -2,6 +2,7 @@ import {
   findFridayOfFollowingWeeks,
   formatDate
 } from "../../../helpers/dates";
+import { alignExternalPaymentsWithInternalFormat } from "./utils";
 
 export function asianAllOthersCountriesOption3(data, courses) {
   const parameters = JSON.parse(data?.payment_options?.find(option => option?.code === 'option_3' && option?.type === 'multiple')?.parameters);
@@ -29,38 +30,12 @@ export function asianAllOthersCountriesOption3(data, courses) {
   }
 
   // Stage 2 - Only internal
-  const paymentsS2 = [];
-  const tuitions = courses.map((course) => course.finalTuition);
-  const names = courses.map((course) => course?.coursePricing?.course?.name);
-
-  let remainder = tuitions.shift();
-  let courseName = names.shift();
-  for (const payment of paymentsS1) {
-    remainder -= payment.paymentAmount;
-    if (remainder < 0) {
-      if(payment.paymentAmount + remainder !== 0) {
-        paymentsS2.push({
-          ...payment,
-          courseName,
-          paymentAmount: payment.paymentAmount + remainder
-        });
-      }
-      courseName = names.shift();
-      paymentsS2.push({
-        ...payment,
-        courseName,
-        paymentAmount: Math.abs(remainder)
-      });
-      remainder += tuitions.shift();
-    } else {
-      paymentsS2.push({
-        ...payment,
-        courseName,
-      });
-    }
+  if (data?.payment_calculator?.type === 'internal') {
+    const paymentsS2 = alignExternalPaymentsWithInternalFormat(paymentsS1, courses);
+    return paymentsS2;
+  } else { 
+    return paymentsS1;
   }
-
-  return paymentsS2;
 }
 
 

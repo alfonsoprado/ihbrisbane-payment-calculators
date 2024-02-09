@@ -13,9 +13,12 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 const API_URL = "http://localhost/apps/public/api/paymentcalculator";
 
 const options = {
-  asian_all_other_countries: '9b48d755-1591-4c53-ba16-5e7976bc5c9e?internal=d1efad72dc5b17dc66a46767c32fff40',
-  latin_america_europe: '9b48d755-212a-43f6-8a42-9516fe40421d?internal=d1efad72dc5b17dc66a46767c32fff40',
-  open_vet: '9b48d755-2402-43f1-bda1-9aeced406148?internal=d1efad72dc5b17dc66a46767c32fff40',
+  internal_asian_all_other_countries: '9b495bf6-470c-475e-847d-bfbc81f80f7e?internal=d1efad72dc5b17dc66a46767c32fff40',
+  internal_latin_america_europe: '9b495bf6-4c8c-43c4-9a29-5bb283194c24?internal=d1efad72dc5b17dc66a46767c32fff40',
+  internal_open_vet: '9b495bf6-4dbc-4248-ac94-5214fbbff753?internal=d1efad72dc5b17dc66a46767c32fff40',
+  external_asian_all_other_countries: '9b495bf6-470c-475e-847d-bfbc81f80f7e',
+  external_latin_america_europe: '9b495bf6-4c8c-43c4-9a29-5bb283194c24',
+  external_open_vet: '9b495bf6-4dbc-4248-ac94-5214fbbff753',
 };
 
 function App() {

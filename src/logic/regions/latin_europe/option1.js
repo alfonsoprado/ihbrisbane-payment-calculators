@@ -3,13 +3,13 @@ import {
   findFridayOfFollowingWeeks,
   formatDate
 } from "../../../helpers/dates";
-import { getOptionParameters } from "../../../helpers/tools";
+import { getPaymentOptionParameters } from "../../../helpers/tools";
 
 function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
   const {
     tuition_installments_amount, // $320
     tuition_installments_interval_weeks // 1 Month = 4 weeks
-  } = getOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1');
 
   const payments = [];
 
@@ -45,7 +45,7 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
 export function latinAmericaEuropeOption1(data, courses) {
   const {
     first_tuition_installment_amount // $100 AUS
-  } = getOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1');
 
   // First tuition
   let result = [

@@ -3,14 +3,14 @@ import {
   findFridayOfFollowingWeeks,
   formatDate
 } from "../../../helpers/dates";
-import { getOptionParameters } from "../../../helpers/tools";
+import { getPaymentOptionParameters } from "../../../helpers/tools";
 
 function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
   const {
     tuition_installments_amount: TIA, // $1000 AUS
     third_tuition_installment_n_weeks_after_course_start: TTIWACS, // 10 weeks
     tuition_installments_interval_weeks_after_third_tuition: TIIWATT, // Month = 4 weeks
-  } = getOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1');
 
   const payments = [];
 
@@ -69,7 +69,7 @@ export function asianAllOthersCountriesOption1(data, courses) {
   const {
     first_tuition_installment_single_course_amount, // $300 AUS
     first_tuition_installment_multiple_courses_amount, // $500 AUS
-  } = getOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1');
 
   // First tuition
   let firstTuitionInstallment = first_tuition_installment_single_course_amount;
