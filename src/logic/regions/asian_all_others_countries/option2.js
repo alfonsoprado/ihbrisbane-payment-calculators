@@ -16,25 +16,29 @@ function generatePaymentSingleCourse(data, course) {
       dueDate: formatDate(new Date()),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.first_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.first_tuition_installment_percentage,
+      code: "tuition_installment"
     },
     {
       dueDate: formatDate(findFridayOfPreviousWeeks(startDate, 1)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage,
+      code: "tuition_installment"
     },
     {
       dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.third_tuition_installment_n_weeks_after_course_start)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.third_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.third_tuition_installment_percentage,
+      code: "tuition_installment"
     },
     {
       dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.fourth_tuition_installment_n_weeks_after_course_start)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.fourth_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.fourth_tuition_installment_percentage,
+      code: "tuition_installment"
     }
   ];
 
@@ -50,7 +54,8 @@ function generatePaymentMultipleCourses(data, courses) {
       dueDate: formatDate(new Date()),
       courseName: courses[0].coursePricing?.course?.name,
       feeDescription: "Tuition installment",
-      paymentAmount: 0
+      paymentAmount: 0,
+      code: "tuition_installment"
     }
   ];
   for (const course of courses) {
@@ -62,19 +67,22 @@ function generatePaymentMultipleCourses(data, courses) {
       dueDate: formatDate(findFridayOfPreviousWeeks(startDate, 1)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage,
+      code: "tuition_installment"
     });
     paymentsS1.push({
       dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.third_tuition_installment_n_weeks_after_course_start)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.third_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.third_tuition_installment_percentage,
+      code: "tuition_installment"
     });
     paymentsS1.push({
       dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.fourth_tuition_installment_n_weeks_after_course_start)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.fourth_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.fourth_tuition_installment_percentage,
+      code: "tuition_installment"
     });
   }
 

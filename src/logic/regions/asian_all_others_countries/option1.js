@@ -23,7 +23,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
       dueDate: formatDate(fridayBeforeStartClass),
       courseName,
       feeDescription: "Tuition installment",
-      paymentAmount: TIA
+      paymentAmount: TIA,
+      code: "tuition_installment"
     });
     remainingAmount -= TIA;
   }
@@ -35,7 +36,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
       dueDate: formatDate(paymentDate),
       courseName,
       feeDescription: "Tuition installment",
-      paymentAmount: TIA
+      paymentAmount: TIA,
+      code: "tuition_installment"
     });
     remainingAmount -= TIA;
   }
@@ -47,7 +49,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
       dueDate: formatDate(paymentDate),
       courseName,
       feeDescription: "Tuition installment",
-      paymentAmount: TIA
+      paymentAmount: TIA,
+      code: "tuition_installment"
     });
     remainingAmount -= TIA;
   }
@@ -58,7 +61,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
       dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, TIIWATT)),
       courseName,
       feeDescription: "Tuition installment",
-      paymentAmount: remainingAmount
+      paymentAmount: remainingAmount,
+      code: "tuition_installment"
     });
   }
 
@@ -82,7 +86,8 @@ export function asianAllOthersCountriesOption1(data, courses) {
       dueDate: formatDate(new Date()),
       feeDescription: "Tuition installment",
       courseName: courses[0]?.coursePricing?.course?.name,
-      paymentAmount: firstTuitionInstallment
+      paymentAmount: firstTuitionInstallment,
+      code: "tuition_installment"
     }
   ];
 

@@ -2,23 +2,7 @@ import { Card, Table, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Select from 'react-select';
-import {
-  parse,
-  startOfWeek,
-  addDays,
-  addWeeks,
-  format
-} from "date-fns";
-
-export function findFridayOfFollowingWeeks(dateInitial, weeksInTheFuture = 0) {
-  if (typeof dateInitial === "string") {
-    dateInitial = parse(dateInitial, "yyyy-MM-dd", new Date());
-  }
-  const startOfTheWeek = startOfWeek(dateInitial, { weekStartsOn: 1 });
-  const futureWeek = addWeeks(startOfTheWeek, weeksInTheFuture - 1);
-  const fridayOfFutureWeek = addDays(futureWeek, 4);
-  return format(fridayOfFutureWeek, "yyyy-MM-dd");
-}
+import { findFinishDateCourse, formatDate } from "../helpers/dates";
 
 function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
   const handleChangeStartDate = (e, id) => {
@@ -68,7 +52,7 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
                 {course?.coursePricing?.course?.duration_weeks}
               </td>
               <td className="text-center align-middle">
-                {course ? findFridayOfFollowingWeeks(course?.startDate, course?.coursePricing?.course?.duration_weeks) : ""}
+                {course ? formatDate(findFinishDateCourse(course?.startDate, course?.coursePricing?.course?.duration_weeks), "yyyy-MM-dd") : ""}
               </td>
               <td className="text-center align-middle">
                 <Button

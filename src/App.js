@@ -31,6 +31,7 @@ function App() {
   const [errorMessages, setErrorMessage] = useState([]);
   const [courses, setCourses] = useState([]);
   const [paymentPlan, setPaymentPlan] = useState([]);
+  const [paymentPlanTableEnabled, setPaymentTableEnabled] = useState(false);
   const { payment_calculator } = useParams();
   const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
 
@@ -63,8 +64,15 @@ function App() {
     setErrorMessage(errors);
   }, [data, courses]);
 
+  const cleanPaymentPlan = () => {
+    setPaymentPlan([]);
+    setPaymentTableEnabled(false);
+    window.location.hash = "footer";
+  }
+
   const createCourse = (course) => {
     setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }]);
+    cleanPaymentPlan();
   };
 
   const updateCourse = (id, propName, newValue) => {
@@ -75,26 +83,31 @@ function App() {
       return item;
     });
     setCourses(updatedItems);
+    cleanPaymentPlan();
   };
 
   const removeCourse = (id) => {
     setCourses(courses.filter((course) => course.id !== id));
-    setPaymentPlan([]);
+    cleanPaymentPlan();
   };
 
   const removeAllCourses = () => {
     setCourses([]);
-    setPaymentPlan([]);
+    cleanPaymentPlan();
   }
 
   const createPaymentPlan = (paymentType, specialCases) => {
     const paymentPlan = generatePaymentPlan(data, courses, paymentType, specialCases);
     setPaymentPlan(paymentPlan);
-    // scroll to payment_plan
+  };
+
+  const showPaymentPlanTable = (paymentType, specialCases) => {
+    setPaymentTableEnabled(true);
+    createPaymentPlan(paymentType, specialCases);
     setTimeout(() => {
       window.location.hash = "payment_plan";
     }, 0);
-  };
+  }
 
   if (error) return <div>failed to load</div>
   if (isLoading) return <div>loading...</div>
@@ -128,7 +141,10 @@ function App() {
             data={data}
             createCourse={createCourse}
             errorMessages={errorMessages}
+            cleanPaymentPlan={cleanPaymentPlan}
             createPaymentPlan={createPaymentPlan}
+            showPaymentPlanTable={showPaymentPlanTable}
+            paymentPlan={paymentPlan}
             courses={courses}
           />
         </Col>
@@ -142,9 +158,12 @@ function App() {
           />
         </Col>
       </Row>
-      <Row id="payment_plan">
-        <PaymentPlan data={data} paymentPlan={paymentPlan}></PaymentPlan>
-      </Row>
+      { paymentPlanTableEnabled && 
+        <Row id="payment_plan">
+          <PaymentPlan data={data} paymentPlan={paymentPlan}></PaymentPlan>
+        </Row>
+      }
+      <div id="footer" />
     </Container>
   );
 }

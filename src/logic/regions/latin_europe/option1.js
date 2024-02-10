@@ -21,7 +21,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
     dueDate: formatDate(paymentDate),
     courseName,
     feeDescription: "Tuition installment",
-    paymentAmount: tuition_installments_amount
+    paymentAmount: tuition_installments_amount,
+    code: "tuition_installment"
   });
   remainingAmount -= tuition_installments_amount;
   // Every month payment
@@ -31,7 +32,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
       dueDate: formatDate(paymentDate),
       courseName,
       feeDescription: "Tuition installment",
-      paymentAmount: tuition_installments_amount
+      paymentAmount: tuition_installments_amount,
+      code: "tuition_installment"
     });
     remainingAmount -= tuition_installments_amount;
   }
@@ -42,7 +44,8 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
       dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks)),
       courseName,
       feeDescription: "Tuition installment",
-      paymentAmount: remainingAmount
+      paymentAmount: remainingAmount,
+      code: "tuition_installment"
     });
   }
 
@@ -60,7 +63,8 @@ export function latinAmericaEuropeOption1(data, courses) {
       dueDate: formatDate(new Date()),
       feeDescription: "Tuition installment",
       courseName: courses[0]?.coursePricing?.course?.name,
-      paymentAmount: first_tuition_installment_amount
+      paymentAmount: first_tuition_installment_amount,
+      code: "tuition_installment"
     }
   ];
 

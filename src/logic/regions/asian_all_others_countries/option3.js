@@ -13,7 +13,8 @@ export function asianAllOthersCountriesOption3(data, courses) {
       dueDate: formatDate(new Date()),
       courseName: courses[0].coursePricing?.course?.name,
       feeDescription: "Tuition installment",
-      paymentAmount: 0
+      paymentAmount: 0,
+      code: "tuition_installment"
     }
   ];
   for (const course of courses) {
@@ -25,7 +26,8 @@ export function asianAllOthersCountriesOption3(data, courses) {
       dueDate: formatDate(findFridayOfFollowingWeeks(startDate, parameters?.second_tuition_installment_interval_weeks)),
       courseName: name,
       feeDescription: "Tuition installment",
-      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage
+      paymentAmount: finalTuition * parameters?.second_tuition_installment_percentage,
+      code: "tuition_installment"
     });
   }
 

@@ -2,22 +2,43 @@ import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
 import DownloadPdf from "./DownloadButton";
+import { findFinishDateCourse, formatDate } from "../../helpers/dates";
+import { parseISO, format } from 'date-fns';
 
-function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
+function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, paymentPlan, showPaymentPlanTable, cleanPaymentPlan }) {
   const [paymentType, setPaymentType] = useState("");
   const [specialCases, setSpecialCases] = useState([]);
 
+  const generateDataPDF = () => {
+    createPaymentPlan(paymentType, specialCases);
+    const dataPDF = {
+      //paymentCalculatorType: data?.payment_calculator?.type,
+      regionCode: data?.region?.code,
+      courses: courses.map(course => {
+        return {
+          name: course?.coursePricing?.course?.name,
+          startDate: format(parseISO(course?.startDate), "dd/MM/yyyy"),
+          finishDate: formatDate(findFinishDateCourse(course?.startDate, course?.coursePricing?.course?.duration_weeks))
+        }
+      }),
+      paymentPlan: paymentPlan
+    }
+    return dataPDF;
+  }
+
   const handlePaymentType = (event) => {
     setPaymentType(event.target.value);
+    cleanPaymentPlan();
   };
 
   const handleSpecialCases = (event) => {
     const { name, checked } = event.target;
-    if(checked && !specialCases.includes(name)) {
+    if (checked && !specialCases.includes(name)) {
       setSpecialCases([...specialCases, name]);
     } else {
       setSpecialCases(specialCases?.filter(specialCase => specialCase !== name));
     }
+    cleanPaymentPlan();
   };
 
   const handleSubmit = (e) => {
@@ -25,8 +46,12 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
   };
 
   const handlePaymentPlan = () => {
-    createPaymentPlan(paymentType, specialCases);
+    showPaymentPlanTable(paymentType, specialCases);
   }
+
+  const buttonDisable = errorMessages?.length > 0 ||
+    !paymentType ||
+    courses?.length === 0;
 
   return (
     <Card id="payment_options" className="mb-3">
@@ -104,18 +129,18 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
           <div className="d-grid gap-2">
             <Button
               onClick={handlePaymentPlan}
-              disabled={
-                errorMessages?.length > 0 ||
-                !paymentType ||
-                courses?.length === 0
-              }
+              disabled={buttonDisable}
               className="mt-2"
               variant="dark"
               type="submit"
             >
               Check Payment Plan
             </Button>
-            <DownloadPdf />
+            <DownloadPdf
+              url="http://localhost/apps/public/api/paymentcalculator/pdf/paymentplan"
+              generateDataPDF={generateDataPDF}
+              title="Payment Plan"
+              disabled={buttonDisable} />
           </div>
         </Form>
       </Card.Body>

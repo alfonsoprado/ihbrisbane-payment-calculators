@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 
-function PdfModal({ url, data, title = "PDF", buttonText = "Show PDF" }) {
+function PdfModal({ url, generateDataPDF, title = "PDF", buttonText = "Generate PDF", disabled }) {
   const [show, setShow] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
 
   const fetchPdf = async () => {
-    const url = 'http://localhost/apps/public/api/paymentcalculator/pdf/paymentplan';
-
     try {
-      const response = await axios.get(url, {
+      const response = await axios.post(url, generateDataPDF(), {
         responseType: 'blob', 
       });
 
@@ -30,7 +28,7 @@ function PdfModal({ url, data, title = "PDF", buttonText = "Show PDF" }) {
 
   return (
     <>
-      <Button variant="dark" onClick={fetchPdf}>
+      <Button disabled={disabled} variant="dark" onClick={fetchPdf}>
         {
           buttonText
         }

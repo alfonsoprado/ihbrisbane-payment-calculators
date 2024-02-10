@@ -68,8 +68,10 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
 
   result = [
     ...result,
-    ...generateTotalPayments(result, courses, paymentType)
+    ...generateTotalPayments(data, result, courses, paymentType)
   ];
+
+  console.debug(result);
 
   return addIdToArray(result);
 }
