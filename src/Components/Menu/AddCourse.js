@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
 import Select from 'react-select';
+import { findFinishDateCourse, formatDate } from "../../helpers/dates";
 
 const groupStyles = {
   display: 'flex',
@@ -38,7 +39,8 @@ function AddCourse({ data, createCourse, courses }) {
 
     const form = {
       coursePricing: coursePricing?.value,
-      startDate: startDate?.value
+      startDate: startDate?.value,
+      finishDate: formatDate(findFinishDateCourse(startDate?.value, duration), "yyyy-MM-dd")
     };
     createCourse(form);
     // Clean values

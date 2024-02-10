@@ -12,16 +12,15 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showP
   const generateDataPDF = () => {
     const paymentPlan = createPaymentPlan(paymentType, specialCases);
     const dataPDF = {
-      //paymentCalculatorType: data?.payment_calculator?.type,
       regionCode: data?.region?.code,
       courses: courses.map(course => {
         return {
           name: course?.coursePricing?.course?.name,
           startDate: format(parseISO(course?.startDate), "dd/MM/yyyy"),
-          finishDate: formatDate(findFinishDateCourse(course?.startDate, course?.coursePricing?.course?.duration_weeks))
+          finishDate: format(parseISO(course?.finishDate), "dd/MM/yyyy")
         }
       }),
-      paymentPlan: paymentPlan
+      paymentPlan: paymentType === "pay_upfront" ? paymentPlan : paymentPlan.filter(row => row.code !== "tuition")
     }
     return dataPDF;
   }

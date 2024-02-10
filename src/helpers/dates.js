@@ -4,7 +4,10 @@ import {
   addDays,
   addWeeks,
   subWeeks,
-  format
+  format,
+  parseISO,
+  isAfter,
+  isBefore
 } from "date-fns";
 export function formatDate(date, formatDate = "dd/MM/yyyy") {
   return format(date, formatDate);
@@ -57,4 +60,28 @@ export function findFridayOfPreviousWeeks(dateInitial, weeksInThePast = 0) {
   const fridayOfPastWeek = addDays(pastWeek, 4);
 
   return fridayOfPastWeek;
+}
+
+
+export function checkForOverlaps(dateRanges) {
+  for (let i = 0; i < dateRanges.length; i++) {
+    const start1 = parseISO(dateRanges[i].startDate);
+    const end1 = parseISO(dateRanges[i].finishDate);
+
+    for (let j = i + 1; j < dateRanges.length; j++) {
+      const start2 = parseISO(dateRanges[j].startDate);
+      const end2 = parseISO(dateRanges[j].finishDate);
+
+      if (start1 <= end2 && start2 <= end1) {
+        console.log("start1 < end2", start1 < end2)
+        console.log("start2 < end1", start2 < end1)
+        console.log(start1, end1);
+        console.log(start2, end2);
+        // Found overlaps
+        return true;
+      }
+    }
+  }
+  // Not found overlaps
+  return false;
 }

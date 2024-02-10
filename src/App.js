@@ -7,6 +7,7 @@ import ErrorAlert from "./ErrorAlert";
 import { generatePaymentPlan } from "./logic/payment-plan";
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
+import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/dates";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -58,8 +59,14 @@ function App() {
       errors.push("We don't accept standalone INTENSIVE course.");
     }
 
+    if(checkForOverlaps(courses)) {
+      errors.push("There is at least one course whose date range overlaps with another course.");
+    }
+
     // startDate1 < startDate2
     // startDate1 + duration1 < startDate2 + duration2 < ....
+    
+    // checkForOverlaps(dateRanges)
 
     setErrorMessage(errors);
   }, [data, courses]);
@@ -78,6 +85,13 @@ function App() {
   const updateCourse = (id, propName, newValue) => {
     const updatedItems = courses.map((item) => {
       if (item.id === id) {
+        if(propName === 'startDate') {
+          return { 
+            ...item, 
+            'startDate': newValue, 
+            'finishDate': formatDate(findFinishDateCourse(newValue, item?.coursePricing?.course?.duration_weeks), "yyyy-MM-dd")
+          }
+        }
         return { ...item, [propName]: newValue };
       }
       return item;
@@ -99,6 +113,7 @@ function App() {
   const createPaymentPlan = (paymentType, specialCases) => {
     const paymentPlan = generatePaymentPlan(data, courses, paymentType, specialCases);
     setPaymentPlan(paymentPlan);
+
     return paymentPlan;
   };
 
