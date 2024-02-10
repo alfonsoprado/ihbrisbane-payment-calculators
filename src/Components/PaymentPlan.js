@@ -4,6 +4,7 @@ function PaymentPlan({ data, paymentPlan }) {
   if (paymentPlan?.length === 0) {
     return;
   }
+  console.debug(paymentPlan);
 
   return (
     <>

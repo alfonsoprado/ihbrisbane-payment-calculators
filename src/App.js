@@ -22,9 +22,9 @@ const payments_calculators = {
 };
 
 const hero_banner = {
-  asian_all_other_countries: "in-person_vet_courses.png",
-  latin_america_europe: "in-person_vet_courses.png",
-  open_vet: "online_vet_courses.png"
+  asian_all_other_countries: "http://localhost/apps/public/images/payment_calculator/in-person_vet_courses.png",
+  latin_america_europe: "http://localhost/apps/public/images/payment_calculator/in-person_vet_courses.png",
+  open_vet: "http://localhost/apps/public/images/payment_calculator/online_vet_courses.png"
 }
 
 function App() {
@@ -36,9 +36,6 @@ function App() {
 
   useEffect(() => {
     let errors = [];
-
-
-    
     let intensiveCourse = 0;
     let standardCourse = 0;
     let notEmpty = true;
@@ -57,19 +54,17 @@ function App() {
     }
 
     if (data?.region?.code === 'open_vet' && intensiveCourse > 0 && standardCourse === 0) {
-      errors.push("Open VET doesn't accept standalone INTENSIVE course.");
+      errors.push("We don't accept standalone INTENSIVE course.");
     }
 
     // startDate1 < startDate2
     // startDate1 + duration1 < startDate2 + duration2 < ....
 
     setErrorMessage(errors);
-  }, [courses]);
+  }, [data, courses]);
 
   const createCourse = (course) => {
-    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }]
-      //.sort((a, b) => a?.coursePricing?.course?.order - b?.coursePricing?.course?.order)
-    );
+    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }]);
   };
 
   const updateCourse = (id, propName, newValue) => {

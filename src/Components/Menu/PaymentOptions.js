@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
+import DownloadPdf from "./DownloadButton";
 
 function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
   const [paymentType, setPaymentType] = useState("");
@@ -21,8 +22,11 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createPaymentPlan(paymentType, specialCases);
   };
+
+  const handlePaymentPlan = () => {
+    createPaymentPlan(paymentType, specialCases);
+  }
 
   return (
     <Card id="payment_options" className="mb-3">
@@ -99,6 +103,7 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
           </Row>
           <div className="d-grid gap-2">
             <Button
+              onClick={handlePaymentPlan}
               disabled={
                 errorMessages?.length > 0 ||
                 !paymentType ||
@@ -110,6 +115,7 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses }) {
             >
               Check Payment Plan
             </Button>
+            <DownloadPdf />
           </div>
         </Form>
       </Card.Body>
