@@ -5,12 +5,12 @@ import DownloadPdf from "./DownloadButton";
 import { findFinishDateCourse, formatDate } from "../../helpers/dates";
 import { parseISO, format } from 'date-fns';
 
-function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, paymentPlan, showPaymentPlanTable, cleanPaymentPlan }) {
+function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showPaymentPlanTable, cleanPaymentPlan }) {
   const [paymentType, setPaymentType] = useState("");
   const [specialCases, setSpecialCases] = useState([]);
 
   const generateDataPDF = () => {
-    createPaymentPlan(paymentType, specialCases);
+    const paymentPlan = createPaymentPlan(paymentType, specialCases);
     const dataPDF = {
       //paymentCalculatorType: data?.payment_calculator?.type,
       regionCode: data?.region?.code,

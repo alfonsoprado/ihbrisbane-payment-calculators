@@ -7,7 +7,6 @@ function Menu({
   errorMessages,
   createPaymentPlan,
   courses,
-  paymentPlan,
   showPaymentPlanTable,
   cleanPaymentPlan
 }) {
@@ -24,7 +23,6 @@ function Menu({
           cleanPaymentPlan={cleanPaymentPlan}
           showPaymentPlanTable={showPaymentPlanTable}
           createPaymentPlan={createPaymentPlan}
-          paymentPlan={paymentPlan}
           courses={courses} />
       }
 

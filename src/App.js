@@ -99,6 +99,7 @@ function App() {
   const createPaymentPlan = (paymentType, specialCases) => {
     const paymentPlan = generatePaymentPlan(data, courses, paymentType, specialCases);
     setPaymentPlan(paymentPlan);
+    return paymentPlan;
   };
 
   const showPaymentPlanTable = (paymentType, specialCases) => {
@@ -144,7 +145,6 @@ function App() {
             cleanPaymentPlan={cleanPaymentPlan}
             createPaymentPlan={createPaymentPlan}
             showPaymentPlanTable={showPaymentPlanTable}
-            paymentPlan={paymentPlan}
             courses={courses}
           />
         </Col>
