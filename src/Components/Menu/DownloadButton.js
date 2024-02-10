@@ -5,8 +5,10 @@ import axios from 'axios';
 function PdfModal({ url, generateDataPDF, title = "PDF", buttonText = "Generate PDF", disabled }) {
   const [show, setShow] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const fetchPdf = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(url, generateDataPDF(), {
         responseType: 'blob', 
@@ -18,6 +20,9 @@ function PdfModal({ url, generateDataPDF, title = "PDF", buttonText = "Generate 
     } catch (error) {
       console.error('Error:', error);
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
@@ -28,10 +33,8 @@ function PdfModal({ url, generateDataPDF, title = "PDF", buttonText = "Generate 
 
   return (
     <>
-      <Button disabled={disabled} variant="dark" onClick={fetchPdf}>
-        {
-          buttonText
-        }
+      <Button disabled={disabled || loading} variant="dark" onClick={fetchPdf}>
+        {loading ? "Loading..." : buttonText}
       </Button>
 
       <Modal show={show} onHide={handleClose} size="xl">
