@@ -1,8 +1,42 @@
 import { faCircleInfo, faPassport, faShieldHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
+import DownloadPDF from "./DownloadPDFButton";
+import { format, parseISO } from "date-fns";
 
-function ApplicationForm() {
+function ApplicationForm({
+    data,
+    courses,
+    paymentType,
+    application,
+    updateApplication
+}) {
+    const [agree1, setAgree1] = useState(false);
+    const [agree2, setAgree2] = useState(false);
+    const [agree3, setAgree3] = useState(false);
+    const [agree4, setAgree4] = useState(false);
+
+    const agree = agree1 && agree2 && agree3 && agree4;
+
+    const updateField = (e) => {
+        updateApplication(e.target.name, e.target.value)
+    }
+
+    const generateDataPDF = () => {
+        return {
+            regionCode: data?.region?.code,
+            paymentType: data?.payment_options?.find(option => option.code === paymentType)?.name,
+            application,
+            courses: courses.map(course => ({
+                name: course?.coursePricing?.course?.name,
+                cricosCode: course?.coursePricing?.course?.cricos_code,
+                courseCode: course?.coursePricing?.course?.course_code,
+                startDate: format(parseISO(course?.startDate), "dd/MM/yyyy")
+            }))
+        };
+    }
+
     return <Form className="mb-3">
         <h4 className="mb-3">Application Form</h4>
         {/* Personal Information */}
@@ -17,39 +51,67 @@ function ApplicationForm() {
                     <Col md>
                         <Form.Group className="mb-3">
                             <Form.Label><b>First Name:</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="firstName"
+                                onChange={updateField}
+                                type="text" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Last Name:</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="lastName"
+                                onChange={updateField}
+                                type="text" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Date of Birth:</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="dateOfBirth"
+                                onChange={updateField}
+                                type="date" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Nationality:</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="nationality"
+                                onChange={updateField}
+                                type="text" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Passport Number:</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="passportNumber"
+                                onChange={updateField}
+                                type="text" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Current Address:</b></Form.Label>
-                            <Form.Control as="textarea" rows={3} />
+                            <Form.Control
+                                as="textarea"
+                                name="currentAddress"
+                                onChange={updateField}
+                                rows={3} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Agency name (if applicable):</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="agencyName"
+                                onChange={updateField}
+                                type="text" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Counselor name:</b></Form.Label>
-                            <Form.Control type="text" />
+                            <Form.Control
+                                name="counselorName"
+                                onChange={updateField}
+                                type="text" />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Counselor email:</b></Form.Label>
-                            <Form.Control type="email" />
+                            <Form.Control
+                                name="counselorEmail"
+                                onChange={updateField}
+                                type="email" />
                         </Form.Group>
                     </Col>
                     <Col md>
@@ -61,23 +123,29 @@ function ApplicationForm() {
                                 <Form.Check
                                     inline
                                     label="Not Given"
-                                    name="group1"
+                                    name="gender"
+                                    value="Not Given"
+                                    checked={application?.gender === 'Not Given'}
+                                    onChange={updateField}
                                     type="radio"
-                                    id="inline-radio-1"
                                 />
                                 <Form.Check
                                     inline
                                     label="Yes"
-                                    name="group1"
+                                    name="gender"
+                                    value="Yes"
+                                    checked={application?.gender === 'Yes'}
+                                    onChange={updateField}
                                     type="radio"
-                                    id="inline-radio-2"
                                 />
                                 <Form.Check
                                     inline
                                     label="No"
-                                    name="group1"
+                                    name="gender"
+                                    value="No"
+                                    checked={application?.gender === 'No'}
+                                    onChange={updateField}
                                     type="radio"
-                                    id="inline-radio-3"
                                 />
                             </Col>
                         </Row>
@@ -85,15 +153,25 @@ function ApplicationForm() {
                             <Col>
                                 <Form.Group className="mb-3">
                                     <Form.Label><b>Email:</b></Form.Label>
-                                    <Form.Control type="email" />
+                                    <Form.Control
+                                        name="email"
+                                        onChange={updateField}
+                                        type="email" />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label><b>Phone:</b></Form.Label>
-                                    <Form.Control type="text" />
+                                    <Form.Control
+                                        name="phone"
+                                        onChange={updateField}
+                                        type="text" />
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                     <Form.Label><b>English Level:</b></Form.Label>
-                                    <Form.Select aria-label="Default select example">
+                                    <Form.Select
+                                        name="englishLevel"
+                                        value={application.englishLevel}
+                                        onChange={updateField}
+                                    >
                                         <option value="Not Given">Not Given</option>
                                         <option value="Elementary">Elementary</option>
                                         <option value="Pre-Intermediate">Pre-Intermediate</option>
@@ -113,29 +191,33 @@ function ApplicationForm() {
                 </Row>
                 <Row className="mb-2">
                     <Col>
-                        <div key="inline-radio">
-                            <Form.Check
-                                inline
-                                label="Not Given"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-1"
-                            />
-                            <Form.Check
-                                inline
-                                label="Yes"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-2"
-                            />
-                            <Form.Check
-                                inline
-                                label="No"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-3"
-                            />
-                        </div>
+                        <Form.Check
+                            inline
+                            label="Not Given"
+                            name="disabilitiesChronicConditions"
+                            value="Not Given"
+                            checked={application?.disabilitiesChronicConditions === 'Not Given'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Yes"
+                            name="disabilitiesChronicConditions"
+                            value="Yes"
+                            checked={application?.disabilitiesChronicConditions === 'Yes'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="No"
+                            name="disabilitiesChronicConditions"
+                            value="No"
+                            checked={application?.disabilitiesChronicConditions === 'No'}
+                            onChange={updateField}
+                            type="radio"
+                        />
                     </Col>
                 </Row>
             </Card.Body>
@@ -153,36 +235,42 @@ function ApplicationForm() {
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <div key="inline-radio">
-                            <Form.Check
-                                inline
-                                label="Student"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-1"
-                            />
-                            <Form.Check
-                                inline
-                                label="Business"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-2"
-                            />
-                            <Form.Check
-                                inline
-                                label="Dependent"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-3"
-                            />
-                            <Form.Check
-                                inline
-                                label="Other"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-3"
-                            />
-                        </div>
+                        <Form.Check
+                            inline
+                            label="Student"
+                            name="visa"
+                            value="Student"
+                            checked={application?.visa === 'Student'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Business"
+                            name="visa"
+                            value="Business"
+                            checked={application?.visa === 'Business'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Dependent"
+                            name="visa"
+                            value="Dependent"
+                            checked={application?.visa === 'Dependent'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Other"
+                            name="visa"
+                            value="Other"
+                            checked={application?.visa === 'Other'}
+                            onChange={updateField}
+                            type="radio"
+                        />
                     </Col>
                 </Row>
                 <Row className="mb-2">
@@ -192,29 +280,33 @@ function ApplicationForm() {
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <div key="inline-radio">
-                            <Form.Check
-                                inline
-                                label="Not Given"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-1"
-                            />
-                            <Form.Check
-                                inline
-                                label="Onshore (in Australia)"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-2"
-                            />
-                            <Form.Check
-                                inline
-                                label="Offshore (Outside of Australia)  "
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-3"
-                            />
-                        </div>
+                        <Form.Check
+                            inline
+                            label="Not Given"
+                            name="studentCurrentLocation"
+                            value="Not Given"
+                            checked={application?.studentCurrentLocation === 'Not Given'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Onshore (in Australia)"
+                            name="studentCurrentLocation"
+                            value="Onshore"
+                            checked={application?.studentCurrentLocation === 'Onshore'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Offshore (Outside of Australia)  "
+                            name="studentCurrentLocation"
+                            value="Offshore"
+                            checked={application?.studentCurrentLocation === 'Offshore'}
+                            onChange={updateField}
+                            type="radio"
+                        />
                     </Col>
                 </Row>
                 <Row className="mb-2">
@@ -224,29 +316,33 @@ function ApplicationForm() {
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <div key="inline-radio">
-                            <Form.Check
-                                inline
-                                label="Not Given"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-1"
-                            />
-                            <Form.Check
-                                inline
-                                label="Onshore (in Australia)"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-2"
-                            />
-                            <Form.Check
-                                inline
-                                label="Offshore (Outside of Australia)  "
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-3"
-                            />
-                        </div>
+                        <Form.Check
+                            inline
+                            label="Not Given"
+                            name="DHAOffice"
+                            value="Not Given"
+                            checked={application?.DHAOffice === 'Not Given'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Onshore (in Australia)"
+                            name="DHAOffice"
+                            value="Onshore"
+                            checked={application?.DHAOffice === 'Onshore'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="Offshore (Outside of Australia)"
+                            name="DHAOffice"
+                            value="Offshore"
+                            checked={application?.DHAOffice === 'Offshore'}
+                            onChange={updateField}
+                            type="radio"
+                        />
                     </Col>
                 </Row>
                 <Row className="mb-2">
@@ -254,22 +350,24 @@ function ApplicationForm() {
                 </Row>
                 <Row className="mb-3">
                     <Col>
-                        <div key="inline-radio">
-                            <Form.Check
-                                inline
-                                label="Yes"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-1"
-                            />
-                            <Form.Check
-                                inline
-                                label="No"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-2"
-                            />
-                        </div>
+                        <Form.Check
+                            inline
+                            label="Yes"
+                            name="enrolledAnotherInstitutionAustralia"
+                            value="Yes"
+                            checked={application?.enrolledAnotherInstitutionAustralia === 'Yes'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="No"
+                            name="enrolledAnotherInstitutionAustralia"
+                            value="No"
+                            checked={application?.enrolledAnotherInstitutionAustralia === 'No'}
+                            onChange={updateField}
+                            type="radio"
+                        />
                     </Col>
                 </Row>
                 <Row className="mb-2">
@@ -277,22 +375,24 @@ function ApplicationForm() {
                 </Row>
                 <Row>
                     <Col>
-                        <div key="inline-radio">
-                            <Form.Check
-                                inline
-                                label="Yes"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-1"
-                            />
-                            <Form.Check
-                                inline
-                                label="No (If No, a letter of release is required)"
-                                name="group1"
-                                type="radio"
-                                id="inline-radio-2"
-                            />
-                        </div>
+                        <Form.Check
+                            inline
+                            label="Yes"
+                            name="additionalStudy"
+                            value="Yes"
+                            checked={application?.additionalStudy === 'Yes'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="No"
+                            name="additionalStudy"
+                            value="No"
+                            checked={application?.additionalStudy === 'No'}
+                            onChange={updateField}
+                            type="radio"
+                        />
                     </Col>
                 </Row>
             </Card.Body>
@@ -315,36 +415,42 @@ function ApplicationForm() {
                         </Row>
                         <Row className="mb-2">
                             <Col>
-                                <div key="inline-radio">
-                                    <Form.Check
-                                        inline
-                                        label="No required"
-                                        name="group1"
-                                        type="radio"
-                                        id="inline-radio-1"
-                                    />
-                                    <Form.Check
-                                        inline
-                                        label="Single"
-                                        name="group1"
-                                        type="radio"
-                                        id="inline-radio-2"
-                                    />
-                                    <Form.Check
-                                        inline
-                                        label="Couple"
-                                        name="group1"
-                                        type="radio"
-                                        id="inline-radio-2"
-                                    />
-                                    <Form.Check
-                                        inline
-                                        label="Family"
-                                        name="group1"
-                                        type="radio"
-                                        id="inline-radio-2"
-                                    />
-                                </div>
+                                <Form.Check
+                                    inline
+                                    label="No required"
+                                    name="OSHC"
+                                    value="No required"
+                                    checked={application?.OSHC === 'No required'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Single"
+                                    name="OSHC"
+                                    value="Single"
+                                    checked={application?.OSHC === 'Single'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Couple"
+                                    name="OSHC"
+                                    value="Couple"
+                                    checked={application?.OSHC === 'Couple'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Family"
+                                    name="OSHC"
+                                    value="Family"
+                                    checked={application?.OSHC === 'Family'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
                             </Col>
                         </Row>
                         <Row>
@@ -381,6 +487,8 @@ function ApplicationForm() {
                                 type="checkbox"
                                 id="agree1"
                                 name="agree1"
+                                checked={agree1}
+                                onChange={() => setAgree1(!agree1)}
                                 label={<b>I have read and understood the IH Brisbane - ALS Student Handbook viewed <a target="_blank" rel="noreferrer" href="http://ihbrisbane.synology.me:81/?resource=doc&doc_no=52400150" style={{ color: "#990000" }}>here</a></b>}
                             />
                         </Form.Group>
@@ -393,6 +501,8 @@ function ApplicationForm() {
                                 type="checkbox"
                                 id="agree2"
                                 name="agree2"
+                                checked={agree2}
+                                onChange={() => setAgree2(!agree2)}
                                 label={<b>I confirm that I have sufficient funds to pay for all tuition fees, accommodation and all other personal expenses during the full period of my course.</b>}
                             />
                         </Form.Group>
@@ -405,6 +515,8 @@ function ApplicationForm() {
                                 type="checkbox"
                                 id="agree3"
                                 name="agree3"
+                                checked={agree3}
+                                onChange={() => setAgree3(!agree3)}
                                 label={<b>I certify that all information given by me in this application is accurate and correct.</b>}
                             />
                         </Form.Group>
@@ -417,6 +529,8 @@ function ApplicationForm() {
                                 type="checkbox"
                                 id="agree4"
                                 name="agree4"
+                                checked={agree4}
+                                onChange={() => setAgree4(!agree4)}
                                 label={<b>I have read and understood the IH Brisbane - ALS <a target="_blank" rel="noreferrer" href="https://www.ihbrisbane.com.au/admission/refund-and-enrolment-policy/" style={{ color: "#990000" }}>here</a> and agree.</b>}
                             />
                         </Form.Group>
@@ -427,13 +541,19 @@ function ApplicationForm() {
         <Row>
             {/* Create Application */}
             <Col>
-                <div className="d-grid gap-2"><Button variant="dark" size="lg">Create Application</Button></div>
+                <div className="d-grid gap-2">
+                    <DownloadPDF
+                        url="http://localhost/apps/public/api/paymentcalculator/pdf/application_form"
+                        generateDataPDF={generateDataPDF}
+                        title="Create Application"
+                        disabled={!agree} />
+                </div>
             </Col>
             {/* Reset Application */}
             {/* Agregar modal al boton */}
             <Col>
                 <div className="d-grid gap-2">
-                    <Button variant="danger" size="lg">Reset</Button>
+                    <Button variant="danger">Reset Application</Button>
                 </div>
             </Col>
         </Row>

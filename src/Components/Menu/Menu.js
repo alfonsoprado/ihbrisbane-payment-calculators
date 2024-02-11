@@ -9,7 +9,9 @@ function Menu({
   courses,
   showPaymentPlanTable,
   cleanPaymentPlan,
-  showApplicationForm
+  showApplicationForm,
+  paymentType,
+  updatePaymentType
 }) {
   return (
     <>
@@ -25,7 +27,10 @@ function Menu({
           showPaymentPlanTable={showPaymentPlanTable}
           showApplicationForm={showApplicationForm}
           createPaymentPlan={createPaymentPlan}
-          courses={courses} />
+          courses={courses}
+          paymentType={paymentType}
+          updatePaymentType={updatePaymentType} 
+          />
       }
 
     </>

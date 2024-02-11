@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
-import DownloadPdf from "../DownloadButton";
+import DownloadPDF from "../DownloadPDFButton";
 import { parseISO, format } from 'date-fns';
 
 function PaymentOptions({ 
@@ -11,18 +11,21 @@ function PaymentOptions({
   courses, 
   showPaymentPlanTable, 
   cleanPaymentPlan,
-  showApplicationForm
+  showApplicationForm,
+  paymentType,
+  updatePaymentType,
 }) {
-  const [paymentType, setPaymentType] = useState("");
   const [specialCases, setSpecialCases] = useState([]);
 
   const generateDataPDF = () => {
-    const paymentPlan = createPaymentPlan(paymentType, specialCases);
+    const paymentPlan = createPaymentPlan(specialCases);
     const dataPDF = {
       regionCode: data?.region?.code,
       courses: courses.map(course => {
         return {
           name: course?.coursePricing?.course?.name,
+          cricosCode: course?.coursePricing?.course?.cricos_code,
+          courseCode: course?.coursePricing?.course?.course_code,
           startDate: format(parseISO(course?.startDate), "dd/MM/yyyy"),
           finishDate: format(parseISO(course?.finishDate), "dd/MM/yyyy")
         }
@@ -33,7 +36,7 @@ function PaymentOptions({
   }
 
   const handlePaymentType = (event) => {
-    setPaymentType(event.target.value);
+    updatePaymentType(event.target.value);
     cleanPaymentPlan();
   };
 
@@ -48,7 +51,7 @@ function PaymentOptions({
   };
 
   const handlePaymentPlan = () => {
-    showPaymentPlanTable(paymentType, specialCases);
+    showPaymentPlanTable(specialCases);
   }
 
   const buttonDisable = errorMessages?.length > 0 ||
@@ -136,8 +139,8 @@ function PaymentOptions({
             >
               Check Payment Plan
             </Button>
-            <DownloadPdf
-              url="http://localhost/apps/public/api/paymentcalculator/pdf/paymentplan"
+            <DownloadPDF
+              url="http://localhost/apps/public/api/paymentcalculator/pdf/payment_plan"
               generateDataPDF={generateDataPDF}
               title="Payment Plan"
               disabled={buttonDisable} />
@@ -146,6 +149,11 @@ function PaymentOptions({
               disabled={buttonDisable}
               onClick={showApplicationForm}
             >Complete Application Details</Button>
+            <Button
+              variant="danger"
+            >
+              Reset All
+            </Button>
           </div>
       </Card.Body>
     </Card>

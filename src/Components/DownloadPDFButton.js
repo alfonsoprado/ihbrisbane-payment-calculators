@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 
-function PdfModal({ url, generateDataPDF, title = "PDF", buttonText = "Generate PDF", disabled }) {
+function DownloadPDF({ url, generateDataPDF, title = "PDF", buttonText = "Generate PDF", disabled }) {
   const [show, setShow] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,4 +54,4 @@ function PdfModal({ url, generateDataPDF, title = "PDF", buttonText = "Generate 
   );
 }
 
-export default PdfModal;
+export default DownloadPDF;

@@ -30,11 +30,36 @@ const hero_banner = {
   open_vet: "http://localhost/apps/public/images/payment_calculator/online_vet_courses.png"
 }
 
+const defaultValuesApplication = {
+  firstName: "",
+  lastName: "",
+  dateOfBirth: "",
+  gender: "Not Given",
+  email: "",
+  phone: "",
+  nationality: "",
+  passportNumber: "",
+  currentAddress: "",
+  agencyName: "",
+  counselorName: "",
+  counselorEmail: "",
+  englishLevel: "Not Given",
+  disabilitiesChronicConditions: "Not Given",
+  visa: "Student",
+  studentCurrentLocation: "Not Given",
+  DHAOffice: "Not Given",
+  enrolledAnotherInstitutionAustralia: "No",
+  additionalStudy: "No",
+  OSHC: "Not Given"
+}
+
 function App() {
   const [errorMessages, setErrorMessage] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [paymentType, setPaymentType] = useState("");
   const [paymentPlan, setPaymentPlan] = useState([]);
   const [paymentPlanTableEnabled, setPaymentTableEnabled] = useState(false);
+  const [application, setApplication] = useState(defaultValuesApplication);
   const [applicationEnabled, setApplicationEnabled] = useState(false);
   const { payment_calculator } = useParams();
   const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
@@ -66,11 +91,6 @@ function App() {
       errors.push("There is at least one course whose date range overlaps with another course.");
     }
 
-    // startDate1 < startDate2
-    // startDate1 + duration1 < startDate2 + duration2 < ....
-
-    // checkForOverlaps(dateRanges)
-
     setErrorMessage(errors);
   }, [data, courses]);
 
@@ -80,7 +100,7 @@ function App() {
   }
 
   const createCourse = (course) => {
-    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }]);
+    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }].sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
     cleanPaymentPlan();
   };
 
@@ -97,13 +117,21 @@ function App() {
         return { ...item, [propName]: newValue };
       }
       return item;
-    });
+    }).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
     setCourses(updatedItems);
     cleanPaymentPlan();
   };
 
+  const updateApplication = (propName, newValue) => {
+    const updatedApplication = {
+      ...application,
+      [propName]: newValue
+    };
+    setApplication(updatedApplication);
+  };
+
   const removeCourse = (id) => {
-    setCourses(courses.filter((course) => course.id !== id));
+    setCourses(courses.filter((course) => course.id !== id).sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
     cleanPaymentPlan();
   };
 
@@ -112,17 +140,17 @@ function App() {
     cleanPaymentPlan();
   }
 
-  const createPaymentPlan = (paymentType, specialCases) => {
+  const createPaymentPlan = (specialCases) => {
     const paymentPlan = generatePaymentPlan(data, courses, paymentType, specialCases);
     setPaymentPlan(paymentPlan);
 
     return paymentPlan;
   };
 
-  const showPaymentPlanTable = (paymentType, specialCases) => {
+  const showPaymentPlanTable = (specialCases) => {
     setPaymentTableEnabled(true);
     setApplicationEnabled(false);
-    createPaymentPlan(paymentType, specialCases);
+    createPaymentPlan(specialCases);
     scrollTo("payment_plan");
   }
 
@@ -168,6 +196,8 @@ function App() {
             createPaymentPlan={createPaymentPlan}
             showPaymentPlanTable={showPaymentPlanTable}
             showApplicationForm={showApplicationForm}
+            paymentType={paymentType}
+            updatePaymentType={setPaymentType}
             courses={courses}
           />
         </Col>
@@ -194,7 +224,13 @@ function App() {
             {/* Crear funcion ShowApplicationFrom que se entrega al menu
             Crear variable para condicional para mostrar y ocultar Application Form, 
             que seria application form enabled */}
-            <ApplicationForm courses={courses} paymentType={null} />
+            <ApplicationForm
+              data={data}
+              courses={courses}
+              paymentType={paymentType}
+              application={application}
+              updateApplication={updateApplication}
+            />
           </Col>
         </Row>
       }
