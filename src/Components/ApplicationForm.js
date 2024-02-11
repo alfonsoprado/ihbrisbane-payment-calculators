@@ -29,16 +29,16 @@ function ApplicationForm({
     const updateField = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        if(['email', 'counselorEmail'].includes(e.target.name)) {
+        if (['email', 'counselorEmail'].includes(e.target.name)) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(e.target.name === 'email') {
-                if(value?.trim() === "") {
+            if (e.target.name === 'email') {
+                if (value?.trim() === "") {
                     setIsValidEmail(true);
                 } else {
                     setIsValidEmail(re.test(value));
                 }
-            } else if(e.target.name === 'counselorEmail') {
-                if(value?.trim() === "") {
+            } else if (e.target.name === 'counselorEmail') {
+                if (value?.trim() === "") {
                     setIsValidCounselorEmail(true);
                 } else {
                     setIsValidCounselorEmail(re.test(value));
@@ -304,78 +304,82 @@ function ApplicationForm({
                         />
                     </Col>
                 </Row>
-                <Row className="mb-2">
-                    <Col>
-                        <b>Student Current Location:</b>
-                    </Col>
-                </Row>
-                <Row className="mb-3">
-                    <Col>
-                        <Form.Check
-                            inline
-                            label="Not Given"
-                            name="studentCurrentLocation"
-                            value="Not Given"
-                            checked={application?.studentCurrentLocation === 'Not Given'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="Onshore (in Australia)"
-                            name="studentCurrentLocation"
-                            value="Onshore"
-                            checked={application?.studentCurrentLocation === 'Onshore'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="Offshore (Outside of Australia)  "
-                            name="studentCurrentLocation"
-                            value="Offshore"
-                            checked={application?.studentCurrentLocation === 'Offshore'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                    </Col>
-                </Row>
-                <Row className="mb-2">
-                    <Col>
-                        <b>Which DHA office will you apply to for your visa? (student visa only)</b>
-                    </Col>
-                </Row>
-                <Row className="mb-3">
-                    <Col>
-                        <Form.Check
-                            inline
-                            label="Not Given"
-                            name="DHAOffice"
-                            value="Not Given"
-                            checked={application?.DHAOffice === 'Not Given'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="Onshore (in Australia)"
-                            name="DHAOffice"
-                            value="Onshore"
-                            checked={application?.DHAOffice === 'Onshore'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="Offshore (Outside of Australia)"
-                            name="DHAOffice"
-                            value="Offshore"
-                            checked={application?.DHAOffice === 'Offshore'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                    </Col>
-                </Row>
+                {
+                    application?.visa === 'Student' && <>
+                        <Row className="mb-2">
+                            <Col>
+                                <b>Student Current Location:</b>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Check
+                                    inline
+                                    label="Not Given"
+                                    name="studentCurrentLocation"
+                                    value="Not Given"
+                                    checked={application?.studentCurrentLocation === 'Not Given'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Onshore (in Australia)"
+                                    name="studentCurrentLocation"
+                                    value="Onshore"
+                                    checked={application?.studentCurrentLocation === 'Onshore'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Offshore (Outside of Australia)  "
+                                    name="studentCurrentLocation"
+                                    value="Offshore"
+                                    checked={application?.studentCurrentLocation === 'Offshore'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                            </Col>
+                        </Row>
+                        <Row className="mb-2">
+                            <Col>
+                                <b>Which DHA office will you apply to for your visa? (student visa only)</b>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Check
+                                    inline
+                                    label="Not Given"
+                                    name="DHAOffice"
+                                    value="Not Given"
+                                    checked={application?.DHAOffice === 'Not Given'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Onshore (in Australia)"
+                                    name="DHAOffice"
+                                    value="Onshore"
+                                    checked={application?.DHAOffice === 'Onshore'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Offshore (Outside of Australia)"
+                                    name="DHAOffice"
+                                    value="Offshore"
+                                    checked={application?.DHAOffice === 'Offshore'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                            </Col>
+                        </Row>
+                    </>
+                }
                 <Row className="mb-2">
                     <Col><b>Are you currently enrolled at another institution in Australia?</b></Col>
                 </Row>
@@ -401,113 +405,120 @@ function ApplicationForm({
                         />
                     </Col>
                 </Row>
-                <Row className="mb-2">
-                    <Col><b>If YES, is this additional study you wish to undertake?</b></Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Check
-                            inline
-                            label="Yes"
-                            name="additionalStudy"
-                            value="Yes"
-                            checked={application?.additionalStudy === 'Yes'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="No"
-                            name="additionalStudy"
-                            value="No"
-                            checked={application?.additionalStudy === 'No'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
-        {/* Insurance Detail */}
-        <Card className="mb-3">
-            <Card.Header>
-                <h5><FontAwesomeIcon icon={faShieldHeart} style={{ color: "#990000" }} /> Insurance Detail</h5>
-            </Card.Header>
-            <Card.Body>
-                <Row>
-                    <Col>
+                {
+                    application?.enrolledAnotherInstitutionAustralia === 'Yes' && <>
                         <Row className="mb-2">
-                            <Col>
-                                <b>OSHC</b> (<b>O</b>verseas <b>S</b>tudent <b>H</b>ealth <b>C</b>over - Compulsory requirement for student visa holder from arrival in Australia)
-                            </Col>
-                        </Row>
-                        <Row className="mb-2">
-                            <Col><b>Do you want IH Brisbane - ALS to arrange OSHC for you?</b></Col>
-                        </Row>
-                        <Row className="mb-2">
-                            <Col>
-                                <Form.Check
-                                    inline
-                                    label="No required"
-                                    name="OSHC"
-                                    value="No required"
-                                    checked={application?.OSHC === 'No required'}
-                                    onChange={updateField}
-                                    type="radio"
-                                />
-                                <Form.Check
-                                    inline
-                                    label="Single"
-                                    name="OSHC"
-                                    value="Single"
-                                    checked={application?.OSHC === 'Single'}
-                                    onChange={updateField}
-                                    type="radio"
-                                />
-                                <Form.Check
-                                    inline
-                                    label="Couple"
-                                    name="OSHC"
-                                    value="Couple"
-                                    checked={application?.OSHC === 'Couple'}
-                                    onChange={updateField}
-                                    type="radio"
-                                />
-                                <Form.Check
-                                    inline
-                                    label="Family"
-                                    name="OSHC"
-                                    value="Family"
-                                    checked={application?.OSHC === 'Family'}
-                                    onChange={updateField}
-                                    type="radio"
-                                />
-                            </Col>
+                            <Col><b>If YES, is this additional study you wish to undertake?</b></Col>
                         </Row>
                         <Row>
                             <Col>
-                                <Table bordered hover>
-                                    <thead className="table-dark">
-                                        <tr>
-                                            <th>Single Rate</th>
-                                            <th>Couple Rate</th>
-                                            <th>Family Rate</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>$50 per month</td>
-                                            <td>$177 per month</td>
-                                            <td>$258 per month</td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
+                                <Form.Check
+                                    inline
+                                    label="Yes"
+                                    name="additionalStudy"
+                                    value="Yes"
+                                    checked={application?.additionalStudy === 'Yes'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
+                                <Form.Check
+                                    inline
+                                    label="No"
+                                    name="additionalStudy"
+                                    value="No"
+                                    checked={application?.additionalStudy === 'No'}
+                                    onChange={updateField}
+                                    type="radio"
+                                />
                             </Col>
                         </Row>
-                    </Col>
-                </Row>
+                    </>
+                }
             </Card.Body>
         </Card>
+        {/* Insurance Detail */}
+        {
+            application?.visa === 'Student' && <Card className="mb-3">
+                <Card.Header>
+                    <h5><FontAwesomeIcon icon={faShieldHeart} style={{ color: "#990000" }} /> Insurance Detail</h5>
+                </Card.Header>
+                <Card.Body>
+                    <Row>
+                        <Col>
+                            <Row className="mb-2">
+                                <Col>
+                                    <b>OSHC</b> (<b>O</b>verseas <b>S</b>tudent <b>H</b>ealth <b>C</b>over - Compulsory requirement for student visa holder from arrival in Australia)
+                                </Col>
+                            </Row>
+                            <Row className="mb-2">
+                                <Col><b>Do you want IH Brisbane - ALS to arrange OSHC for you?</b></Col>
+                            </Row>
+                            <Row className="mb-2">
+                                <Col>
+                                    <Form.Check
+                                        inline
+                                        label="No required"
+                                        name="OSHC"
+                                        value="No required"
+                                        checked={application?.OSHC === 'No required'}
+                                        onChange={updateField}
+                                        type="radio"
+                                    />
+                                    <Form.Check
+                                        inline
+                                        label="Single"
+                                        name="OSHC"
+                                        value="Single"
+                                        checked={application?.OSHC === 'Single'}
+                                        onChange={updateField}
+                                        type="radio"
+                                    />
+                                    <Form.Check
+                                        inline
+                                        label="Couple"
+                                        name="OSHC"
+                                        value="Couple"
+                                        checked={application?.OSHC === 'Couple'}
+                                        onChange={updateField}
+                                        type="radio"
+                                    />
+                                    <Form.Check
+                                        inline
+                                        label="Family"
+                                        name="OSHC"
+                                        value="Family"
+                                        checked={application?.OSHC === 'Family'}
+                                        onChange={updateField}
+                                        type="radio"
+                                    />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Table bordered hover>
+                                        <thead className="table-dark">
+                                            <tr>
+                                                <th>Single Rate</th>
+                                                <th>Couple Rate</th>
+                                                <th>Family Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>$50 per month</td>
+                                                <td>$177 per month</td>
+                                                <td>$258 per month</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+        }
+
         {/* Policy */}
         <Row>
             <Col>
@@ -591,16 +602,15 @@ function ApplicationForm({
                 </div>
             </Col>
             {/* Reset Application */}
-            {/* Agregar modal al boton */}
             <Col>
                 <div className="d-grid gap-2">
-                    <AppModal 
-                        title="Reset Application" 
-                        content="Are you sure you want to reset the application?" 
+                    <AppModal
+                        title="Reset Application"
+                        content="Are you sure you want to reset the application?"
                         actionTextButton="Reset Application"
-                        actionVariantButton="danger" 
+                        actionVariantButton="danger"
                         showTextButton="Reset Application"
-                        showVariantButton="danger" 
+                        showVariantButton="danger"
                         onAction={resetApplication}
                     />
                 </div>
