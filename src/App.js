@@ -50,7 +50,7 @@ const defaultValuesApplication = {
   DHAOffice: "Not Given",
   enrolledAnotherInstitutionAustralia: "No",
   additionalStudy: "No",
-  OSHC: "Not Given"
+  OSHC: "No required"
 }
 
 function App() {

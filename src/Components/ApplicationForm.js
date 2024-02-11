@@ -1,7 +1,7 @@
 import { faCircleInfo, faPassport, faShieldHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Card, Form, Button, Row, Col, Table, Alert } from "react-bootstrap";
 import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
 
@@ -13,15 +13,29 @@ function ApplicationForm({
     application,
     updateApplication
 }) {
+    const [isValidEmail, setIsValidEmail] = useState(true);
+    const [isValidCounselorEmail, setIsValidCounselorEmail] = useState(true);
+
     const [agree1, setAgree1] = useState(false);
     const [agree2, setAgree2] = useState(false);
     const [agree3, setAgree3] = useState(false);
     const [agree4, setAgree4] = useState(false);
 
     const agree = agree1 && agree2 && agree3 && agree4;
+    const invalidApplicationForm = !(agree && isValidEmail && isValidCounselorEmail);
 
     const updateField = (e) => {
-        updateApplication(e.target.name, e.target.value)
+        const name = e.target.name;
+        const value = e.target.value;
+        if(['email', 'counselorEmail'].includes(e.target.name)) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(e.target.name === 'email') {
+                setIsValidEmail(re.test(value));
+            } else if(e.target.name === 'counselorEmail') {
+                setIsValidCounselorEmail(re.test(value));
+            }
+        }
+        updateApplication(name, value);
     }
 
     const generateDataPDF = () => {
@@ -113,6 +127,7 @@ function ApplicationForm({
                             <Form.Control
                                 name="counselorEmail"
                                 onChange={updateField}
+                                isInvalid={!isValidCounselorEmail}
                                 type="email" />
                         </Form.Group>
                     </Col>
@@ -158,7 +173,11 @@ function ApplicationForm({
                                     <Form.Control
                                         name="email"
                                         onChange={updateField}
+                                        isInvalid={!isValidEmail}
                                         type="email" />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter a valid email address.
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label><b>Phone:</b></Form.Label>
@@ -540,6 +559,15 @@ function ApplicationForm({
                 </Card>
             </Col>
         </Row>
+        {
+            !agree && <Row>
+                <Col>
+                    <Alert variant="danger">
+                        Please note that you must accept our Terms and Conditions before proceeding. By agreeing, you acknowledge that you have read, understood, and consented to our policies.
+                    </Alert>
+                </Col>
+            </Row>
+        }
         <Row>
             {/* Create Application */}
             <Col>
@@ -549,7 +577,7 @@ function ApplicationForm({
                         generateDataPDF={generateDataPDF}
                         title="Application Form"
                         buttonText="Complete Application"
-                        disabled={!agree} />
+                        disabled={invalidApplicationForm} />
                 </div>
             </Col>
             {/* Reset Application */}
