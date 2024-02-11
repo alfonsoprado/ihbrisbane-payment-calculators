@@ -1,9 +1,10 @@
 import { faCircleInfo, faPassport, faShieldHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Card, Form, Button, Row, Col, Table, Alert } from "react-bootstrap";
+import { Card, Form, Row, Col, Table, Alert } from "react-bootstrap";
 import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
+import AppModal from "./AppModal";
 
 function ApplicationForm({
     data,
@@ -11,7 +12,8 @@ function ApplicationForm({
     paymentType,
     specialCases,
     application,
-    updateApplication
+    updateApplication,
+    resetApplication
 }) {
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidCounselorEmail, setIsValidCounselorEmail] = useState(true);
@@ -30,9 +32,17 @@ function ApplicationForm({
         if(['email', 'counselorEmail'].includes(e.target.name)) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if(e.target.name === 'email') {
-                setIsValidEmail(re.test(value));
+                if(value?.trim() === "") {
+                    setIsValidEmail(true);
+                } else {
+                    setIsValidEmail(re.test(value));
+                }
             } else if(e.target.name === 'counselorEmail') {
-                setIsValidCounselorEmail(re.test(value));
+                if(value?.trim() === "") {
+                    setIsValidCounselorEmail(true);
+                } else {
+                    setIsValidCounselorEmail(re.test(value));
+                }
             }
         }
         updateApplication(name, value);
@@ -584,7 +594,15 @@ function ApplicationForm({
             {/* Agregar modal al boton */}
             <Col>
                 <div className="d-grid gap-2">
-                    <Button variant="danger">Reset Application</Button>
+                    <AppModal 
+                        title="Reset Application" 
+                        content="Are you sure you want to reset the application?" 
+                        actionTextButton="Reset Application"
+                        actionVariantButton="danger" 
+                        showTextButton="Reset Application"
+                        showVariantButton="danger" 
+                        onAction={resetApplication}
+                    />
                 </div>
             </Col>
         </Row>

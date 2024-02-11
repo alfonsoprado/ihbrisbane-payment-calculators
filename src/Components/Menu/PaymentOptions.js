@@ -1,21 +1,22 @@
-import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
 import DownloadPDF from "../DownloadPDFButton";
 import { parseISO, format } from 'date-fns';
+import AppModal from "../AppModal";
 
-function PaymentOptions({ 
-  data, 
-  errorMessages, 
-  createPaymentPlan, 
-  courses, 
-  showPaymentPlanTable, 
+function PaymentOptions({
+  data,
+  errorMessages,
+  createPaymentPlan,
+  courses,
+  showPaymentPlanTable,
   cleanPaymentPlan,
   showApplicationForm,
   paymentType,
   updatePaymentType,
   specialCases,
-  updateSpecialCases
+  updateSpecialCases,
+  resetAll
 }) {
   const generateDataPDF = () => {
     const paymentPlan = createPaymentPlan();
@@ -64,97 +65,101 @@ function PaymentOptions({
         <h4>Payment Options</h4>
       </Card.Header>
       <Card.Body>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label><b>Payment Type</b></Form.Label>
-                {
-                  courses.length > 1 ? getPaymentOptions(data, true).map(option => {
-                    return (
-                      <Form.Check
-                        key={option.code}
-                        type="radio"
-                        value={option.code}
-                        checked={paymentType === option.code}
-                        onChange={handlePaymentType}
-                        label={option.name}
-                        name="radios"
-                        id={option.code}
-                      />
-                    )
-                  }) : getPaymentOptions(data, false).map((option) => {
-                    return (
-                      <Form.Check
-                        key={option.code}
-                        type="radio"
-                        value={option.code}
-                        checked={paymentType === option.code}
-                        onChange={handlePaymentType}
-                        label={option.name}
-                        name="radios"
-                        id={option.code}
-                      />
-                    )
-                  })
-                }
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label><b>Special Cases</b></Form.Label>
-                {
-                  getSpecialCases(data, courses).map((specialCase) => {
-                    return (
-                      <OverlayTrigger
-                        key={specialCase?.code}
-                        placement='left'
-                        overlay={
-                          <Tooltip id='tooltip-left'>
-                            {specialCase?.info}
-                          </Tooltip>
-                        }
-                      >
-                        <Form.Group className="mb-3" controlId={specialCase?.code}>
-                          <Form.Check
-                            type="checkbox"
-                            name={specialCase?.code}
-                            label={specialCase?.name}
-                            checked={specialCases.includes(specialCase?.code)}
-                            onChange={handleSpecialCases}
-                          />
-                        </Form.Group>
-                      </OverlayTrigger>
-                    );
-                  })
-                }
-              </Form.Group>
-            </Col>
-          </Row>
-          <div className="d-grid gap-2">
-            <Button
-              onClick={handlePaymentPlan}
-              disabled={buttonDisable}
-              className="mt-2"
-              variant="dark"
-            >
-              Check Payment Plan
-            </Button>
-            <DownloadPDF
-              url="http://localhost/apps/public/api/paymentcalculator/pdf/payment_plan"
-              generateDataPDF={generateDataPDF}
-              title="Payment Plan"
-              disabled={buttonDisable} />
-            <Button
-              variant="dark"
-              disabled={buttonDisable}
-              onClick={showApplicationForm}
-            >Complete Application Details</Button>
-            <Button
-              variant="danger"
-            >
-              Reset All
-            </Button>
-          </div>
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label><b>Payment Type</b></Form.Label>
+              {
+                courses.length > 1 ? getPaymentOptions(data, true).map(option => {
+                  return (
+                    <Form.Check
+                      key={option.code}
+                      type="radio"
+                      value={option.code}
+                      checked={paymentType === option.code}
+                      onChange={handlePaymentType}
+                      label={option.name}
+                      name="radios"
+                      id={option.code}
+                    />
+                  )
+                }) : getPaymentOptions(data, false).map((option) => {
+                  return (
+                    <Form.Check
+                      key={option.code}
+                      type="radio"
+                      value={option.code}
+                      checked={paymentType === option.code}
+                      onChange={handlePaymentType}
+                      label={option.name}
+                      name="radios"
+                      id={option.code}
+                    />
+                  )
+                })
+              }
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group>
+              <Form.Label><b>Special Cases</b></Form.Label>
+              {
+                getSpecialCases(data, courses).map((specialCase) => {
+                  return (
+                    <OverlayTrigger
+                      key={specialCase?.code}
+                      placement='left'
+                      overlay={
+                        <Tooltip id='tooltip-left'>
+                          {specialCase?.info}
+                        </Tooltip>
+                      }
+                    >
+                      <Form.Group className="mb-3" controlId={specialCase?.code}>
+                        <Form.Check
+                          type="checkbox"
+                          name={specialCase?.code}
+                          label={specialCase?.name}
+                          checked={specialCases.includes(specialCase?.code)}
+                          onChange={handleSpecialCases}
+                        />
+                      </Form.Group>
+                    </OverlayTrigger>
+                  );
+                })
+              }
+            </Form.Group>
+          </Col>
+        </Row>
+        <div className="d-grid gap-2">
+          <Button
+            onClick={handlePaymentPlan}
+            disabled={buttonDisable}
+            className="mt-2"
+            variant="dark"
+          >
+            Check Payment Plan
+          </Button>
+          <DownloadPDF
+            url="http://localhost/apps/public/api/paymentcalculator/pdf/payment_plan"
+            generateDataPDF={generateDataPDF}
+            title="Payment Plan"
+            disabled={buttonDisable} />
+          <Button
+            variant="dark"
+            disabled={buttonDisable}
+            onClick={showApplicationForm}
+          >Complete Application Details</Button>
+          <AppModal
+            title="Reset All"
+            content="Are you sure you want to reset all?"
+            actionTextButton="Reset All"
+            actionVariantButton="danger"
+            showTextButton="Reset All"
+            showVariantButton="danger"
+            onAction={resetAll}
+          />
+        </div>
       </Card.Body>
     </Card>
   );

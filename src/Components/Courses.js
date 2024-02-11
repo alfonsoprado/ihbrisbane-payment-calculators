@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Select from 'react-select';
 import { findFinishDateCourse, formatDate } from "../helpers/dates";
+import AppModal from "./AppModal";
 
 function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
   const handleChangeStartDate = (e, id) => {
@@ -66,13 +67,15 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
           ))}
         </tbody>
       </Table>
-      {courses?.length > 0 && <Button
-        className="rounded-botton"
-        variant="danger"
-        onClick={() => removeAllCourses()}
-      >
-        Remove All
-      </Button>}
+      {courses?.length > 0 && <AppModal
+        title="Remove All"
+        content="Are you sure you want to remove all the courses?"
+        actionTextButton="Remove All"
+        actionVariantButton="danger"
+        showTextButton="Remove All"
+        showVariantButton="danger"
+        onAction={removeAllCourses}
+      />}
     </Card>
   );
 }

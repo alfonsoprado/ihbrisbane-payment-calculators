@@ -69,11 +69,12 @@ function App() {
   const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
 
   useEffect(() => {
+    // General Errors
     let errors = [];
     let intensiveCourse = 0;
     let standardCourse = 0;
     let notEmpty = true;
-    // Check for required inputs
+
     for (const course of courses) {
       if (!notEmpty) {
         notEmpty = Object.entries(course).every((field) => field[1]);
@@ -93,6 +94,10 @@ function App() {
 
     if (checkForOverlaps(courses)) {
       errors.push("There is at least one course whose date range overlaps with another course.");
+    }
+
+    if(errors?.length > 0) {
+      setApplicationEnabled(false);
     }
 
     setErrorMessage(errors);
@@ -142,6 +147,16 @@ function App() {
   const removeAllCourses = () => {
     setCourses([]);
     cleanPaymentPlan();
+  }
+
+  const resetApplication = () => {
+    setApplication(defaultValuesApplication);
+    setApplicationEnabled(false);
+  }
+
+  const resetAll = () => {
+    removeAllCourses();
+    resetApplication();
   }
 
   const createPaymentPlan = () => {
@@ -205,6 +220,7 @@ function App() {
             specialCases={specialCases}
             updateSpecialCases={setSpecialCases}
             courses={courses}
+            resetAll={resetAll}
           />
         </Col>
         <Col sm={8}>
@@ -227,9 +243,6 @@ function App() {
       {applicationEnabled &&
         <Row id="application">
           <Col>
-            {/* Crear funcion ShowApplicationFrom que se entrega al menu
-            Crear variable para condicional para mostrar y ocultar Application Form, 
-            que seria application form enabled */}
             <ApplicationForm
               data={data}
               courses={courses}
@@ -237,6 +250,7 @@ function App() {
               specialCases={specialCases}
               application={application}
               updateApplication={updateApplication}
+              resetApplication={resetApplication}
             />
           </Col>
         </Row>
@@ -247,3 +261,4 @@ function App() {
 }
 
 export default App;
+

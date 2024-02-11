@@ -13,7 +13,8 @@ function Menu({
   paymentType,
   updatePaymentType,
   specialCases,
-  updateSpecialCases
+  updateSpecialCases,
+  resetAll
 }) {
   return (
     <>
@@ -34,6 +35,7 @@ function Menu({
           updatePaymentType={updatePaymentType} 
           specialCases={specialCases}
           updateSpecialCases={updateSpecialCases}
+          resetAll={resetAll}
           />
       }
 
