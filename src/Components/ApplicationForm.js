@@ -5,6 +5,7 @@ import { Card, Form, Row, Col, Table, Alert } from "react-bootstrap";
 import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
 import AppModal from "./AppModal";
+import { ALS_STUDENT_HANDBOOK_URL, APPLICATION_FORM_PDF_API_URL } from "../env";
 
 function ApplicationForm({
     data,
@@ -531,7 +532,7 @@ function ApplicationForm({
                                 name="agree1"
                                 checked={agree1}
                                 onChange={() => setAgree1(!agree1)}
-                                label={<b>I have read and understood the IH Brisbane - ALS Student Handbook viewed <a target="_blank" rel="noreferrer" href="http://ihbrisbane.synology.me:81/?resource=doc&doc_no=52400150" style={{ color: "#990000" }}>here</a></b>}
+                                label={<b>I have read and understood the IH Brisbane - ALS Student Handbook viewed <a target="_blank" rel="noreferrer" href={ALS_STUDENT_HANDBOOK_URL} style={{ color: "#990000" }}>here</a></b>}
                             />
                         </Form.Group>
                     </Card.Body>
@@ -594,7 +595,7 @@ function ApplicationForm({
             <Col>
                 <div className="d-grid gap-2">
                     <DownloadPDF
-                        url="http://localhost/apps/public/api/paymentcalculator/pdf/application_form"
+                        url={APPLICATION_FORM_PDF_API_URL}
                         generateDataPDF={generateDataPDF}
                         title="Application Form"
                         buttonText="Complete Application"

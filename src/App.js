@@ -10,26 +10,9 @@ import useSWR from 'swr';
 import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/dates";
 import ApplicationForm from "./Components/ApplicationForm";
 import { scrollTo } from "./helpers/tools";
+import { PAYMENT_CALCULATOR_API_URL, hero_banner, payments_calculators } from "./env";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
-
-const MAIN_URL = "http://localhost/apps/public";
-const API_URL = `${MAIN_URL}/api/paymentcalculator`
-
-const payments_calculators = {
-  internal_asian_all_other_countries: '9b4fbab0-3eb5-487d-bffe-463f6ff58f81?internal=d1efad72dc5b17dc66a46767c32fff40',
-  internal_latin_america_europe: '9b4fbab0-9045-441a-8e24-149ea4742e38?internal=d1efad72dc5b17dc66a46767c32fff40',
-  internal_open_vet: '9b4fbab0-9152-45b5-acc8-448c5392c856?internal=d1efad72dc5b17dc66a46767c32fff40',
-  external_asian_all_other_countries: '9b4fbab0-3eb5-487d-bffe-463f6ff58f81',
-  external_latin_america_europe: '9b4fbab0-9045-441a-8e24-149ea4742e38',
-  external_open_vet: '9b4fbab0-9152-45b5-acc8-448c5392c856',
-};
-
-const hero_banner = {
-  asian_all_other_countries: `${MAIN_URL}/images/payment_calculator/in-person_vet_courses.png`,
-  latin_america_europe: `${MAIN_URL}/images/payment_calculator/in-person_vet_courses.png`,
-  open_vet: `${MAIN_URL}/images/payment_calculator/online_vet_courses.png`
-}
 
 const defaultValuesApplication = {
   firstName: "",
@@ -67,7 +50,7 @@ function App() {
   const [applicationEnabled, setApplicationEnabled] = useState(false);
 
   const { payment_calculator } = useParams();
-  const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
 
   useEffect(() => {
     // General Errors

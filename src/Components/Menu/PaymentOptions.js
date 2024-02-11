@@ -3,6 +3,7 @@ import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
 import DownloadPDF from "../DownloadPDFButton";
 import { parseISO, format } from 'date-fns';
 import AppModal from "../AppModal";
+import { PAYMENT_PLAN_PDF_API_URL } from "../../env";
 
 function PaymentOptions({
   data,
@@ -141,7 +142,7 @@ function PaymentOptions({
             Check Payment Plan
           </Button>
           <DownloadPDF
-            url="http://localhost/apps/public/api/paymentcalculator/pdf/payment_plan"
+            url={PAYMENT_PLAN_PDF_API_URL}
             generateDataPDF={generateDataPDF}
             title="Payment Plan"
             disabled={buttonDisable} />

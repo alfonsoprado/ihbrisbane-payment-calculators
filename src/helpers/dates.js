@@ -71,10 +71,6 @@ export function checkForOverlaps(dateRanges) {
       const end2 = parseISO(dateRanges[j].finishDate);
 
       if (start1 <= end2 && start2 <= end1) {
-        console.log("start1 < end2", start1 < end2)
-        console.log("start2 < end1", start2 < end1)
-        console.log(start1, end1);
-        console.log(start2, end2);
         // Found overlaps
         return true;
       }
