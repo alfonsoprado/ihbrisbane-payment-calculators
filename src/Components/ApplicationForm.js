@@ -505,9 +505,9 @@ function ApplicationForm({
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>$50 per month</td>
-                                                <td>$177 per month</td>
-                                                <td>$258 per month</td>
+                                                <td>${data?.payment_calculator?.oshc?.single_rate} per month</td>
+                                                <td>${data?.payment_calculator?.oshc?.couple_rate} per month</td>
+                                                <td>${data?.payment_calculator?.oshc?.family_rate} per month</td>
                                             </tr>
                                         </tbody>
                                     </Table>

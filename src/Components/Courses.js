@@ -68,7 +68,7 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
         </tbody>
       </Table>
       {courses?.length > 0 && <AppModal
-        title="Remove All"
+        title="Remove All the Courses"
         content="Are you sure you want to remove all the courses?"
         actionTextButton="Remove All"
         actionVariantButton="danger"
