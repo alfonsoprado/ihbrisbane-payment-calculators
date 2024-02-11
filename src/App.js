@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import { Container, Row, Col, Card, Image, Spinner } from "react-bootstrap";
 import Menu from "./Components/Menu/Menu";
 import Courses from "./Components/Courses";
 import PaymentPlan from "./Components/PaymentPlan";
@@ -11,6 +11,8 @@ import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/da
 import ApplicationForm from "./Components/ApplicationForm";
 import { scrollTo } from "./helpers/tools";
 import { PAYMENT_CALCULATOR_API_URL, hero_banner, payments_calculators } from "./env";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBug } from "@fortawesome/free-solid-svg-icons";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -35,6 +37,15 @@ const defaultValuesApplication = {
   enrolledAnotherInstitutionAustralia: "No",
   additionalStudy: "No",
   OSHC: "No required"
+}
+
+const middleCenterStyle = {
+  position: 'absolute',
+  height: '100vh',
+  width: '100vw',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
 }
 
 function App() {
@@ -80,7 +91,7 @@ function App() {
       errors.push("There is at least one course whose date range overlaps with another course.");
     }
 
-    if(errors?.length > 0) {
+    if (errors?.length > 0) {
       setApplicationEnabled(false);
     }
 
@@ -163,8 +174,13 @@ function App() {
     scrollTo("application");
   }
 
-  if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+  if (error) return <div style={middleCenterStyle}><div>Failed to load <FontAwesomeIcon icon={faBug} /></div></div>
+  if (isLoading) return (<div style={middleCenterStyle}>
+    <div>
+      <Spinner className="ms-3" animation="border" variant="dark" />
+      <p>Loading...</p>
+    </div>
+  </div>)
 
   return (
     <Container>
