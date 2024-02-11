@@ -11,7 +11,9 @@ function Menu({
   cleanPaymentPlan,
   showApplicationForm,
   paymentType,
-  updatePaymentType
+  updatePaymentType,
+  specialCases,
+  updateSpecialCases
 }) {
   return (
     <>
@@ -30,6 +32,8 @@ function Menu({
           courses={courses}
           paymentType={paymentType}
           updatePaymentType={updatePaymentType} 
+          specialCases={specialCases}
+          updateSpecialCases={updateSpecialCases}
           />
       }
 

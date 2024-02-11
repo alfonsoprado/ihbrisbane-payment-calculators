@@ -57,10 +57,14 @@ function App() {
   const [errorMessages, setErrorMessage] = useState([]);
   const [courses, setCourses] = useState([]);
   const [paymentType, setPaymentType] = useState("");
+  const [specialCases, setSpecialCases] = useState([]);
+
   const [paymentPlan, setPaymentPlan] = useState([]);
   const [paymentPlanTableEnabled, setPaymentTableEnabled] = useState(false);
+
   const [application, setApplication] = useState(defaultValuesApplication);
   const [applicationEnabled, setApplicationEnabled] = useState(false);
+
   const { payment_calculator } = useParams();
   const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
 
@@ -140,17 +144,17 @@ function App() {
     cleanPaymentPlan();
   }
 
-  const createPaymentPlan = (specialCases) => {
+  const createPaymentPlan = () => {
     const paymentPlan = generatePaymentPlan(data, courses, paymentType, specialCases);
     setPaymentPlan(paymentPlan);
 
     return paymentPlan;
   };
 
-  const showPaymentPlanTable = (specialCases) => {
+  const showPaymentPlanTable = () => {
     setPaymentTableEnabled(true);
     setApplicationEnabled(false);
-    createPaymentPlan(specialCases);
+    createPaymentPlan();
     scrollTo("payment_plan");
   }
 
@@ -198,6 +202,8 @@ function App() {
             showApplicationForm={showApplicationForm}
             paymentType={paymentType}
             updatePaymentType={setPaymentType}
+            specialCases={specialCases}
+            updateSpecialCases={setSpecialCases}
             courses={courses}
           />
         </Col>
@@ -228,6 +234,7 @@ function App() {
               data={data}
               courses={courses}
               paymentType={paymentType}
+              specialCases={specialCases}
               application={application}
               updateApplication={updateApplication}
             />

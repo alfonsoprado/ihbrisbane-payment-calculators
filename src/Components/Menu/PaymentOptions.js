@@ -14,11 +14,11 @@ function PaymentOptions({
   showApplicationForm,
   paymentType,
   updatePaymentType,
+  specialCases,
+  updateSpecialCases
 }) {
-  const [specialCases, setSpecialCases] = useState([]);
-
   const generateDataPDF = () => {
-    const paymentPlan = createPaymentPlan(specialCases);
+    const paymentPlan = createPaymentPlan();
     const dataPDF = {
       regionCode: data?.region?.code,
       courses: courses.map(course => {
@@ -43,15 +43,15 @@ function PaymentOptions({
   const handleSpecialCases = (event) => {
     const { name, checked } = event.target;
     if (checked && !specialCases.includes(name)) {
-      setSpecialCases([...specialCases, name]);
+      updateSpecialCases([...specialCases, name]);
     } else {
-      setSpecialCases(specialCases?.filter(specialCase => specialCase !== name));
+      updateSpecialCases(specialCases?.filter(specialCase => specialCase !== name));
     }
     cleanPaymentPlan();
   };
 
   const handlePaymentPlan = () => {
-    showPaymentPlanTable(specialCases);
+    showPaymentPlanTable();
   }
 
   const buttonDisable = errorMessages?.length > 0 ||

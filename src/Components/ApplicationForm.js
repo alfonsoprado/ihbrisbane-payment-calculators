@@ -9,6 +9,7 @@ function ApplicationForm({
     data,
     courses,
     paymentType,
+    specialCases,
     application,
     updateApplication
 }) {
@@ -28,6 +29,7 @@ function ApplicationForm({
             regionCode: data?.region?.code,
             paymentType: data?.payment_options?.find(option => option.code === paymentType)?.name,
             application,
+            specialCases,
             courses: courses.map(course => ({
                 name: course?.coursePricing?.course?.name,
                 cricosCode: course?.coursePricing?.course?.cricos_code,
@@ -545,7 +547,8 @@ function ApplicationForm({
                     <DownloadPDF
                         url="http://localhost/apps/public/api/paymentcalculator/pdf/application_form"
                         generateDataPDF={generateDataPDF}
-                        title="Create Application"
+                        title="Application Form"
+                        buttonText="Complete Application"
                         disabled={!agree} />
                 </div>
             </Col>
