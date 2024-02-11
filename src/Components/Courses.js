@@ -12,7 +12,7 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
 
   return (
     <Card>
-      <Card.Header><h5>Courses</h5></Card.Header>
+      <Card.Header><h4>Courses</h4></Card.Header>
       <Table className="mb-0" striped bordered hover>
         <thead className="table-dark">
           <tr>

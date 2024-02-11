@@ -8,7 +8,8 @@ function Menu({
   createPaymentPlan,
   courses,
   showPaymentPlanTable,
-  cleanPaymentPlan
+  cleanPaymentPlan,
+  showApplicationForm
 }) {
   return (
     <>
@@ -22,6 +23,7 @@ function Menu({
           errorMessages={errorMessages}
           cleanPaymentPlan={cleanPaymentPlan}
           showPaymentPlanTable={showPaymentPlanTable}
+          showApplicationForm={showApplicationForm}
           createPaymentPlan={createPaymentPlan}
           courses={courses} />
       }

@@ -7,7 +7,7 @@ function PaymentPlan({ data, paymentPlan }) {
 
   return (
     <>
-      <h4>Payment Plan</h4>
+      <h4 className="mb-3">Payment Plan</h4>
       <Table className="m-2 mb-4" hover>
         <thead className="table-dark">
           <tr>

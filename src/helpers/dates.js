@@ -6,8 +6,6 @@ import {
   subWeeks,
   format,
   parseISO,
-  isAfter,
-  isBefore
 } from "date-fns";
 export function formatDate(date, formatDate = "dd/MM/yyyy") {
   return format(date, formatDate);

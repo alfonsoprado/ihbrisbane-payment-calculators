@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
 import Select from 'react-select';
 import { findFinishDateCourse, formatDate } from "../../helpers/dates";
+import { scrollTo } from "../../helpers/tools";
 
 const groupStyles = {
   display: 'flex',
@@ -49,9 +50,7 @@ function AddCourse({ data, createCourse, courses }) {
     setDuration("");
     // scroll to payment_options
     if(scrollToPaymentOptions) {
-      setTimeout(() => {
-        window.location.hash = "payment_options";
-      }, 0);
+      scrollTo("payment_options");
       setScrollToPaymentOptions(false);
     }
   };
@@ -63,9 +62,9 @@ function AddCourse({ data, createCourse, courses }) {
       </Card.Header>
       <Card.Body>
         <Form onSubmit={handleSubmit}>
-          <Form.Group>
-            <Form.Label>Course:</Form.Label>
-            <Select 
+          <Form.Group className="mb-2">
+            <Form.Label><b>Course:</b></Form.Label>
+            <Select
               formatGroupLabel={formatGroupLabel}
               options={data?.categories?.map((category) => {
                 return { options: data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code)).map(coursePricing => {
@@ -78,8 +77,8 @@ function AddCourse({ data, createCourse, courses }) {
               value={coursePricing}
               onChange={handleChangeCoursePricing} />
           </Form.Group>
-          <Form.Group>
-            <Form.Label>Start date:</Form.Label>
+          <Form.Group className="mb-2">
+            <Form.Label><b>Start date:</b></Form.Label>
             <Select 
               options={coursePricing?.value?.course?.start_dates?.map((start_date) => {
                 return {
@@ -90,8 +89,8 @@ function AddCourse({ data, createCourse, courses }) {
               value={startDate}
               onChange={handleChangeStartDate} />
           </Form.Group>
-          <Form.Group>
-            <Form.Label>Duration weeks:</Form.Label>
+          <Form.Group className="mb-2">
+            <Form.Label><b>Duration weeks:</b></Form.Label>
             <Form.Control
               name="duration"
               readOnly

@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
-import DownloadPdf from "./DownloadButton";
-import { findFinishDateCourse, formatDate } from "../../helpers/dates";
+import DownloadPdf from "../DownloadButton";
 import { parseISO, format } from 'date-fns';
 
-function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showPaymentPlanTable, cleanPaymentPlan }) {
+function PaymentOptions({ 
+  data, 
+  errorMessages, 
+  createPaymentPlan, 
+  courses, 
+  showPaymentPlanTable, 
+  cleanPaymentPlan,
+  showApplicationForm
+}) {
   const [paymentType, setPaymentType] = useState("");
   const [specialCases, setSpecialCases] = useState([]);
 
@@ -40,10 +47,6 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showP
     cleanPaymentPlan();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
   const handlePaymentPlan = () => {
     showPaymentPlanTable(paymentType, specialCases);
   }
@@ -58,7 +61,6 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showP
         <h4>Payment Options</h4>
       </Card.Header>
       <Card.Body>
-        <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
               <Form.Group>
@@ -131,7 +133,6 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showP
               disabled={buttonDisable}
               className="mt-2"
               variant="dark"
-              type="submit"
             >
               Check Payment Plan
             </Button>
@@ -140,8 +141,12 @@ function PaymentOptions({ data, errorMessages, createPaymentPlan, courses, showP
               generateDataPDF={generateDataPDF}
               title="Payment Plan"
               disabled={buttonDisable} />
+            <Button
+              variant="dark"
+              disabled={buttonDisable}
+              onClick={showApplicationForm}
+            >Complete Application Details</Button>
           </div>
-        </Form>
       </Card.Body>
     </Card>
   );

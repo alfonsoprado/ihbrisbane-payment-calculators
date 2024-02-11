@@ -8,6 +8,8 @@ import { generatePaymentPlan } from "./logic/payment-plan";
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/dates";
+import ApplicationForm from "./Components/ApplicationForm";
+import { scrollTo } from "./helpers/tools";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -33,6 +35,7 @@ function App() {
   const [courses, setCourses] = useState([]);
   const [paymentPlan, setPaymentPlan] = useState([]);
   const [paymentPlanTableEnabled, setPaymentTableEnabled] = useState(false);
+  const [applicationEnabled, setApplicationEnabled] = useState(false);
   const { payment_calculator } = useParams();
   const { data, error, isLoading } = useSWR(`${API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
 
@@ -46,9 +49,9 @@ function App() {
       if (!notEmpty) {
         notEmpty = Object.entries(course).every((field) => field[1]);
       }
-      
-      if(course?.coursePricing?.course?.type === 'intensive') intensiveCourse += 1;
-      if(course?.coursePricing?.course?.type === 'standard') standardCourse += 1
+
+      if (course?.coursePricing?.course?.type === 'intensive') intensiveCourse += 1;
+      if (course?.coursePricing?.course?.type === 'standard') standardCourse += 1
     }
 
     if (!notEmpty) {
@@ -59,13 +62,13 @@ function App() {
       errors.push("We don't accept standalone INTENSIVE course.");
     }
 
-    if(checkForOverlaps(courses)) {
+    if (checkForOverlaps(courses)) {
       errors.push("There is at least one course whose date range overlaps with another course.");
     }
 
     // startDate1 < startDate2
     // startDate1 + duration1 < startDate2 + duration2 < ....
-    
+
     // checkForOverlaps(dateRanges)
 
     setErrorMessage(errors);
@@ -74,7 +77,6 @@ function App() {
   const cleanPaymentPlan = () => {
     setPaymentPlan([]);
     setPaymentTableEnabled(false);
-    window.location.hash = "footer";
   }
 
   const createCourse = (course) => {
@@ -85,10 +87,10 @@ function App() {
   const updateCourse = (id, propName, newValue) => {
     const updatedItems = courses.map((item) => {
       if (item.id === id) {
-        if(propName === 'startDate') {
-          return { 
-            ...item, 
-            'startDate': newValue, 
+        if (propName === 'startDate') {
+          return {
+            ...item,
+            'startDate': newValue,
             'finishDate': formatDate(findFinishDateCourse(newValue, item?.coursePricing?.course?.duration_weeks), "yyyy-MM-dd")
           }
         }
@@ -119,10 +121,15 @@ function App() {
 
   const showPaymentPlanTable = (paymentType, specialCases) => {
     setPaymentTableEnabled(true);
+    setApplicationEnabled(false);
     createPaymentPlan(paymentType, specialCases);
-    setTimeout(() => {
-      window.location.hash = "payment_plan";
-    }, 0);
+    scrollTo("payment_plan");
+  }
+
+  const showApplicationForm = () => {
+    setPaymentTableEnabled(false);
+    setApplicationEnabled(true);
+    scrollTo("application");
   }
 
   if (error) return <div>failed to load</div>
@@ -160,6 +167,7 @@ function App() {
             cleanPaymentPlan={cleanPaymentPlan}
             createPaymentPlan={createPaymentPlan}
             showPaymentPlanTable={showPaymentPlanTable}
+            showApplicationForm={showApplicationForm}
             courses={courses}
           />
         </Col>
@@ -173,12 +181,24 @@ function App() {
           />
         </Col>
       </Row>
-      { paymentPlanTableEnabled && 
+      {paymentPlanTableEnabled &&
         <Row id="payment_plan">
-          <PaymentPlan data={data} paymentPlan={paymentPlan}></PaymentPlan>
+          <Col>
+            <PaymentPlan data={data} paymentPlan={paymentPlan} />
+          </Col>
         </Row>
       }
-      <div id="footer" />
+      {applicationEnabled &&
+        <Row id="application">
+          <Col>
+            {/* Crear funcion ShowApplicationFrom que se entrega al menu
+            Crear variable para condicional para mostrar y ocultar Application Form, 
+            que seria application form enabled */}
+            <ApplicationForm courses={courses} paymentType={null} />
+          </Col>
+        </Row>
+      }
+
     </Container>
   );
 }
