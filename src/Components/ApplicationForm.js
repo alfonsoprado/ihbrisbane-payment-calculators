@@ -5,7 +5,7 @@ import { Card, Form, Row, Col, Table, Alert } from "react-bootstrap";
 import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
 import AppModal from "./AppModal";
-import { ALS_STUDENT_HANDBOOK_URL, APPLICATION_FORM_PDF_API_URL } from "../env";
+import { ALS_STUDENT_HANDBOOK_URL, APPLICATION_FORM_PDF_API_URL, REFUND_ENROLMENT_POLICY_URL } from "../env";
 
 function ApplicationForm({
     data,
@@ -574,7 +574,7 @@ function ApplicationForm({
                                 name="agree4"
                                 checked={agree4}
                                 onChange={() => setAgree4(!agree4)}
-                                label={<b>I have read and understood the IH Brisbane - ALS <a target="_blank" rel="noreferrer" href="https://www.ihbrisbane.com.au/admission/refund-and-enrolment-policy/" style={{ color: "#990000" }}>here</a> and agree.</b>}
+                                label={<b>I have read and understood the IH Brisbane - ALS <a target="_blank" rel="noreferrer" href={REFUND_ENROLMENT_POLICY_URL} style={{ color: "#990000" }}>here</a> and agree.</b>}
                             />
                         </Form.Group>
                     </Card.Body>
