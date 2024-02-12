@@ -7,7 +7,7 @@ I2=$DIR/internal/latin_america_europe
 I3=$DIR/internal/open_vet
 E1=$DIR/external/ApplyVET
 E2=$DIR/external/nQkuQcXaNC0ymC1gsCA9
-E3=$DIR/external/YqofYnOlpNYqofYn
+E3=$DIR/external/yqofYnOlpNYqofYn
 
 rm -rf $I1
 rm -rf $I2
