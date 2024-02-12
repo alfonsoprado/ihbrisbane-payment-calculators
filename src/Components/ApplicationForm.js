@@ -5,7 +5,7 @@ import { Card, Form, Row, Col, Table, Alert, InputGroup } from "react-bootstrap"
 import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
 import AppModal from "./AppModal";
-import { ALS_STUDENT_HANDBOOK_URL, APPLICATION_FORM_PDF_API_URL, REFUND_ENROLMENT_POLICY_URL } from "../env";
+import { ALS_STUDENT_HANDBOOK_URL, APPLICATION_FORM_PDF_API_URL, REFUND_ENROLMENT_POLICY_URL, VOCATIONAL_ENTRY_TEST_URL } from "../env";
 
 function ApplicationForm({
     data,
