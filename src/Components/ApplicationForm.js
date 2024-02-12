@@ -80,6 +80,7 @@ function ApplicationForm({
                             <Form.Label><b>First Name:</b></Form.Label>
                             <Form.Control
                                 name="firstName"
+                                value={application?.firstName}
                                 onChange={updateField}
                                 type="text" />
                         </Form.Group>
@@ -87,6 +88,7 @@ function ApplicationForm({
                             <Form.Label><b>Last Name:</b></Form.Label>
                             <Form.Control
                                 name="lastName"
+                                value={application?.lastName}
                                 onChange={updateField}
                                 type="text" />
                         </Form.Group>
@@ -94,6 +96,7 @@ function ApplicationForm({
                             <Form.Label><b>Date of Birth:</b></Form.Label>
                             <Form.Control
                                 name="dateOfBirth"
+                                value={application?.dateOfBirth}
                                 onChange={updateField}
                                 type="date" />
                         </Form.Group>
@@ -101,6 +104,7 @@ function ApplicationForm({
                             <Form.Label><b>Nationality:</b></Form.Label>
                             <Form.Control
                                 name="nationality"
+                                value={application?.nationality}
                                 onChange={updateField}
                                 type="text" />
                         </Form.Group>
@@ -108,6 +112,7 @@ function ApplicationForm({
                             <Form.Label><b>Passport Number:</b></Form.Label>
                             <Form.Control
                                 name="passportNumber"
+                                value={application?.passportNumber}
                                 onChange={updateField}
                                 type="text" />
                         </Form.Group>
@@ -116,6 +121,7 @@ function ApplicationForm({
                             <Form.Control
                                 as="textarea"
                                 name="currentAddress"
+                                value={application?.currentAddress}
                                 onChange={updateField}
                                 rows={3} />
                         </Form.Group>
@@ -123,6 +129,7 @@ function ApplicationForm({
                             <Form.Label><b>Agency name (if applicable):</b></Form.Label>
                             <Form.Control
                                 name="agencyName"
+                                value={application?.agencyName}
                                 onChange={updateField}
                                 type="text" />
                         </Form.Group>
@@ -130,6 +137,7 @@ function ApplicationForm({
                             <Form.Label><b>Counselor name:</b></Form.Label>
                             <Form.Control
                                 name="counselorName"
+                                value={application?.counselorName}
                                 onChange={updateField}
                                 type="text" />
                         </Form.Group>
@@ -137,6 +145,7 @@ function ApplicationForm({
                             <Form.Label><b>Counselor email:</b></Form.Label>
                             <Form.Control
                                 name="counselorEmail"
+                                value={application?.counselorEmail}
                                 onChange={updateField}
                                 isInvalid={!isValidCounselorEmail}
                                 type="email" />
@@ -183,6 +192,7 @@ function ApplicationForm({
                                     <Form.Label><b>Email:</b></Form.Label>
                                     <Form.Control
                                         name="email"
+                                        value={application?.email}
                                         onChange={updateField}
                                         isInvalid={!isValidEmail}
                                         type="email" />
@@ -194,6 +204,7 @@ function ApplicationForm({
                                     <Form.Label><b>Phone:</b></Form.Label>
                                     <Form.Control
                                         name="phone"
+                                        value={application?.phone}
                                         onChange={updateField}
                                         type="text" />
                                 </Form.Group>
@@ -212,7 +223,7 @@ function ApplicationForm({
                                         <option value="Advanced">Advanced</option>
                                     </Form.Select>
                                     <Form.Text id="passwordHelpBlock" muted>
-                                    Not met the English requirement? student to do the entry test at <a href={VOCATIONAL_ENTRY_TEST_URL} target="_blank" rel="noreferrer">Vocational Entry Test</a>.
+                                        Not met the English requirement? student to do the entry test at <a href={VOCATIONAL_ENTRY_TEST_URL} target="_blank" rel="noreferrer">Vocational Entry Test</a>.
                                     </Form.Text>
                                 </Form.Group>
                             </Col>
@@ -298,13 +309,13 @@ function ApplicationForm({
                             type="radio"
                         />
                         <InputGroup inline>
-                            <InputGroup.Radio 
+                            <InputGroup.Radio
                                 name="visa"
                                 value=""
                                 onChange={updateField}
                                 checked={!["Student", "Business", "Dependent"].includes(application?.visa)} />
                             <InputGroup.Text>Other</InputGroup.Text>
-                            <Form.Control 
+                            <Form.Control
                                 name="visa"
                                 type="text"
                                 onChange={updateField}
@@ -424,6 +435,43 @@ function ApplicationForm({
                         </Row>
                     </>
                 }
+                <Row className="mb-2">
+                    <Col><b>Have you previoulsy held a visa for Australia?</b></Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Check
+                            inline
+                            label="Yes"
+                            name="havePrevioulsyHeldVisaAustralia"
+                            value="Yes"
+                            checked={application?.havePrevioulsyHeldVisaAustralia === 'Yes'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="No"
+                            name="havePrevioulsyHeldVisaAustralia"
+                            value="No"
+                            checked={application?.havePrevioulsyHeldVisaAustralia === 'No'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    {
+                        application?.havePrevioulsyHeldVisaAustralia === 'Yes' && <Form.Group className="mb-3">
+                            <Form.Label><b>Please detail your Australian immigration history here (visa types held, and dates to / from):</b></Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                name="previousVisaAustraliaDetails"
+                                onChange={updateField}
+                                rows={3} />
+                        </Form.Group>
+                    }
+                </Row>
             </Card.Body>
         </Card>
         {/* Insurance Detail */}
@@ -508,7 +556,6 @@ function ApplicationForm({
                 </Card.Body>
             </Card>
         }
-
         {/* Policy */}
         <Row>
             <Col>

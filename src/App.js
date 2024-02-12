@@ -36,7 +36,9 @@ const defaultValuesApplication = {
   DHAOffice: "Onshore",
   enrolledAnotherInstitutionAustralia: "No",
   additionalStudy: "No",
-  OSHC: "No required"
+  OSHC: "No required",
+  havePrevioulsyHeldVisaAustralia: "No",
+  previousVisaAustraliaDetails: ""
 }
 
 const middleCenterStyle = {
