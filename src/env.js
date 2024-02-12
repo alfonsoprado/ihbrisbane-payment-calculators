@@ -18,7 +18,7 @@ export const payments_calculators = {
   // Latin America/Europe
   i2: `${latin_america_europe}?internal=${internal}`,
   // Open VET
-  i3: `${open_vet}?${open_vet}internal=${internal}`,
+  i3: `${open_vet}?internal=${internal}`,
   // External
   // Asian all other countries
   e1: asian_all_other_countries,
