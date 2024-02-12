@@ -1,13 +1,13 @@
-export const MAIN_URL = "http://localhost/apps/public";
+export const MAIN_URL = "https://apps.ihbrisbane.com";
 export const API_URL = `${MAIN_URL}/api`;
 export const PAYMENT_CALCULATOR_API_URL = `${API_URL}/paymentcalculator`;
 export const APPLICATION_FORM_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/application_form`;
 export const PAYMENT_PLAN_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/payment_plan`;
 
 const internal = 'd1efad72dc5b17dc66a46767c32fff40';
-const asian_all_other_countries = '9b4fbab0-3eb5-487d-bffe-463f6ff58f81';
-const latin_america_europe = "9b4fbab0-9045-441a-8e24-149ea4742e38";
-const open_vet = "9b4fbab0-9152-45b5-acc8-448c5392c856";
+const asian_all_other_countries = '9b50e7c3-6be6-409a-91f8-0223e68e756c';
+const latin_america_europe = "9b50e7c3-7f7a-48db-bfb5-9e638dd9bbdf";
+const open_vet = "9b50e7c3-862e-4957-8141-7ba73d72e1b0";
 
 export const payments_calculators = {
   // Internal
@@ -19,11 +19,11 @@ export const payments_calculators = {
   internal_open_vet: `${open_vet}?${open_vet}internal=${internal}`,
   // External
   // Asian all other countries
-  external_asian_all_other_countries: asian_all_other_countries,
+  apply_vet: asian_all_other_countries,
   // Latin America/Europe
-  external_latin_america_europe: latin_america_europe,
+  nQkuQcXaNC0ymC1gsCA9: latin_america_europe,
   // Open Vet
-  external_open_vet: open_vet,
+  YqofYnOlpNYqofYn: open_vet,
 };
 
 export const hero_banner = {
