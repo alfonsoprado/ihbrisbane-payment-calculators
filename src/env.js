@@ -1,4 +1,4 @@
-export const PAYMENT_CALCULATOR = "i1";
+export const PAYMENT_CALCULATOR = process.env.REACT_APP_PC;
 
 export const MAIN_URL = "https://apps.ihbrisbane.com";
 export const API_URL = `${MAIN_URL}/api`;
