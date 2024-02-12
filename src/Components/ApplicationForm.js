@@ -212,7 +212,7 @@ function ApplicationForm({
                                         <option value="Advanced">Advanced</option>
                                     </Form.Select>
                                     <Form.Text id="passwordHelpBlock" muted>
-                                    Not met the English requirement? student to do the entry test at <a href="https://alscertificates.com/vocational-entry-test/">Vocational Entry Test</a>.
+                                    Not met the English requirement? student to do the entry test at <a href={VOCATIONAL_ENTRY_TEST_URL} target="_blank" rel="noreferrer">Vocational Entry Test</a>.
                                     </Form.Text>
                                 </Form.Group>
                             </Col>
