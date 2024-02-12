@@ -5,12 +5,11 @@ import PaymentPlan from "./Components/PaymentPlan";
 import { useEffect, useState } from "react";
 import ErrorAlert from "./ErrorAlert";
 import { generatePaymentPlan } from "./logic/payment-plan";
-import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/dates";
 import ApplicationForm from "./Components/ApplicationForm";
 import { scrollTo } from "./helpers/tools";
-import { PAYMENT_CALCULATOR_API_URL, hero_banner, payments_calculators } from "./env";
+import { PAYMENT_CALCULATOR, PAYMENT_CALCULATOR_API_URL, hero_banner, payments_calculators } from "./env";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
 
@@ -62,8 +61,7 @@ function App() {
   const [application, setApplication] = useState(defaultValuesApplication);
   const [applicationEnabled, setApplicationEnabled] = useState(false);
 
-  const { payment_calculator } = useParams();
-  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[payment_calculator]}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[PAYMENT_CALCULATOR]}`, fetcher)
 
   useEffect(() => {
     // General Errors
@@ -263,4 +261,3 @@ function App() {
 }
 
 export default App;
-
