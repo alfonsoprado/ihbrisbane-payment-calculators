@@ -1,3 +1,5 @@
+git pull
+
 DIR=/var/www/years/2024/02
 
 I1=$DIR/internal/asian_all_other_countries
