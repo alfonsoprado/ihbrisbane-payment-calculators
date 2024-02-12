@@ -1,7 +1,7 @@
 import { faCircleInfo, faPassport, faShieldHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Card, Form, Row, Col, Table, Alert } from "react-bootstrap";
+import { Card, Form, Row, Col, Table, Alert, InputGroup } from "react-bootstrap";
 import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
 import AppModal from "./AppModal";
@@ -159,19 +159,19 @@ function ApplicationForm({
                                 />
                                 <Form.Check
                                     inline
-                                    label="Yes"
+                                    label="Male"
                                     name="gender"
-                                    value="Yes"
-                                    checked={application?.gender === 'Yes'}
+                                    value="Male"
+                                    checked={application?.gender === 'Male'}
                                     onChange={updateField}
                                     type="radio"
                                 />
                                 <Form.Check
                                     inline
-                                    label="No"
+                                    label="Female"
                                     name="gender"
-                                    value="No"
-                                    checked={application?.gender === 'No'}
+                                    value="Female"
+                                    checked={application?.gender === 'Female'}
                                     onChange={updateField}
                                     type="radio"
                                 />
@@ -211,6 +211,9 @@ function ApplicationForm({
                                         <option value="Upper-Intermediate">Upper-Intermediate</option>
                                         <option value="Advanced">Advanced</option>
                                     </Form.Select>
+                                    <Form.Text id="passwordHelpBlock" muted>
+                                    Not met the English requirement? student to do the entry test at <a href="https://alscertificates.com/vocational-entry-test/">Vocational Entry Test</a>.
+                                    </Form.Text>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -266,7 +269,7 @@ function ApplicationForm({
                     </Col>
                 </Row>
                 <Row className="mb-3">
-                    <Col>
+                    <Col className="d-flex justify-content-between">
                         <Form.Check
                             inline
                             label="Student"
@@ -294,15 +297,19 @@ function ApplicationForm({
                             onChange={updateField}
                             type="radio"
                         />
-                        <Form.Check
-                            inline
-                            label="Other"
-                            name="visa"
-                            value="Other"
-                            checked={application?.visa === 'Other'}
-                            onChange={updateField}
-                            type="radio"
-                        />
+                        <InputGroup inline>
+                            <InputGroup.Radio 
+                                name="visa"
+                                value=""
+                                onChange={updateField}
+                                checked={!["Student", "Business", "Dependent"].includes(application?.visa)} />
+                            <InputGroup.Text>Other</InputGroup.Text>
+                            <Form.Control 
+                                name="visa"
+                                type="text"
+                                onChange={updateField}
+                            />
+                        </InputGroup>
                     </Col>
                 </Row>
                 {
@@ -314,15 +321,6 @@ function ApplicationForm({
                         </Row>
                         <Row className="mb-3">
                             <Col>
-                                <Form.Check
-                                    inline
-                                    label="Not Given"
-                                    name="studentCurrentLocation"
-                                    value="Not Given"
-                                    checked={application?.studentCurrentLocation === 'Not Given'}
-                                    onChange={updateField}
-                                    type="radio"
-                                />
                                 <Form.Check
                                     inline
                                     label="Onshore (in Australia)"
@@ -350,15 +348,6 @@ function ApplicationForm({
                         </Row>
                         <Row className="mb-3">
                             <Col>
-                                <Form.Check
-                                    inline
-                                    label="Not Given"
-                                    name="DHAOffice"
-                                    value="Not Given"
-                                    checked={application?.DHAOffice === 'Not Given'}
-                                    onChange={updateField}
-                                    type="radio"
-                                />
                                 <Form.Check
                                     inline
                                     label="Onshore (in Australia)"

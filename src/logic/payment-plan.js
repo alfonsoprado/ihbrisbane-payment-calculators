@@ -29,7 +29,8 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   } else if(data?.region?.code === "open_vet") {
     openVetDiscounts(data, paymentType, courses, specialCases);
   } else {
-    // Lanzar error region no existe
+    console.error("Region doesn't exists.");
+    return [];
   }
   
   // Generate Extra Fees
@@ -63,7 +64,8 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       ];
     }
   } else {
-    // Lanza error region no existe
+    console.error("Region doesn't exists.");
+    return []
   }
 
   result = [

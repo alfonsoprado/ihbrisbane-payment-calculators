@@ -32,8 +32,8 @@ const defaultValuesApplication = {
   englishLevel: "Not Given",
   disabilitiesChronicConditions: "Not Given",
   visa: "Student",
-  studentCurrentLocation: "Not Given",
-  DHAOffice: "Not Given",
+  studentCurrentLocation: "Onshore",
+  DHAOffice: "Onshore",
   enrolledAnotherInstitutionAustralia: "No",
   additionalStudy: "No",
   OSHC: "No required"
