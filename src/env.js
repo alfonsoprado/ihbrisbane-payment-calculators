@@ -4,13 +4,26 @@ export const PAYMENT_CALCULATOR_API_URL = `${API_URL}/paymentcalculator`;
 export const APPLICATION_FORM_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/application_form`;
 export const PAYMENT_PLAN_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/payment_plan`;
 
+const internal = 'd1efad72dc5b17dc66a46767c32fff40';
+const asian_all_other_countries = '9b4fbab0-3eb5-487d-bffe-463f6ff58f81';
+const latin_america_europe = "9b4fbab0-9045-441a-8e24-149ea4742e38";
+const open_vet = "9b4fbab0-9152-45b5-acc8-448c5392c856";
+
 export const payments_calculators = {
-  internal_asian_all_other_countries: '9b4fbab0-3eb5-487d-bffe-463f6ff58f81?internal=d1efad72dc5b17dc66a46767c32fff40',
-  internal_latin_america_europe: '9b4fbab0-9045-441a-8e24-149ea4742e38?internal=d1efad72dc5b17dc66a46767c32fff40',
-  internal_open_vet: '9b4fbab0-9152-45b5-acc8-448c5392c856?internal=d1efad72dc5b17dc66a46767c32fff40',
-  external_asian_all_other_countries: '9b4fbab0-3eb5-487d-bffe-463f6ff58f81',
-  external_latin_america_europe: '9b4fbab0-9045-441a-8e24-149ea4742e38',
-  external_open_vet: '9b4fbab0-9152-45b5-acc8-448c5392c856',
+  // Internal
+  // Asian/All other countries
+  internal_asian_all_other_countries: `${asian_all_other_countries}?internal=${internal}`,
+  // Latin America/Europe
+  internal_latin_america_europe: `${latin_america_europe}?internal=${internal}`,
+  // Open VET
+  internal_open_vet: `${open_vet}?${open_vet}internal=${internal}`,
+  // External
+  // Asian all other countries
+  external_asian_all_other_countries: asian_all_other_countries,
+  // Latin America/Europe
+  external_latin_america_europe: latin_america_europe,
+  // Open Vet
+  external_open_vet: open_vet,
 };
 
 export const hero_banner = {
