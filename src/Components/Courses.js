@@ -32,12 +32,16 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
           )}
           {courses.map((course) => (
             <tr key={course?.id}>
-              <td className="text-center align-middle">
+              <td className="text-center align-middle" style={{
+                wordWrap: 'break-word'
+              }}>
                 <b>
                   {course?.coursePricing?.course?.name}
                 </b>
               </td>
-              <td className="text-center align-middle">
+              <td className="text-center align-middle" style={{
+                width: '160px' 
+              }}>
                 <Select
                   options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
                     return {
@@ -52,7 +56,9 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
               <td className="text-center align-middle">
                 {course?.coursePricing?.course?.duration_weeks}
               </td>
-              <td className="text-center align-middle">
+              <td className="text-center align-middle" style={{
+                width: '110px' 
+              }}>
                 {course ? formatDate(findFinishDateCourse(course?.startDate, course?.coursePricing?.course?.duration_weeks), "yyyy-MM-dd") : ""}
               </td>
               <td className="text-center align-middle">
