@@ -1,10 +1,8 @@
 import { useState } from "react";
 import Select from 'react-select';
 import App from "./App";
-import { payments_calculators } from "./env";
+import { ENV, payments_calculators } from "./env";
 import { Col, Container, Row } from "react-bootstrap";
-
-export const ENV = process.env.NODE_ENV;
 
 const options = Object.keys(payments_calculators);
 

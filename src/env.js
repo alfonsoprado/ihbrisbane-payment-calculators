@@ -1,15 +1,20 @@
+import { developPaymentCalculators } from "./env.develop";
+import { productionPaymentCalculators } from "./env.production";
+
+export const ENV = process.env.NODE_ENV;
+
 export const PAYMENT_CALCULATOR = process.env.REACT_APP_PC;
 
-export const MAIN_URL = "https://apps.ihbrisbane.com";
+export const MAIN_URL = ENV === "production" ? productionPaymentCalculators['main_url'] : developPaymentCalculators['main_url'];
 export const API_URL = `${MAIN_URL}/api`;
 export const PAYMENT_CALCULATOR_API_URL = `${API_URL}/paymentcalculator`;
 export const APPLICATION_FORM_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/application_form`;
 export const PAYMENT_PLAN_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/payment_plan`;
 
-const internal = 'd1efad72dc5b17dc66a46767c32fff40';
-const asian_all_other_countries = '9b50e7c3-6be6-409a-91f8-0223e68e756c';
-const latin_america_europe = "9b50e7c3-7f7a-48db-bfb5-9e638dd9bbdf";
-const open_vet = "9b50e7c3-862e-4957-8141-7ba73d72e1b0";
+const internal = ENV === "production" ? productionPaymentCalculators['internal'] : developPaymentCalculators['internal'];
+const asian_all_other_countries = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries'] : developPaymentCalculators['asian_all_other_countries'];
+const latin_america_europe = ENV === "production" ? productionPaymentCalculators['latin_america_europe'] : developPaymentCalculators['latin_america_europe'];
+const open_vet = ENV === "production" ? productionPaymentCalculators['open_vet'] : developPaymentCalculators['open_vet'];
 
 export const payments_calculators = {
   // Internal
