@@ -98,6 +98,10 @@ function App({ paymentCalculator }) {
     setErrorMessage(errors);
   }, [data, courses]);
 
+  useEffect(() => {
+    resetAll();
+  }, paymentCalculator);
+
   const cleanPaymentPlan = () => {
     setPaymentPlan([]);
     setPaymentTableEnabled(false);
