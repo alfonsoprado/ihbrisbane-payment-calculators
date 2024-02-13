@@ -98,9 +98,14 @@ function App({ paymentCalculator }) {
     setErrorMessage(errors);
   }, [data, courses]);
 
+  // Only develop: it is only happens when the payment calculator is changed
   useEffect(() => {
-    resetAll();
-  }, paymentCalculator);
+    setCourses([]);
+    setPaymentPlan([]);
+    setPaymentTableEnabled(false);
+    setApplication(defaultValuesApplication);
+    setApplicationEnabled(false);
+  }, [paymentCalculator]);
 
   const cleanPaymentPlan = () => {
     setPaymentPlan([]);

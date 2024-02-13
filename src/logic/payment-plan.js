@@ -7,6 +7,7 @@ import { generateTotalPayments } from "./total";
 import { openVetDiscounts } from "./regions/open_vet/discounts";
 import { latinAmericaEuropeDiscounts } from "./regions/latin_europe/discounts";
 import { latinAmericaEuropeOption1 } from "./regions/latin_europe/option1";
+import { minimumInstallmentThreshold } from "./minimum-installment-threshold";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -67,6 +68,9 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     console.error("Region doesn't exists.");
     return []
   }
+
+  // Minimum installment threshold $100
+  result = minimumInstallmentThreshold(data, result);
 
   result = [
     ...result,
