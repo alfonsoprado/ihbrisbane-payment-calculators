@@ -83,7 +83,7 @@ function App({ paymentCalculator }) {
       errors.push("The fields of the courses cannot be empty.");
     }
 
-    if (data?.region?.code === 'open_vet' && intensiveCourse > 0 && standardCourse === 0) {
+    if (data?.region?.code === 'open_vet' && intensiveCourse === 1 && standardCourse === 0) {
       errors.push("We don't accept standalone INTENSIVE course.");
     }
 
