@@ -5,9 +5,9 @@ DIR=/var/www/years/2024/02
 I1=$DIR/internal/asian_all_other_countries
 I2=$DIR/internal/latin_america_europe
 I3=$DIR/internal/open_vet
-E1=$DIR/external/asian_all_other_countries
-E2=$DIR/external/latin_america_europe
-E3=$DIR/external/open_vet
+E1=$DIR/external/ApplyVET
+E2=$DIR/external/nQkuQcXaNC0ymC1gsCA9
+E3=$DIR/external/yqofYnOlpNYqofYn
 
 rm -rf $I1
 rm -rf $I2
