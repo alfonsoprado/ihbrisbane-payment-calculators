@@ -14,18 +14,18 @@ const open_vet = "9b50e7c3-862e-4957-8141-7ba73d72e1b0";
 export const payments_calculators = {
   // Internal
   // Asian/All other countries
-  i1: `${asian_all_other_countries}?internal=${internal}`,
+  internal_asian: `${asian_all_other_countries}?internal=${internal}`,
   // Latin America/Europe
-  i2: `${latin_america_europe}?internal=${internal}`,
+  internal_latin: `${latin_america_europe}?internal=${internal}`,
   // Open VET
-  i3: `${open_vet}?internal=${internal}`,
+  internal_open_vet: `${open_vet}?internal=${internal}`,
   // External
   // Asian all other countries
-  e1: asian_all_other_countries,
+  external_asian: asian_all_other_countries,
   // Latin America/Europe
-  e2: latin_america_europe,
+  external_latin: latin_america_europe,
   // Open Vet
-  e3: open_vet,
+  external_open_vet: open_vet,
 };
 
 export const hero_banner = {

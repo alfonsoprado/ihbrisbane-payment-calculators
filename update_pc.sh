@@ -16,16 +16,16 @@ rm -rf $E1
 rm -rf $E2
 rm -rf $E3
 
-REACT_APP_PC=i1 npm run build
+NODE_ENV=production REACT_APP_PC=internal_asian npm run build
 mv build $I1
-REACT_APP_PC=i2 npm run build
+NODE_ENV=production REACT_APP_PC=internal_latin npm run build
 mv build $I2
-REACT_APP_PC=i3 npm run build
+NODE_ENV=production REACT_APP_PC=internal_open_vet npm run build
 mv build $I3
 
-REACT_APP_PC=e1 npm run build
+NODE_ENV=production REACT_APP_PC=external_asian npm run build
 mv build $E1
-REACT_APP_PC=e2 npm run build
+NODE_ENV=production REACT_APP_PC=external_latin npm run build
 mv build $E2
-REACT_APP_PC=e3 npm run build
+NODE_ENV=production REACT_APP_PC=external_open_vet npm run build
 mv build $E3

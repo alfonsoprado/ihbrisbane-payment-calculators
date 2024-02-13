@@ -49,7 +49,7 @@ const middleCenterStyle = {
   justifyContent: 'center'
 }
 
-function App() {
+function App({ paymentCalculator }) {
   const [errorMessages, setErrorMessage] = useState([]);
   const [courses, setCourses] = useState([]);
   const [paymentType, setPaymentType] = useState("");
@@ -61,7 +61,7 @@ function App() {
   const [application, setApplication] = useState(defaultValuesApplication);
   const [applicationEnabled, setApplicationEnabled] = useState(false);
 
-  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[PAYMENT_CALCULATOR]}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[paymentCalculator ? paymentCalculator : PAYMENT_CALCULATOR]}`, fetcher)
 
   useEffect(() => {
     // General Errors
