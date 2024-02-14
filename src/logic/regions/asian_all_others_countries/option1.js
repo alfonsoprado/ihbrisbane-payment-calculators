@@ -16,11 +16,11 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
 
   let remainingAmount = coursePrice;
 
+// Second tuition: 3 days before friday payment
+  const secondTuitionInstallmentDate  = findFridayOfPreviousWeeks(startDate, 1);
   if (TIA <= remainingAmount) {
-    // Second tuition: 3 days before friday payment
-    const fridayBeforeStartClass = findFridayOfPreviousWeeks(startDate, 1);
     payments.push({
-      dueDate: formatDate(fridayBeforeStartClass),
+      dueDate: formatDate(secondTuitionInstallmentDate),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: TIA,
@@ -29,7 +29,7 @@ function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
     remainingAmount -= TIA;
   }
 
-  let paymentDate = findFridayOfFollowingWeeks(startDate, TTIWACS);
+  let paymentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, TTIWACS);
   if (TIA <= remainingAmount) {
     // Third tuition: n weeks after course start date, n = TTIWACS = 10 weeks
     payments.push({
