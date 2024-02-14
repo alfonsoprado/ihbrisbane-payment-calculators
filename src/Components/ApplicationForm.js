@@ -308,7 +308,7 @@ function ApplicationForm({
                             onChange={updateField}
                             type="radio"
                         />
-                        <InputGroup inline>
+                        <InputGroup>
                             <InputGroup.Radio
                                 name="visa"
                                 value=""
