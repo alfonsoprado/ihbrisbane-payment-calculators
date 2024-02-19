@@ -5,7 +5,9 @@ import {
 } from "../../../helpers/dates";
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 
-function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
+function generatePaymentsOption1(data, course, startDate, coursePrice) {
+  const courseName = course?.coursePricing?.course?.name;
+
   const {
     tuition_installments_amount: TIA, // $1000 AUS
     third_tuition_installment_n_weeks_after_course_start: TTIWACS, // 10 weeks
@@ -93,7 +95,6 @@ export function asianAllOthersCountriesOption1(data, courses) {
 
   for (const [index, course] of courses.entries()) {
     let startDate = course?.startDate;
-    let name = course?.coursePricing?.course?.name;
     // Remove amount of the first tuition of the first price
     let tuition_fee = course?.finalTuition;
     if (index === 0) {
@@ -101,7 +102,7 @@ export function asianAllOthersCountriesOption1(data, courses) {
     }
     result = [
       ...result,
-      ...generatePaymentsOption1(data, name, startDate, tuition_fee)
+      ...generatePaymentsOption1(data, course, startDate, tuition_fee)
     ];
   }
 

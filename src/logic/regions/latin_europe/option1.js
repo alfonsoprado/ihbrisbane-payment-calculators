@@ -5,11 +5,26 @@ import {
 } from "../../../helpers/dates";
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 
-function generatePaymentsOption1(data, courseName, startDate, coursePrice) {
-  const {
+function generatePaymentsOption1(data, course, startDate, coursePrice) {
+  const courseName = course?.coursePricing?.course?.name;
+  const courseCode = course?.coursePricing?.course?.course_code;
+
+  let {
     tuition_installments_amount, // $320
-    tuition_installments_interval_weeks // 1 Month = 4 weeks
+    tuition_installments_interval_weeks, // 1 Month = 4 weeks
+    courses,
   } = getPaymentOptionParameters(data, 'option_1');
+
+  // Courses with diferent tuition_installments_amount or tuition_installments_interval_weeks
+  if (courses && Object.keys(courses).includes(courseCode)) {
+    console.log(courses[courseCode]);
+    if(courses[courseCode]?.tuition_installments_amount) {
+      tuition_installments_amount = courses[courseCode]?.tuition_installments_amount;
+    }
+    if(courses[courseCode]?.tuition_installments_interval_weeks) {
+      tuition_installments_interval_weeks = courses[courseCode]?.tuition_installments_interval_weeks;
+    }
+  }
 
   const payments = [];
 
@@ -70,7 +85,6 @@ export function latinAmericaEuropeOption1(data, courses) {
 
   for (const [index, course] of courses.entries()) {
     let startDate = course?.startDate;
-    let name = course?.coursePricing?.course?.name;
     // Remove amount of the first tuition of the first price
     let tuition_fee = course?.finalTuition;
     if (index === 0) {
@@ -78,7 +92,7 @@ export function latinAmericaEuropeOption1(data, courses) {
     }
     result = [
       ...result,
-      ...generatePaymentsOption1(data, name, startDate, tuition_fee)
+      ...generatePaymentsOption1(data, course, startDate, tuition_fee)
     ];
   }
 

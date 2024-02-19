@@ -1,7 +1,7 @@
 const internal = 'd1efad72dc5b17dc66a46767c32fff40';
-const asian_all_other_countries = '9b4fbab0-3eb5-487d-bffe-463f6ff58f81';
-const latin_america_europe = "9b4fbab0-9045-441a-8e24-149ea4742e38";
-const open_vet = "9b4fbab0-9152-45b5-acc8-448c5392c856";
+const asian_all_other_countries = '9b5e7be7-560f-4e6f-84fc-f0b8ed89f8ce';
+const latin_america_europe = "9b5e7be7-b37e-44fd-b221-760cc06e0364";
+const open_vet = "9b5e7be7-b493-4250-a4cf-27a700d41397";
 const main_url = "http://apps.test";
 
 export const developPaymentCalculators = {
