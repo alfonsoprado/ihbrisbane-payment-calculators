@@ -142,6 +142,7 @@ function PaymentOptions({
             Check Payment Plan
           </Button>
           <DownloadPDF
+            downloadFileName="payment_plan.pdf"
             url={PAYMENT_PLAN_PDF_API_URL}
             generateDataPDF={generateDataPDF}
             title="Payment Plan"

@@ -6,6 +6,7 @@ import DownloadPDF from "./DownloadPDFButton";
 import { format, parseISO } from "date-fns";
 import AppModal from "./AppModal";
 import { ALS_STUDENT_HANDBOOK_URL, APPLICATION_FORM_PDF_API_URL, REFUND_ENROLMENT_POLICY_URL, VOCATIONAL_ENTRY_TEST_URL } from "../env";
+import { formatName } from "../helpers/tools";
 
 function ApplicationForm({
     data,
@@ -631,6 +632,7 @@ function ApplicationForm({
             <Col>
                 <div className="d-grid gap-2">
                     <DownloadPDF
+                        downloadFileName={application?.firstName?.trim() || application?.lastName?.trim() ? `ALS_Booking_Form_${formatName(application?.firstName, application?.lastName)}.pdf` : "ALS_Booking_Form.pdf"}
                         url={APPLICATION_FORM_PDF_API_URL}
                         generateDataPDF={generateDataPDF}
                         title="Application Form"

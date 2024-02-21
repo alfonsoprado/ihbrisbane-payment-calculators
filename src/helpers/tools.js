@@ -42,3 +42,14 @@ export function scrollTo(id) {
         window.location.hash = id;
     }, 0);
 }
+
+export function formatName(firstName, lastName) {
+    firstName = firstName?.trim(); 
+    lastName = lastName?.trim();
+    let fullName = [];
+    if (firstName) fullName.push(firstName);
+    if (lastName) fullName.push(lastName);
+    fullName = fullName.join(" ");
+    const formattedName = fullName.replace(/ /g, '_');
+    return formattedName;
+}
