@@ -25,7 +25,7 @@ export function asianAllOthersCountriesDiscounts(data, paymentType, courses, spe
         const payUpfrontEnable = paymentType === 'pay_upfront';
 
         // Extension Student
-        if (extensionStudentEnable && !horticulturePackageSpecialEnable && !payUpfrontEnable) {
+        if (extensionStudentEnable && !horticulturePackageSpecialEnable && !(payUpfrontEnable && courses.length > 1)) {
             console.debug("Discount: Extension Student");
             const specialCaseES = allSpecialCasesAvailable?.find(sc => sc?.code === 'es');
             // Every course
