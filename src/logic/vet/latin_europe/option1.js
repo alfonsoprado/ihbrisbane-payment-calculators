@@ -67,7 +67,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   return payments;
 }
 
-export function latinAmericaEuropeOption1(data, courses) {
+export function latinAmericaEuropeOption1VET(data, courses) {
   const {
     first_tuition_installment_amount // $100 AUS
   } = getPaymentOptionParameters(data, 'option_1');

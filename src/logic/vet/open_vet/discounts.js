@@ -1,6 +1,6 @@
 import { getSpecialCases } from "../../../helpers/tools";
 
-export function openVetDiscounts(data, paymentType, courses, specialCases) {
+export function openVetDiscountsVET(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
 
     for (let i = 0; i < courses.length; i++) {

@@ -71,7 +71,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   return payments;
 }
 
-export function asianAllOthersCountriesOption1(data, courses) {
+export function asianAllOthersCountriesOption1VET(data, courses) {
   const {
     first_tuition_installment_single_course_amount, // $300 AUS
     first_tuition_installment_multiple_courses_amount, // $500 AUS

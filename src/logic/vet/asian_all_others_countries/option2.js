@@ -95,7 +95,7 @@ function generatePaymentMultipleCourses(data, courses) {
   }
 }
 
-export function asianAllOthersCountriesOption2(data, courses) {
+export function asianAllOthersCountriesOption2VET(data, courses) {
   let result = [];
   if (courses.length === 1) {
     result = generatePaymentSingleCourse(data, courses[0]);

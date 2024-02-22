@@ -1,4 +1,4 @@
-export function latinAmericaEuropeDiscounts(data, paymentType, courses, specialCases) {
+export function latinAmericaEuropeDiscountsVET(data, paymentType, courses, specialCases) {
     for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
         // Default finalTuition, change if have discount
