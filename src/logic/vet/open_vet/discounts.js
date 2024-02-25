@@ -14,7 +14,7 @@ export function openVetDiscountsVET(data, paymentType, courses, specialCases) {
         const payUpfrontEnable = paymentType === 'pay_upfront';
 
         // Extension Student
-        if(extensionStudentEnable && !!(payUpfrontEnable && courses.length > 1)) {
+        if(extensionStudentEnable && !(payUpfrontEnable && courses.length > 1)) {
             console.debug("Discount: Extension Student");
             const specialCaseES = allSpecialCasesAvailable?.find(sc => sc?.code === 'es');
             // Every course
