@@ -1,3 +1,5 @@
+import { getPaymentCalculatorDiscountPromotion } from "../../../helpers/tools";
+
 export function latinAmericaEuropeDiscountsVET(data, paymentType, courses, specialCases) {
     for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
@@ -13,7 +15,7 @@ export function latinAmericaEuropeDiscountsVET(data, paymentType, courses, speci
             console.debug("Discount: Multiple courses");
             // It is the last course
             if(i === courses.length - 1) {
-                const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'multi_course_last_discount');
+                const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data,'multi_course_last_discount');
                 course.finalTuition -= discountPromotionLastCourse?.amount;
                 course.discountsApplied.push(discountPromotionLastCourse);
                 console.debug("A discount was applied to:", course);

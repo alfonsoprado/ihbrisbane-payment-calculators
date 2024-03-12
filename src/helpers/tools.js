@@ -14,6 +14,14 @@ export function getPaymentCalculatorParameters(data) {
     return JSON.parse(data?.parameters);
 }
 
+export function getPaymentCalculatorDiscountPromotion(data, code) {
+    return JSON.parse(data?.discount_promotions?.find(dp => dp.code === code)?.parameters);
+}
+
+export function getCourseDiscountPromotion(data, courseCricosCode, code) {
+    return JSON.parse(data?.course_pricings?.find(cp => cp?.course?.cricos_code === courseCricosCode)?.discount_promotions?.find(dp => dp.code === code)?.parameters)?.courses;
+}
+
 export function getSpecialCases(data, courses) {
     return [
         ...data?.payment_calculator?.pricing_modifiers,
@@ -21,7 +29,6 @@ export function getSpecialCases(data, courses) {
         ...courses?.map((course) => course?.coursePricing?.pricing_modifiers).flat()
     ].sort((a, b) => a.order - b.order);
 }
-
 
 export function removeHash() {
     var scrollV, scrollH, loc = window.location;

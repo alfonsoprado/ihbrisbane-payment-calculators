@@ -1,4 +1,4 @@
-import { getSpecialCases } from "../../../helpers/tools";
+import { getPaymentCalculatorDiscountPromotion, getSpecialCases } from "../../../helpers/tools";
 
 export function openVetDiscountsVET(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
@@ -27,7 +27,7 @@ export function openVetDiscountsVET(data, paymentType, courses, specialCases) {
         // PaymentType: Pay upfront and 2 course o more
         if(payUpfrontEnable && courses.length > 1) {
             console.debug("PaymentType: Pay upfront");
-            const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'pay_upfront_discount');
+            const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data,'pay_upfront_discount');
             const discountPercentage = discountPromotionLastCourse.percentage;
             course.finalTuition = course.finalTuition * (1 - discountPercentage);
             course.discountsApplied.push(discountPromotionLastCourse);

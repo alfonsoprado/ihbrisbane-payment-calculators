@@ -106,7 +106,5 @@ export function asianAllOthersCountriesOption1VET(data, courses) {
     ];
   }
 
-
-
   return result;
 }

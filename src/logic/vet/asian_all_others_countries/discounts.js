@@ -1,4 +1,4 @@
-import { getSpecialCases } from "../../../helpers/tools";
+import { getCourseDiscountPromotion, getPaymentCalculatorDiscountPromotion, getSpecialCases } from "../../../helpers/tools";
 
 /*
     Do not forget, when applying discounts using percentages, 
@@ -9,7 +9,7 @@ import { getSpecialCases } from "../../../helpers/tools";
 */
 export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
-    const horticulturePackageSpecial = JSON.parse(data?.course_pricings?.find(cp => cp?.course?.cricos_code === '113194A')?.discount_promotions?.find(dp => dp.code === 'horticulture_package_special')?.parameters)?.courses;
+    const horticulturePackageSpecial = getCourseDiscountPromotion(data, '113194A', 'horticulture_package_special');
     const horticultureCoursesCricosCodes = Object.keys(horticulturePackageSpecial);
 
     for (let i = 0; i < courses.length; i++) {
@@ -53,7 +53,7 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
         // PaymentType: Pay upfront and 2 course o more
         if (payUpfrontEnable && courses.length > 1 && !horticulturePackageSpecialEnable) {
             console.debug("PaymentType: Pay upfront");
-            const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'pay_upfront_discount');
+            const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data, 'pay_upfront_discount');
             const discountPercentage = discountPromotionLastCourse.percentage;
             course.finalTuition = course.finalTuition * (1 - discountPercentage);
             course.discountsApplied.push(discountPromotionLastCourse);
@@ -65,7 +65,7 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
             console.debug("Discount: Multiple courses");
             // It is the last course
             if (i === courses.length - 1) {
-                const discountPromotionLastCourse = data?.discount_promotions?.find(d => d?.code === 'multi_course_last_discount');
+                const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data, 'multi_course_last_discount');
                 course.finalTuition -= discountPromotionLastCourse?.amount;
                 course.discountsApplied.push(discountPromotionLastCourse);
                 console.debug("A discount was applied to:", course);

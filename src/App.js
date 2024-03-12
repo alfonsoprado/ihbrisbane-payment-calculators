@@ -239,8 +239,6 @@ function App({ paymentCalculator }) {
     </div>
   </div>)
 
-  console.log(`${data?.region?.code}_${data?.payment_calculator?.type}`);
-
   return (
     <Container>
       <Row className="mt-2">
