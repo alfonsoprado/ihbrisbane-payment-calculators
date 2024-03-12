@@ -10,6 +10,10 @@ export function getPaymentOptionParameters(data, option) {
     return JSON.parse(data?.payment_options.find(item => item.code === option)?.parameters);
 }
 
+export function getPaymentCalculatorParameters(data) {
+    return JSON.parse(data?.parameters);
+}
+
 export function getSpecialCases(data, courses) {
     return [
         ...data?.payment_calculator?.pricing_modifiers,
@@ -52,4 +56,8 @@ export function formatName(firstName, lastName) {
     fullName = fullName.join(" ");
     const formattedName = fullName.replace(/ /g, '_');
     return formattedName;
+}
+
+export function hasDecimalPart(number) {
+    return number % 1 > 0;
 }

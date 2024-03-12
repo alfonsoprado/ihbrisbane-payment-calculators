@@ -1,4 +1,4 @@
-import { Card, Table, Button } from "react-bootstrap";
+import { Card, Table, Button, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Select from 'react-select';
@@ -9,6 +9,11 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
   const handleChangeStartDate = (e, id) => {
     const { value } = e;
     updateCourse(id, "startDate", value);
+  };
+
+  const handleChangeDuration = (e, id) => {
+    const { name, value } = e.target;
+    updateCourse(id, name, value);
   };
 
   return (
@@ -40,7 +45,7 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
                 </b>
               </td>
               <td className="text-center align-middle" style={{
-                width: '160px' 
+                width: '160px'
               }}>
                 <Select
                   options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
@@ -53,13 +58,33 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
                   onChange={(e) => handleChangeStartDate(e, course.id)}
                 />
               </td>
-              <td className="text-center align-middle">
-                {course?.coursePricing?.course?.duration_weeks}
-              </td>
+              {
+                !course?.coursePricing?.course?.duration_weeks ?
+                  <td>
+                    <Form.Control
+                      name="duration"
+                      value={course?.duration}
+                      isInvalid={!course?.duration}
+                      onChange={(e) =>
+                        handleChangeDuration(e, course.id)
+                      }
+                      type="number"
+                      min={course?.coursePricing?.course?.minimum_duration_weeks || 1}
+                      step="1"
+                      placeholder="Weeks"
+                    ></Form.Control>
+                    <Form.Control.Feedback type="invalid">
+                      The field is required.
+                    </Form.Control.Feedback>
+                  </td> :
+                  <td className="text-center align-middle">
+                    {course?.coursePricing?.course?.duration_weeks}
+                  </td>
+              }
               <td className="text-center align-middle" style={{
-                width: '110px' 
+                width: '110px'
               }}>
-                {course ? formatDate(findFinishDateCourse(course?.startDate, course?.coursePricing?.course?.duration_weeks), "yyyy-MM-dd") : ""}
+                {course ? formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd") : ""}
               </td>
               <td className="text-center align-middle">
                 <Button

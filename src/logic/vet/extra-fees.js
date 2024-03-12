@@ -1,7 +1,7 @@
-import { formatDate } from "../helpers/dates";
-import { getSpecialCases } from "../helpers/tools";
+import { formatDate } from "../../helpers/dates";
+import { getSpecialCases } from "../../helpers/tools";
 
-export function generateExtraFees(data, paymentType, courses, specialCasesSelected) {
+export function generateExtraFeesVET(data, paymentType, courses, specialCasesSelected) {
   const allSpecialCasesAvailable = getSpecialCases(data, courses);
   let enrolmentFee = 0;
   let materialFee = 0;
@@ -19,7 +19,7 @@ export function generateExtraFees(data, paymentType, courses, specialCasesSelect
       dueDate: formatDate(new Date()),
       feeDescription: "Enrolment Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('ew') || (specialCasesSelected?.includes('es') && data?.region?.code !== "open_vet") ? 0 : enrolmentFee,
+      paymentAmount: specialCasesSelected?.includes('ew') || (specialCasesSelected?.includes('es') && data?.region?.code !== "online") ? 0 : enrolmentFee,
       code: 'enrolment_fee'
     },
     {

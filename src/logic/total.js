@@ -32,7 +32,7 @@ export function generateTotalPayments(data, result, courses, paymentType) {
     ];
   }
 
-  if (data?.payment_calculator?.type === 'external') {
+  if (data?.payment_calculator?.allow === 'external') {
     return [
       total
     ];

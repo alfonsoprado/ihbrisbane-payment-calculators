@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
 import Select from 'react-select';
 import { findFinishDateCourse, formatDate } from "../../helpers/dates";
@@ -23,16 +23,34 @@ function AddCourse({ data, createCourse, courses }) {
   // use one time
   const [scrollToPaymentOptions, setScrollToPaymentOptions] = useState(true);
 
+  useEffect(() => {
+    setCoursePricing("");
+    setStartDate("");
+    setDuration("");
+  }, [courses]);
+
+  const handleChangeDuration = (e) => {
+    const { value } = e.target;
+    setDuration(value);
+  };
+
   const handleChangeCoursePricing = (e) => {
     const value = e.value;
-    setCoursePricing({ label: value?.course?.name, value});
+    setCoursePricing({ label: value?.course?.name, value });
     setStartDate("");
-    setDuration(value?.course?.duration_weeks || "");
+    let duration_weeks = "";
+    if(value?.course?.duration_weeks) {
+      duration_weeks = value?.course?.duration_weeks;
+    } else if(!value?.course?.duration_weeks && value?.course?.minimum_duration_weeks) {
+      duration_weeks = value?.course?.minimum_duration_weeks;
+    } 
+
+    setDuration(duration_weeks);
   };
 
   const handleChangeStartDate = (e) => {
     const value = e.value;
-    setStartDate({ label: value, value});
+    setStartDate({ label: value, value });
   }
 
   const handleSubmit = (e) => {
@@ -41,6 +59,7 @@ function AddCourse({ data, createCourse, courses }) {
     const form = {
       coursePricing: coursePricing?.value,
       startDate: startDate?.value,
+      duration: duration,
       finishDate: formatDate(findFinishDateCourse(startDate?.value, duration), "yyyy-MM-dd")
     };
     createCourse(form);
@@ -49,12 +68,18 @@ function AddCourse({ data, createCourse, courses }) {
     setStartDate("");
     setDuration("");
     // scroll to payment_options
-    if(scrollToPaymentOptions) {
+    if (scrollToPaymentOptions) {
       scrollTo("payment_options");
       setScrollToPaymentOptions(false);
     }
   };
 
+  const coursesOption = (data, category) => {
+    if(data?.payment_calculator?.type === "elicos") {
+      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+    }
+    return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code));
+  }
   return (
     <Card className="mb-3">
       <Card.Header>
@@ -67,19 +92,21 @@ function AddCourse({ data, createCourse, courses }) {
             <Select
               formatGroupLabel={formatGroupLabel}
               options={data?.categories?.map((category) => {
-                return { options: data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code)).map(coursePricing => {
-                  return {
-                    value: coursePricing,
-                    label: coursePricing?.course?.name
-                  }
-                }), label: category?.name };
+                return {
+                  options: coursesOption(data, category).map(coursePricing => {
+                    return {
+                      value: coursePricing,
+                      label: coursePricing?.course?.name
+                    }
+                  }), label: category?.name
+                };
               })}
               value={coursePricing}
               onChange={handleChangeCoursePricing} />
           </Form.Group>
           <Form.Group className="mb-2">
             <Form.Label><b>Start date:</b></Form.Label>
-            <Select 
+            <Select
               options={coursePricing?.value?.course?.start_dates?.map((start_date) => {
                 return {
                   value: start_date,
@@ -89,23 +116,35 @@ function AddCourse({ data, createCourse, courses }) {
               value={startDate}
               onChange={handleChangeStartDate} />
           </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label><b>Duration weeks:</b></Form.Label>
-            <Form.Control
-              name="duration"
-              readOnly
-              required
-              value={duration}
-              type="number"
-              placeholder="Number of weeks"
-            ></Form.Control>
-          </Form.Group>
+          {
+            !coursePricing?.value || coursePricing?.value?.course?.duration_weeks ?
+            <Form.Group className="mb-2">
+                <Form.Label className="me-2"><b>Duration weeks:</b></Form.Label>
+                  {duration}
+              </Form.Group>
+               :
+               <Form.Group className="mb-2">
+               <Form.Label><b>Duration weeks:</b></Form.Label>
+               <Form.Control
+                 name="duration"
+                 onChange={handleChangeDuration}
+                 required
+                 value={duration}
+                 type="number"
+                 min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
+                 step="1"
+                 placeholder="Number of weeks"
+               ></Form.Control>
+             </Form.Group>
+          }
+
           <div className="d-grid gap-2">
-            <Button 
-                disabled={
-                  !coursePricing ||
-                  !startDate
-                }
+            <Button
+              disabled={
+                !coursePricing ||
+                !startDate ||
+                !duration
+              }
               className="mt-2" variant="dark" type="submit">
               Add Course
             </Button>

@@ -8,7 +8,7 @@ import { generatePaymentPlan } from "./logic/payment-plan";
 import useSWR from 'swr';
 import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/dates";
 import ApplicationForm from "./Components/ApplicationForm";
-import { scrollTo } from "./helpers/tools";
+import { getPaymentCalculatorParameters, getPaymentOptions, scrollTo } from "./helpers/tools";
 import { PAYMENT_CALCULATOR, PAYMENT_CALCULATOR_API_URL, hero_banner, payments_calculators } from "./env";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
@@ -69,21 +69,54 @@ function App({ paymentCalculator }) {
     let intensiveCourse = 0;
     let standardCourse = 0;
     let notEmpty = true;
+    let courseWithoutDuration = false;
 
     for (const course of courses) {
       if (!notEmpty) {
         notEmpty = Object.entries(course).every((field) => field[1]);
       }
 
+      if (!course?.duration || course?.duration === "0") {
+        courseWithoutDuration = true;
+      }
+
       if (course?.coursePricing?.course?.type === 'intensive') intensiveCourse += 1;
-      if (course?.coursePricing?.course?.type === 'standard') standardCourse += 1
+      if (course?.coursePricing?.course?.type === 'standard') standardCourse += 1;
+    }
+
+    if (data?.payment_calculator?.type === 'elicos') {
+      // Elicos payment calculator
+      let duration_weeks_day_courses_elicos = 0;
+      let has_elicos_course = false;
+
+      const {
+        minimum_weeks
+      } = getPaymentCalculatorParameters(data)?.restrictions;
+
+      for (const course of courses) {
+        if (data?.payment_calculator?.type === 'elicos' && minimum_weeks?.courses?.includes(course?.coursePricing?.course?.cricos_code)) {
+          has_elicos_course = true;
+          duration_weeks_day_courses_elicos += parseInt(course?.duration);
+        }
+      }
+
+      if (
+        has_elicos_course &&
+        duration_weeks_day_courses_elicos < minimum_weeks?.quantiy_weeks) {
+        errors.push(`The total duration of each course must be greater than ${minimum_weeks?.quantiy_weeks} weeks to be eligible for a payment plan (unless combined with other courses).`);
+      }
+    }
+
+
+    if (courseWithoutDuration) {
+      errors.push("There is at least one course whose doesn't have duration.");
     }
 
     if (!notEmpty) {
       errors.push("The fields of the courses cannot be empty.");
     }
 
-    if (data?.region?.code === 'open_vet' && intensiveCourse === 1 && standardCourse === 0) {
+    if (data?.region?.code === 'online' && intensiveCourse === 1 && standardCourse === 0) {
       errors.push("We don't accept standalone INTENSIVE course.");
     }
 
@@ -98,10 +131,19 @@ function App({ paymentCalculator }) {
     setErrorMessage(errors);
   }, [data, courses]);
 
+  useEffect(() => {
+    if (data && !paymentType) {
+      setPaymentType(getPaymentOptions(data, true)[0]?.code);
+    }
+  }, [data, paymentType]);
+
   // Only develop: it is only happens when the payment calculator is changed
   useEffect(() => {
     setCourses([]);
     setPaymentPlan([]);
+    setPaymentType("");
+    setSpecialCases([]);
+
     setPaymentTableEnabled(false);
     setApplication(defaultValuesApplication);
     setApplicationEnabled(false);
@@ -124,7 +166,13 @@ function App({ paymentCalculator }) {
           return {
             ...item,
             'startDate': newValue,
-            'finishDate': formatDate(findFinishDateCourse(newValue, item?.coursePricing?.course?.duration_weeks), "yyyy-MM-dd")
+            'finishDate': formatDate(findFinishDateCourse(newValue, item?.duration), "yyyy-MM-dd")
+          }
+        } else if (propName === 'duration') {
+          return {
+            ...item,
+            'duration': newValue,
+            'finishDate': formatDate(findFinishDateCourse(item?.startDate, newValue), "yyyy-MM-dd")
           }
         }
         return { ...item, [propName]: newValue };
@@ -195,19 +243,19 @@ function App({ paymentCalculator }) {
     <Container>
       <Row className="mt-2">
         {
-          data?.payment_calculator?.type === 'external' && (<Col sm={12}>
-            <Image src={hero_banner[data?.region?.code]} fluid />
+          data?.payment_calculator?.allow === 'external' && (<Col sm={12}>
+            <Image src={hero_banner[`${data?.region?.code}_${data?.region?.paymentCalculator?.type}`]} fluid />
           </Col>)
         }
         <Col className="mt-2" sm={12}>
           <Card>
             {
-              data?.payment_calculator?.type === 'internal' && (<Card.Header>
+              data?.payment_calculator?.allow === 'internal' && (<Card.Header>
                 <h4 className="my-1">{data?.payment_calculator?.name}: {data?.region?.name}</h4>
               </Card.Header>)
             }
             {
-              data?.payment_calculator?.type === 'external' && (<Card.Body className="text-center m-1">
+              data?.payment_calculator?.allow === 'external' && (<Card.Body className="text-center m-1">
                 <div dangerouslySetInnerHTML={{ __html: data?.external_message }} />
               </Card.Body>)
             }

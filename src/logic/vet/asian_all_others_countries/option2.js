@@ -87,7 +87,7 @@ function generatePaymentMultipleCourses(data, courses) {
   }
 
   // Stage 2 - Only internal payment calculator
-  if (data?.payment_calculator?.type === 'internal') {
+  if (data?.payment_calculator?.allow === 'internal') {
     const paymentsS2 = alignExternalPaymentsWithInternalFormat(paymentsS1, courses);
     return paymentsS2;
   } else {
