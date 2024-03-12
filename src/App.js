@@ -239,12 +239,14 @@ function App({ paymentCalculator }) {
     </div>
   </div>)
 
+  console.log(`${data?.region?.code}_${data?.payment_calculator?.type}`);
+
   return (
     <Container>
       <Row className="mt-2">
         {
           data?.payment_calculator?.allow === 'external' && (<Col sm={12}>
-            <Image src={hero_banner[`${data?.region?.code}_${data?.region?.paymentCalculator?.type}`]} fluid />
+            <Image src={hero_banner[`${data?.region?.code}_${data?.payment_calculator?.type}`]} fluid />
           </Col>)
         }
         <Col className="mt-2" sm={12}>
