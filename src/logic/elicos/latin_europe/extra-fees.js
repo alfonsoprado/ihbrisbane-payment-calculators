@@ -2,7 +2,7 @@ import { formatDate } from "../../../helpers/dates";
 import { getPaymentCalculatorDiscountPromotion } from "../../../helpers/tools";
 
 export function generateExtraFeesLatinAmericaEuropeElicos(data, paymentType, courses, specialCasesSelected) {
-  const discount21Week = getPaymentCalculatorDiscountPromotion(data, '21_weeks_discount');
+  const discount21Week = getPaymentCalculatorDiscountPromotion(data, '21_weeks_discount')?.parameters;
 
   let enrolmentFee = 0;
   let materialFee = 0;
@@ -22,7 +22,7 @@ export function generateExtraFeesLatinAmericaEuropeElicos(data, paymentType, cou
       }
 
       if (discount21Week.courses_discount.includes(course?.coursePricing?.course?.cricos_code)) {
-        const parameters = JSON.parse(course?.coursePricing?.parameters)
+        const parameters = JSON.parse(course?.coursePricing?.parameters);
         const weeksDurationLimitCourse = parameters?.material_fee_weeks;
         if (materialFeeWeeks < weeksDurationLimitCourse) {
           let weeksDurationCourse = parseInt(course?.duration);

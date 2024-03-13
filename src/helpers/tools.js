@@ -15,12 +15,21 @@ export function getPaymentCalculatorParameters(data) {
 }
 
 export function getPaymentCalculatorDiscountPromotion(data, code) {
-    return JSON.parse(data?.discount_promotions?.find(dp => dp.code === code)?.parameters);
+    const discountPromotion = data?.discount_promotions?.find(dp => dp.code === code);
+    return {
+        ...discountPromotion,
+        parameters: JSON.parse(discountPromotion.parameters)
+    };
 }
 
 export function getCourseDiscountPromotion(data, courseCricosCode, code) {
-    return JSON.parse(data?.course_pricings?.find(cp => cp?.course?.cricos_code === courseCricosCode)?.discount_promotions?.find(dp => dp.code === code)?.parameters)?.courses;
+    const discountPromotion = data?.course_pricings?.find(cp => cp?.course?.cricos_code === courseCricosCode)?.discount_promotions?.find(dp => dp.code === code);
+    return {
+        ...discountPromotion,
+        parameters: JSON.parse(discountPromotion?.parameters)
+    }
 }
+
 
 export function getSpecialCases(data, courses) {
     return [

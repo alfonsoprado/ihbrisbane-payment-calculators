@@ -20,7 +20,7 @@ export function latinAmericaEuropeOption1Elicos(data, courses) {
 
   const firstCourse = courses[0];
 
-  const courseWeeklyTuitionFee = firstCourse.coursePricing?.tuition_fee;
+  const courseWeeklyTuitionFee = firstCourse.coursePricing?.weekly_tuition_fee;
   const courseStartDate = parse(firstCourse?.startDate, "yyyy-MM-dd", new Date());
   const lastCourseEndDate = parse(courses[courses.length - 1]?.finishDate, "yyyy-MM-dd", new Date());
   const paymentBeforeStartCourse = findFridayOfPreviousWeeks(courseStartDate, 1);

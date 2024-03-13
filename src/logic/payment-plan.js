@@ -25,6 +25,15 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   console.debug("Payment Type", paymentType);
   console.debug("Special Cases", specialCases);
 
+  // Total Tuition = Tuition Fee per week x weeks
+  for (const course of courses) {
+    if (course?.coursePricing?.weekly_tuition_fee) {
+      course.tuition = course?.coursePricing?.weekly_tuition_fee * parseInt(course?.duration);
+    } else {
+      course.tuition = course?.coursePricing?.tuition_fee;
+    }
+  }
+
   let result = [];
 
   if (data?.payment_calculator?.type === 'vet') {

@@ -9,7 +9,7 @@ function generatePaymentSingleCourse(data, course) {
   const { startDate, finalTuition } = course;
   const name = course?.coursePricing?.course?.name;
 
-  const parameters = JSON.parse(data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'single')?.parameters);
+  const parameters = data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'single')?.parameters;
 
   const result = [
     {
@@ -46,7 +46,7 @@ function generatePaymentSingleCourse(data, course) {
 }
 
 function generatePaymentMultipleCourses(data, courses) {
-  const parameters = JSON.parse(data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'multiple')?.parameters);
+  const parameters = data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'multiple')?.parameters;
 
   // Stage 1 - Internal & external
   const paymentsS1 = [
