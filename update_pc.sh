@@ -4,12 +4,12 @@ DIR=/var/www/years/2024/02
 
 I1=$DIR/internal/asian-and-all-other-countries-vet
 I2=$DIR/internal/latin-america-and-europe-vet
-I3=$DIR/internal/online-vet
+I3=$DIR/internal/open-vet
 I4=$DIR/internal/latin-america-and-europe-elicos
 
 E1=$DIR/external/ApplyVET
 E2=$DIR/external/latin-america-and-europe-vet-onshore
-E3=$DIR/external/nQkuQcXaNC0ymC1gsCA9
+E3=$DIR/external/yqofYnOlpNYqofYn
 E4=$DIR/external/latin-america-and-europe-elicos-onshore
 
 NODE_ENV=production REACT_APP_PC=internal_asian_vet npm run build
