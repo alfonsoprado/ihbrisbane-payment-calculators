@@ -22,6 +22,7 @@ function PaymentOptions({
   const generateDataPDF = () => {
     const paymentPlan = createPaymentPlan();
     const dataPDF = {
+      paymentCalculatorType: data?.payment_calculator?.type,
       regionCode: data?.region?.code,
       courses: courses.map(course => {
         return {

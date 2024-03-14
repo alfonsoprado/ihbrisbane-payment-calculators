@@ -52,6 +52,7 @@ function ApplicationForm({
 
     const generateDataPDF = () => {
         return {
+            paymentCalculatorType: data?.payment_calculator?.type,
             regionCode: data?.region?.code,
             paymentType: data?.payment_options?.find(option => option.code === paymentType)?.name,
             application,
