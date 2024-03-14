@@ -2,12 +2,15 @@ git pull
 
 DIR=/var/www/years/2024/02
 
-I1=$DIR/internal/asian_all_other_countries
-I2=$DIR/internal/latin_america_europe
-I3=$DIR/internal/open_vet
+I1=$DIR/internal/asian-and-all-other-countries-vet
+I2=$DIR/internal/latin-america-and-europe-vet
+I3=$DIR/internal/online-vet
+I4=$DIR/internal/latin-america-and-europe-elicos
+
 E1=$DIR/external/ApplyVET
-E2=$DIR/external/nQkuQcXaNC0ymC1gsCA9
-E3=$DIR/external/yqofYnOlpNYqofYn
+E2=$DIR/external/latin-america-and-europe-vet-onshore
+E3=$DIR/external/nQkuQcXaNC0ymC1gsCA9
+E4=$DIR/external/latin-america-and-europe-elicos-onshore
 
 NODE_ENV=production REACT_APP_PC=internal_asian_vet npm run build
 rm -rf $I1
@@ -19,8 +22,8 @@ NODE_ENV=production REACT_APP_PC=internal_online_vet npm run build
 rm -rf $I3
 mv build $I3
 NODE_ENV=production REACT_APP_PC=internal_latin_america_europe_elicos npm run build
-rm -rf $E3
-mv build $E3
+rm -rf $I4
+mv build $I4
 
 NODE_ENV=production REACT_APP_PC=external_asian_vet npm run build
 rm -rf $E1
@@ -32,5 +35,5 @@ NODE_ENV=production REACT_APP_PC=external_online_vet npm run build
 rm -rf $E3
 mv build $E3
 NODE_ENV=production REACT_APP_PC=external_latin_america_europe_elicos npm run build
-rm -rf $E3
-mv build $E3
+rm -rf $E4
+mv build $E4

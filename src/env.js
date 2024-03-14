@@ -39,10 +39,10 @@ export const payments_calculators = {
 };
 
 export const hero_banner = {
-  asian_all_other_countries_vet: `${MAIN_URL}/images/payment_calculator/in-person_vet_courses.png`,
-  latin_america_europe_vet: `${MAIN_URL}/images/payment_calculator/in-person_vet_courses.png`,
-  online_vet: `${MAIN_URL}/images/payment_calculator/online_vet_courses.png`,
-  latin_america_europe_elicosvet: `${MAIN_URL}/images/payment_calculator/in-person_vet_courses.png`,
+  asian_all_other_countries_vet: `./in-person_vet_courses.png`,
+  latin_america_europe_vet: `./in-person_vet_courses.png`,
+  online_vet: `./online_vet_courses.png`,
+  latin_america_europe_elicos: `./elicos_courses.jpg`,
 };
 
 export const ALS_STUDENT_HANDBOOK_URL = "http://ihbrisbane.synology.me:81/?resource=doc&doc_no=52400150";
