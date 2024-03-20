@@ -13,7 +13,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
     tuition_installments_amount, // $320
     tuition_installments_interval_weeks, // 1 Month = 4 weeks
     courses,
-  } = getPaymentOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1', 'both');
 
   // Courses with diferent tuition_installments_amount or tuition_installments_interval_weeks
   if (courses && Object.keys(courses).includes(courseCode)) {
@@ -70,7 +70,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
 export function latinAmericaEuropeOption1VET(data, courses) {
   const {
     first_tuition_installment_amount // $100 AUS
-  } = getPaymentOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1', 'both');
 
   // First tuition
   let result = [

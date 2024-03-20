@@ -12,7 +12,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
     tuition_installments_amount: TIA, // $1000 AUS
     third_tuition_installment_n_weeks_after_course_start: TTIWACS, // 10 weeks
     tuition_installments_interval_weeks_after_third_tuition: TIIWATT, // Month = 4 weeks
-  } = getPaymentOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1', 'both');
 
   const payments = [];
 
@@ -75,7 +75,7 @@ export function asianAllOthersCountriesOption1VET(data, courses) {
   const {
     first_tuition_installment_single_course_amount, // $300 AUS
     first_tuition_installment_multiple_courses_amount, // $500 AUS
-  } = getPaymentOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1', 'both');
 
   // First tuition
   let firstTuitionInstallment = first_tuition_installment_single_course_amount;

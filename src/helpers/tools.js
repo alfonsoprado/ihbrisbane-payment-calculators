@@ -6,8 +6,8 @@ export function getPaymentOptions(data, plural = false) {
     return data?.payment_options?.filter(option => types.includes(option?.type)).sort((a, b) => a.order - b.order);
 }
 
-export function getPaymentOptionParameters(data, option) {
-    return JSON.parse(data?.payment_options.find(item => item.code === option)?.parameters);
+export function getPaymentOptionParameters(data, option, type) {
+    return JSON.parse(data?.payment_options?.find(item => item?.code === option && item?.type === type)?.parameters);
 }
 
 export function getPaymentCalculatorParameters(data) {
@@ -64,7 +64,7 @@ export function scrollTo(id) {
 }
 
 export function formatName(firstName, lastName) {
-    firstName = firstName?.trim(); 
+    firstName = firstName?.trim();
     lastName = lastName?.trim();
     let fullName = [];
     if (firstName) fullName.push(firstName);

@@ -16,7 +16,7 @@ export function latinAmericaEuropeOption1Elicos(data, courses) {
     second_tuition_installment_weeks, 
     tuition_installments_interval_weeks,
     weeks_before_course_end_for_payment
-  } = getPaymentOptionParameters(data, 'option_1');
+  } = getPaymentOptionParameters(data, 'option_1', 'both');
 
   const firstCourse = courses[0];
 

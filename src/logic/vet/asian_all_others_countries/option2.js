@@ -3,13 +3,14 @@ import {
   findFridayOfFollowingWeeks,
   formatDate
 } from "../../../helpers/dates";
+import { getPaymentOptionParameters } from "../../../helpers/tools";
 import { alignExternalPaymentsWithInternalFormat } from "./utils";
 
 function generatePaymentSingleCourse(data, course) {
   const { startDate, finalTuition } = course;
   const name = course?.coursePricing?.course?.name;
 
-  const parameters = data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'single')?.parameters;
+  const parameters = getPaymentOptionParameters(data, 'option_2', 'single');
 
   const result = [
     {
@@ -46,7 +47,7 @@ function generatePaymentSingleCourse(data, course) {
 }
 
 function generatePaymentMultipleCourses(data, courses) {
-  const parameters = data?.payment_options?.find(option => option?.code === 'option_2' && option?.type === 'multiple')?.parameters;
+  const parameters = getPaymentOptionParameters(data, 'option_2', 'multiple');
 
   // Stage 1 - Internal & external
   const paymentsS1 = [

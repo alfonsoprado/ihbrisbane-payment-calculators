@@ -2,10 +2,11 @@ import {
   findFridayOfFollowingWeeks,
   formatDate
 } from "../../../helpers/dates";
+import { getPaymentOptionParameters } from "../../../helpers/tools";
 import { alignExternalPaymentsWithInternalFormat } from "./utils";
 
 export function asianAllOthersCountriesOption3VET(data, courses) {
-  const parameters = data?.payment_options?.find(option => option?.code === 'option_3' && option?.type === 'multiple')?.parameters;
+  const parameters = getPaymentOptionParameters(data, 'option_3', 'multiple');
 
   // Stage 1 - Internal & external
   const paymentsS1 = [
