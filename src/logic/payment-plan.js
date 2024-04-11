@@ -11,6 +11,9 @@ import { minimumInstallmentThreshold } from "./minimum-installment-threshold";
 import { generateExtraFeesLatinAmericaEuropeElicos } from "./elicos/latin_europe/extra-fees";
 import { latinAmericaEuropeOption1Elicos } from "./elicos/latin_europe/option1";
 import { latinAmericaEuropeDiscountsElicos } from "./elicos/latin_europe/discounts";
+import { generateExtraFeesAgedCare } from "./aged_care/extra-fees";
+import { option1AgedCare } from "./aged_care/option1";
+import { discountsAgedCare } from "./aged_care/discounts";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -36,6 +39,9 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
 
   let result = [];
 
+  /**
+   * VET PAYMENT CALCULATOR
+   */
   if (data?.payment_calculator?.type === 'vet') {
     // Discounts by regions
     if (data?.region?.code === "asian_all_other_countries") {
@@ -83,6 +89,10 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       console.error("Region doesn't exists.");
       return []
     }
+
+  /**
+   * ELICOS PAYMENT CALCULATOR
+   */
   } else if (data?.payment_calculator?.type === 'elicos') {
     // Discounts by regions
     if (data?.region?.code === "latin_america_europe") {
@@ -92,8 +102,8 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       return [];
     }
 
-     // Generate Extra Fees
-     result = [
+    // Generate Extra Fees
+    result = [
       ...generateExtraFeesLatinAmericaEuropeElicos(data, paymentType, courses, specialCases)
     ];
 
@@ -102,6 +112,35 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
         result = [
           ...result,
           ...latinAmericaEuropeOption1Elicos(data, courses)
+        ];
+      }
+    } else {
+      console.error("Region doesn't exists.");
+      return []
+    }
+
+  /**
+   * AGED CARE PAYMENT CALCULATOR
+   */
+  } else if (data?.payment_calculator?.type === 'aged_care') {
+    // Discounts by regions
+    if (["latin_america_europe", "asian_all_other_countries"].includes(data?.region?.code)) {
+      discountsAgedCare(data, paymentType, courses, specialCases);
+    } else {
+      console.error("Region doesn't exists.");
+      return [];
+    }
+
+    // Generate Extra Fees
+    result = [
+      ...generateExtraFeesAgedCare(data, paymentType, courses, specialCases)
+    ];
+
+    if (["latin_america_europe", "asian_all_other_countries"].includes(data?.region?.code)) {
+      if (paymentType === "option_1") {
+        result = [
+          ...result,
+          ...option1AgedCare(data, courses)
         ];
       }
     } else {

@@ -39,11 +39,11 @@ function AddCourse({ data, createCourse, courses }) {
     setCoursePricing({ label: value?.course?.name, value });
     setStartDate("");
     let duration_weeks = "";
-    if(value?.course?.duration_weeks) {
+    if (value?.course?.duration_weeks) {
       duration_weeks = value?.course?.duration_weeks;
-    } else if(!value?.course?.duration_weeks && value?.course?.minimum_duration_weeks) {
+    } else if (!value?.course?.duration_weeks && value?.course?.minimum_duration_weeks) {
       duration_weeks = value?.course?.minimum_duration_weeks;
-    } 
+    }
 
     setDuration(duration_weeks);
   };
@@ -74,12 +74,34 @@ function AddCourse({ data, createCourse, courses }) {
     }
   };
 
-  const coursesOption = (data, category) => {
-    if(data?.payment_calculator?.type === "elicos") {
-      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
-    }
-    return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code));
+  const coursesCategory = () => {
+      return data?.categories?.map((category) => {
+        return {
+          options: coursesOption(data, category, courses).map(coursePricing => {
+            return {
+              value: coursePricing,
+              label: coursePricing?.course?.name
+            }
+          }), label: category?.name
+        };
+      });
   }
+
+  const coursesOption = (data, category) => {
+    if (data?.payment_calculator?.type === "elicos") {
+      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+    } else if (data?.payment_calculator?.type === "aged_care") {
+      const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection;
+
+      const coursePricings = courses?.some(course => [courseOrderSelection?.first, courseOrderSelection?.second].includes(course.coursePricing?.course?.course_code)) ?
+        data?.course_pricings :
+        data?.course_pricings?.filter(coursePricing => [courseOrderSelection?.first, courseOrderSelection?.second].includes(coursePricing?.course?.course_code));
+      return coursePricings.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+    } else {
+      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code));
+    }
+  }
+
   return (
     <Card className="mb-3">
       <Card.Header>
@@ -91,16 +113,7 @@ function AddCourse({ data, createCourse, courses }) {
             <Form.Label><b>Course:</b></Form.Label>
             <Select
               formatGroupLabel={formatGroupLabel}
-              options={data?.categories?.map((category) => {
-                return {
-                  options: coursesOption(data, category).map(coursePricing => {
-                    return {
-                      value: coursePricing,
-                      label: coursePricing?.course?.name
-                    }
-                  }), label: category?.name
-                };
-              })}
+              options={coursesCategory()}
               value={coursePricing}
               onChange={handleChangeCoursePricing} />
           </Form.Group>
@@ -118,24 +131,24 @@ function AddCourse({ data, createCourse, courses }) {
           </Form.Group>
           {
             !coursePricing?.value || coursePricing?.value?.course?.duration_weeks ?
-            <Form.Group className="mb-2">
+              <Form.Group className="mb-2">
                 <Form.Label className="me-2"><b>Duration weeks:</b></Form.Label>
-                  {duration}
+                {duration}
               </Form.Group>
-               :
-               <Form.Group className="mb-2">
-               <Form.Label><b>Duration weeks:</b></Form.Label>
-               <Form.Control
-                 name="duration"
-                 onChange={handleChangeDuration}
-                 required
-                 value={duration}
-                 type="number"
-                 min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
-                 step="1"
-                 placeholder="Number of weeks"
-               ></Form.Control>
-             </Form.Group>
+              :
+              <Form.Group className="mb-2">
+                <Form.Label><b>Duration weeks:</b></Form.Label>
+                <Form.Control
+                  name="duration"
+                  onChange={handleChangeDuration}
+                  required
+                  value={duration}
+                  type="number"
+                  min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
+                  step="1"
+                  placeholder="Number of weeks"
+                ></Form.Control>
+              </Form.Group>
           }
 
           <div className="d-grid gap-2">

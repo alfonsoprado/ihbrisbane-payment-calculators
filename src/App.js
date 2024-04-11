@@ -64,10 +64,10 @@ function App({ paymentCalculator }) {
   const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[paymentCalculator ? paymentCalculator : PAYMENT_CALCULATOR]}`, fetcher)
 
   useEffect(() => {
-    // General Errors
+    // Errors
     let errors = [];
-    let intensiveCourse = 0;
-    let standardCourse = 0;
+
+    // General Errors
     let notEmpty = true;
     let courseWithoutDuration = false;
 
@@ -79,13 +79,45 @@ function App({ paymentCalculator }) {
       if (!course?.duration || course?.duration === "0") {
         courseWithoutDuration = true;
       }
-
-      if (course?.coursePricing?.course?.type === 'intensive') intensiveCourse += 1;
-      if (course?.coursePricing?.course?.type === 'standard') standardCourse += 1;
     }
 
+    if (courseWithoutDuration) {
+      errors.push("There is at least one course whose doesn't have duration.");
+    }
+
+    if (!notEmpty) {
+      errors.push("The fields of the courses cannot be empty.");
+    }
+
+    if (checkForOverlaps(courses)) {
+      errors.push("There is at least one course whose date range overlaps with another course.");
+    }
+
+    // VET Errors
+    if (data?.payment_calculator?.type === 'vet' && data?.region?.code === 'online') {
+      let intensiveCourse = 0;
+      let standardCourse = 0;
+
+      for (const course of courses) {
+        if (!notEmpty) {
+          notEmpty = Object.entries(course).every((field) => field[1]);
+        }
+
+        if (!course?.duration || course?.duration === "0") {
+          courseWithoutDuration = true;
+        }
+
+        if (course?.coursePricing?.course?.type === 'intensive') intensiveCourse += 1;
+        if (course?.coursePricing?.course?.type === 'standard') standardCourse += 1;
+      }
+
+      if (intensiveCourse === 1 && standardCourse === 0) {
+        errors.push("We don't accept standalone INTENSIVE course.");
+      }
+    }
+
+    // Elicos Errors
     if (data?.payment_calculator?.type === 'elicos') {
-      // Elicos payment calculator
       let duration_weeks_day_courses_elicos = 0;
       let has_elicos_course = false;
 
@@ -107,21 +139,32 @@ function App({ paymentCalculator }) {
       }
     }
 
+    // Aged Care
+    if (data?.payment_calculator?.type === 'aged_care') {
+      const paymentCalculatorParameters = JSON.parse(data?.payment_calculator?.parameters);
+      const firstCourseCode = paymentCalculatorParameters?.course_order_selection?.first;
+      const secondCourseCode = paymentCalculatorParameters?.course_order_selection?.second;
+      const firstCourseName = data?.course_pricings?.find(coursePricing => coursePricing?.course?.course_code === firstCourseCode)?.course?.name;
+      const secondCourseName = data?.course_pricings?.find(coursePricing => coursePricing?.course?.course_code === secondCourseCode)?.course?.name;
 
-    if (courseWithoutDuration) {
-      errors.push("There is at least one course whose doesn't have duration.");
-    }
+      const courseCodes = courses.map(course => course?.coursePricing?.course?.course_code);
 
-    if (!notEmpty) {
-      errors.push("The fields of the courses cannot be empty.");
-    }
-
-    if (data?.region?.code === 'online' && intensiveCourse === 1 && standardCourse === 0) {
-      errors.push("We don't accept standalone INTENSIVE course.");
-    }
-
-    if (checkForOverlaps(courses)) {
-      errors.push("There is at least one course whose date range overlaps with another course.");
+      if (courseCodes?.length > 0 && courseCodes?.every(courseCode => firstCourseCode !== courseCode && secondCourseCode !== courseCode)) {
+        errors.push(`There have to be at least a course which is either "${firstCourseName}" or "${secondCourseName}".`);
+      } else if (courseCodes.includes(firstCourseCode) &&
+        !courseCodes.includes(secondCourseCode) &&
+        firstCourseCode !== courseCodes[0]) {
+        errors.push(`The first course has to be "${firstCourseName}"`);
+      } else if (courseCodes.includes(secondCourseCode) &&
+        !courseCodes.includes(firstCourseCode) &&
+        secondCourseCode !== courseCodes[0]) {
+        errors.push(`The first course has to be "${secondCourseName}"`);
+      } else if (courseCodes.includes(firstCourseCode) && 
+        courseCodes.includes(secondCourseCode) && 
+        firstCourseCode !== courseCodes[0] &&
+        secondCourseCode !== courseCodes[1]) {
+          errors.push(`The order of the first and second course have to be "${firstCourseName}" and "${secondCourseName} respectively`);
+      }
     }
 
     if (errors?.length > 0) {

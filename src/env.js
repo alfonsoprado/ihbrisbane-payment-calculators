@@ -16,6 +16,8 @@ const asian_all_other_countries_vet = ENV === "production" ? productionPaymentCa
 const latin_america_europe_vet = ENV === "production" ? productionPaymentCalculators['latin_america_europe_vet'] : developPaymentCalculators['latin_america_europe_vet'];
 const online_vet = ENV === "production" ? productionPaymentCalculators['online_vet'] : developPaymentCalculators['online_vet'];
 const latin_america_europe_elicos = ENV === "production" ? productionPaymentCalculators['latin_america_europe_elicos'] : developPaymentCalculators['latin_america_europe_elicos'];
+const asian_all_other_countries_aged_care = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_aged_care'] : developPaymentCalculators['asian_all_other_countries_aged_care'];
+const latin_america_europe_aged_care = ENV === "production" ? productionPaymentCalculators['latin_america_europe_aged_care'] : developPaymentCalculators['latin_america_europe_aged_care'];
 
 export const payments_calculators = {
   // Internal
@@ -27,6 +29,10 @@ export const payments_calculators = {
   internal_online_vet: `${online_vet}?internal=${internal}`,
   // Latin America/Europe Elicos
   internal_latin_america_europe_elicos: `${latin_america_europe_elicos}?internal=${internal}`,
+  // Asian/All other countries
+  internal_asian_aged_care: `${asian_all_other_countries_aged_care}?internal=${internal}`,
+  // Latin America/Europe
+  internal_latin_america_europe_aged_care: `${latin_america_europe_aged_care}?internal=${internal}`,
   // External
   // Asian all other countries
   external_asian_vet: asian_all_other_countries_vet,
@@ -36,11 +42,17 @@ export const payments_calculators = {
   external_online_vet: online_vet,
   // Latin America/Europe Elicos
   external_latin_america_europe_elicos: latin_america_europe_elicos,
+    // Asian all other countries
+  external_asian_aged_care: asian_all_other_countries_aged_care,
+  // Latin America/Europe
+  external_latin_america_europe_aged_care: latin_america_europe_aged_care,
 };
 
 export const hero_banner = {
   asian_all_other_countries_vet: `./in-person_vet_courses.png`,
   latin_america_europe_vet: `./banner_latin_europe_vet.jpg`,
+  asian_all_other_countries_aged_care: `./in-person_vet_courses.png`,
+  latin_america_europe_aged_care: `./banner_latin_europe_vet.jpg`,
   online_vet: `./online_vet_courses.png`,
   latin_america_europe_elicos: `./banner_latin_europe_elicos.jpg`,
 };
