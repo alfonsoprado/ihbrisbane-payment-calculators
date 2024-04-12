@@ -13,7 +13,7 @@ export function generateExtraFeesAgedCare(data, paymentType, courses, specialCas
       dueDate: formatDate(new Date()),
       feeDescription: "Enrolment Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('ew') ? 0 : enrolmentFee,
+      paymentAmount: specialCasesSelected?.includes('ew') || specialCasesSelected?.includes('es') ? 0 : enrolmentFee,
       code: 'enrolment_fee'
     },
     {
@@ -27,7 +27,7 @@ export function generateExtraFeesAgedCare(data, paymentType, courses, specialCas
       dueDate: formatDate(new Date()),
       feeDescription: "Payment Plan Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('pfw') ? 0 : data?.payment_plan_fee,
+      paymentAmount: specialCasesSelected?.includes('pfw') || paymentType === 'pay_upfront' ? 0 : data?.payment_plan_fee,
       code: 'payment_plan_fee' 
     }
   ];

@@ -57,9 +57,12 @@ function PaymentOptions({
     showPaymentPlanTable();
   }
 
+  const specialCasesOptions = getSpecialCases(data, courses);
+
   const buttonDisable = errorMessages?.length > 0 ||
     !paymentType ||
     courses?.length === 0;
+
 
   return (
     <Card id="payment_options" className="mb-3">
@@ -67,7 +70,7 @@ function PaymentOptions({
         <h4>Payment Options</h4>
       </Card.Header>
       <Card.Body>
-        <Row>
+        <Row className="mb-3">
           <Col>
             <Form.Group>
               <Form.Label><b>Payment Type</b></Form.Label>
@@ -104,9 +107,9 @@ function PaymentOptions({
           </Col>
           <Col>
             <Form.Group>
-              <Form.Label><b>Special Cases</b></Form.Label>
+              { specialCasesOptions.length > 0 && <Form.Label><b>Special Cases</b></Form.Label> }
               {
-                getSpecialCases(data, courses).map((specialCase) => {
+                specialCasesOptions.map((specialCase) => {
                   return (
                     <OverlayTrigger
                       key={specialCase?.code}
@@ -117,7 +120,7 @@ function PaymentOptions({
                         </Tooltip>
                       }
                     >
-                      <Form.Group className="mb-3" controlId={specialCase?.code}>
+                      <Form.Group controlId={specialCase?.code}>
                         <Form.Check
                           type="checkbox"
                           name={specialCase?.code}
