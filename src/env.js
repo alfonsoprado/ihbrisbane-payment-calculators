@@ -51,8 +51,8 @@ export const payments_calculators = {
 export const hero_banner = {
   asian_all_other_countries_vet: `./in-person_vet_courses.png`,
   latin_america_europe_vet: `./banner_latin_europe_vet.jpg`,
-  asian_all_other_countries_aged_care: `./in-person_vet_courses.png`,
-  latin_america_europe_aged_care: `./banner_latin_europe_vet.jpg`,
+  asian_all_other_countries_aged_care: `./aged-care_courses.jpg`,
+  latin_america_europe_aged_care: `./aged-care_courses.jpg`,
   online_vet: `./online_vet_courses.png`,
   latin_america_europe_elicos: `./banner_latin_europe_elicos.jpg`,
 };
