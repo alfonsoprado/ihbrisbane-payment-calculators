@@ -1,5 +1,3 @@
-import { getCourseDiscountPromotion, getPaymentCalculatorDiscountPromotion, getSpecialCases } from "../../helpers/tools";
-
 /*
     Do not forget, when applying discounts using percentages, 
     the rule is to use the largest percentage, it is not cumulative. 
