@@ -160,9 +160,9 @@ function App({ paymentCalculator }) {
         secondCourseCode !== courseCodes[0]) {
         errors.push(`The first course has to be "${secondCourseName}"`);
       } else if (courseCodes.includes(firstCourseCode) && 
-        courseCodes.includes(secondCourseCode) && 
-        firstCourseCode !== courseCodes[0] &&
-        secondCourseCode !== courseCodes[1]) {
+        courseCodes.includes(secondCourseCode) &&  
+        !(firstCourseCode === courseCodes[0] &&
+        secondCourseCode === courseCodes[1])) {
           errors.push(`The order of the first and second course have to be "${firstCourseName}" and "${secondCourseName} respectively`);
       }
     }
