@@ -20,6 +20,7 @@ const defaultValuesApplication = {
   lastName: "",
   dateOfBirth: "",
   gender: "Not Given",
+  USI: "",
   email: "",
   phone: "",
   nationality: "",
@@ -37,7 +38,9 @@ const defaultValuesApplication = {
   additionalStudy: "No",
   OSHC: "No required",
   havePrevioulsyHeldVisaAustralia: "No",
-  previousVisaAustraliaDetails: ""
+  previousVisaAustraliaDetails: "",
+  haveYouBeenRefusedOrCancelledVisa: "No",
+  haveYouBeenRefusedOrCancelledVisaDetails: "",
 }
 
 const middleCenterStyle = {

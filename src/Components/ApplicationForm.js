@@ -191,6 +191,14 @@ function ApplicationForm({
                         <Row>
                             <Col>
                                 <Form.Group className="mb-3">
+                                    <Form.Label><b>USI:</b></Form.Label>
+                                    <Form.Control
+                                        name="USI"
+                                        value={application?.USI}
+                                        onChange={updateField}
+                                        type="text" />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
                                     <Form.Label><b>Email:</b></Form.Label>
                                     <Form.Control
                                         name="email"
@@ -231,6 +239,7 @@ function ApplicationForm({
                             </Col>
                         </Row>
                     </Col>
+
                 </Row>
                 <Row className="mb-2">
                     <Col>
@@ -289,24 +298,6 @@ function ApplicationForm({
                             name="visa"
                             value="Student"
                             checked={application?.visa === 'Student'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="Business"
-                            name="visa"
-                            value="Business"
-                            checked={application?.visa === 'Business'}
-                            onChange={updateField}
-                            type="radio"
-                        />
-                        <Form.Check
-                            inline
-                            label="Dependent"
-                            name="visa"
-                            value="Dependent"
-                            checked={application?.visa === 'Dependent'}
                             onChange={updateField}
                             type="radio"
                         />
@@ -469,6 +460,43 @@ function ApplicationForm({
                             <Form.Control
                                 as="textarea"
                                 name="previousVisaAustraliaDetails"
+                                onChange={updateField}
+                                rows={3} />
+                        </Form.Group>
+                    }
+                </Row>
+                <Row className="mb-2">
+                    <Col><b>Have you been refused or cancelled a visa in the past?</b></Col>
+                </Row>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Check
+                            inline
+                            label="Yes"
+                            name="haveYouBeenRefusedOrCancelledVisa"
+                            value="Yes"
+                            checked={application?.haveYouBeenRefusedOrCancelledVisa === 'Yes'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                        <Form.Check
+                            inline
+                            label="No"
+                            name="haveYouBeenRefusedOrCancelledVisa"
+                            value="No"
+                            checked={application?.haveYouBeenRefusedOrCancelledVisa === 'No'}
+                            onChange={updateField}
+                            type="radio"
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    {
+                        application?.haveYouBeenRefusedOrCancelledVisa === 'Yes' && <Form.Group className="mb-3">
+                            <Form.Label><b>Please provide details:</b></Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                name="haveYouBeenRefusedOrCancelledVisaDetails"
                                 onChange={updateField}
                                 rows={3} />
                         </Form.Group>
