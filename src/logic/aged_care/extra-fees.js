@@ -1,5 +1,4 @@
 import { formatDate } from "../../helpers/dates";
-import { getSpecialCases } from "../../helpers/tools";
 
 export function generateExtraFeesAgedCare(data, paymentType, courses, specialCasesSelected) {
   let enrolmentFee = courses[0]?.coursePricing?.enrolment_fee;
