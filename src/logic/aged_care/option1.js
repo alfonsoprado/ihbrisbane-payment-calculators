@@ -80,14 +80,14 @@ function generatePaymentType1(data, course, index) {
       dueDate: formatDate(secondTuitionInstallmentDate),
       feeDescription: "Tuition installment",
       courseName: course?.coursePricing?.course?.name,
-      paymentAmount: secondTuitionInstallmentFee,
+      paymentAmount: Math.round(secondTuitionInstallmentFee * 10) / 10,
       code: "tuition_installment"
     },
     {
       dueDate: formatDate(thirdTuitionInstallmentDate),
       feeDescription: "Tuition installment",
       courseName: course?.coursePricing?.course?.name,
-      paymentAmount: thirdTuitionInstallmentFee,
+      paymentAmount: Math.round(thirdTuitionInstallmentFee * 10) / 10,
       code: "tuition_installment"
     }
   ] 
@@ -118,21 +118,21 @@ function generatePaymentType2(data, course, index) {
       dueDate: formatDate(secondTuitionInstallmentDate),
       feeDescription: "Tuition installment",
       courseName: course?.coursePricing?.course?.name,
-      paymentAmount: secondTuitionInstallmentFee,
+      paymentAmount: Math.round(secondTuitionInstallmentFee * 10) / 10,
       code: "tuition_installment"
     },
     {
       dueDate: formatDate(thirdTuitionInstallmentDate),
       feeDescription: "Tuition installment",
       courseName: course?.coursePricing?.course?.name,
-      paymentAmount: thirdTuitionInstallmentFee,
+      paymentAmount: Math.round(thirdTuitionInstallmentFee * 10) / 10,
       code: "tuition_installment"
     },
     {
       dueDate: formatDate(fourthTuitionInstallmentDate),
       feeDescription: "Tuition installment",
       courseName: course?.coursePricing?.course?.name,
-      paymentAmount: fourthTuitionInstallmentFee,
+      paymentAmount: Math.round(fourthTuitionInstallmentFee * 10) / 10,
       code: "tuition_installment"
     },
   ] 
