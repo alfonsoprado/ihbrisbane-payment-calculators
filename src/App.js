@@ -53,6 +53,7 @@ const middleCenterStyle = {
 }
 
 function App({ paymentCalculator }) {
+  const [counterCoursesAdded, setCounterCoursesAdded] = useState(0);
   const [errorMessages, setErrorMessage] = useState([]);
   const [courses, setCourses] = useState([]);
   const [paymentType, setPaymentType] = useState("");
@@ -201,7 +202,9 @@ function App({ paymentCalculator }) {
   }
 
   const createCourse = (course) => {
-    setCourses([...courses, { ...course, id: course?.coursePricing?.course?.id }].sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
+    let id = `${course?.coursePricing?.course?.id}-${counterCoursesAdded}`;
+    setCounterCoursesAdded(counterCoursesAdded + 1);
+    setCourses([...courses, { ...course, id }].sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
     cleanPaymentPlan();
   };
 

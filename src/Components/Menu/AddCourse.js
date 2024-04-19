@@ -89,7 +89,7 @@ function AddCourse({ data, createCourse, courses }) {
 
   const coursesOption = (data, category) => {
     if (data?.payment_calculator?.type === "elicos") {
-      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && (!courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name) || ["062145C", "062145C"].includes(coursePricing?.course?.cricos_code) || ["062145C", "062145C"].includes(coursePricing?.course?.cricos_code)));
     } else if (data?.payment_calculator?.type === "aged_care") {
       const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection;
 
