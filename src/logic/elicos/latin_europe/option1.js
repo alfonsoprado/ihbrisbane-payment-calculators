@@ -73,7 +73,7 @@ export function latinAmericaEuropeOption1Elicos(data, courses) {
     paymentDate = findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks);
     let _amountPerTuition = Math.trunc(amountPerTuition);
     if(numberHasDecimalPart && i === (numberOfPayments - 1)) {
-        _amountPerTuition += 1;
+        _amountPerTuition = coursesPrice - firstTuition - secondTuition - Math.trunc(amountPerTuition) * (numberOfPayments - 1);
     }
 
     result = [
