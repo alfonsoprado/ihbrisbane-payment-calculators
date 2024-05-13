@@ -50,6 +50,9 @@ function AddCourse({ data, createCourse, courses }) {
 
   const handleChangeStartDate = (e) => {
     const value = e.value;
+    if(coursePricing?.value?.course?.start_dates_with_weeks?.length > 0) {
+      setDuration(coursePricing?.value?.course?.start_dates_with_weeks?.find(obj => obj.start_date === value)?.duration_weeks);
+    }
     setStartDate({ label: value, value });
   }
 
@@ -75,30 +78,53 @@ function AddCourse({ data, createCourse, courses }) {
   };
 
   const coursesCategory = () => {
-      return data?.categories?.map((category) => {
-        return {
-          options: coursesOption(data, category, courses).map(coursePricing => {
-            return {
-              value: coursePricing,
-              label: coursePricing?.course?.name
-            }
-          }), label: category?.name
-        };
-      });
+    return data?.categories?.map((category) => {
+      return {
+        options: coursesOption(data, category, courses).map(coursePricing => {
+          return {
+            value: coursePricing,
+            label: coursePricing?.course?.name
+          }
+        }), label: category?.name
+      };
+    });
   }
 
   const coursesOption = (data, category) => {
     if (data?.payment_calculator?.type === "elicos") {
-      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && (!courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name) || ["062145C", "062145C"].includes(coursePricing?.course?.cricos_code) || ["062145C", "062145C"].includes(coursePricing?.course?.cricos_code)));
+      const coursesWithMultipleDates = JSON.parse(data?.payment_calculator?.parameters)?.courses_with_multiple_dates;
+      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && (!courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name) || coursesWithMultipleDates.includes(coursePricing?.course?.cricos_code)));
     } else if (data?.payment_calculator?.type === "aged_care") {
       const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection;
-
       const coursePricings = courses?.some(course => [courseOrderSelection?.first, courseOrderSelection?.second].includes(course.coursePricing?.course?.course_code)) ?
         data?.course_pricings :
         data?.course_pricings?.filter(coursePricing => [courseOrderSelection?.first, courseOrderSelection?.second].includes(coursePricing?.course?.course_code));
       return coursePricings.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
     } else {
       return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code));
+    }
+  }
+
+  const durationField = () => {
+    if (!coursePricing?.value || coursePricing?.value?.course?.duration_weeks || coursePricing?.value?.course?.start_dates_with_weeks?.length > 0) {
+      return <Form.Group className="mb-2">
+        <Form.Label className="me-2"><b>Duration weeks:</b></Form.Label>
+        {duration}
+      </Form.Group>
+    } else {
+      return <Form.Group className="mb-2">
+        <Form.Label><b>Duration weeks:</b></Form.Label>
+        <Form.Control
+          name="duration"
+          onChange={handleChangeDuration}
+          required
+          value={duration}
+          type="number"
+          min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
+          step="1"
+          placeholder="Number of weeks"
+        ></Form.Control>
+      </Form.Group>
     }
   }
 
@@ -130,27 +156,8 @@ function AddCourse({ data, createCourse, courses }) {
               onChange={handleChangeStartDate} />
           </Form.Group>
           {
-            !coursePricing?.value || coursePricing?.value?.course?.duration_weeks ?
-              <Form.Group className="mb-2">
-                <Form.Label className="me-2"><b>Duration weeks:</b></Form.Label>
-                {duration}
-              </Form.Group>
-              :
-              <Form.Group className="mb-2">
-                <Form.Label><b>Duration weeks:</b></Form.Label>
-                <Form.Control
-                  name="duration"
-                  onChange={handleChangeDuration}
-                  required
-                  value={duration}
-                  type="number"
-                  min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
-                  step="1"
-                  placeholder="Number of weeks"
-                ></Form.Control>
-              </Form.Group>
+            durationField()
           }
-
           <div className="d-grid gap-2">
             <Button
               disabled={

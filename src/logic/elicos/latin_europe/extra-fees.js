@@ -15,8 +15,9 @@ export function generateExtraFeesLatinAmericaEuropeElicos(data, paymentType, cou
     return prev + parseInt(cur.duration);
   }, 0);
 
-  if (totalDurationDayCourses < discount21Week.required_weeks) {
-    for (const course of courses) {
+
+  for (const course of courses) {
+    if (totalDurationDayCourses < discount21Week.required_weeks) {
       if (course?.coursePricing?.enrolment_fee > enrolmentFee) {
         enrolmentFee = course?.coursePricing?.enrolment_fee;
       }
@@ -31,11 +32,11 @@ export function generateExtraFeesLatinAmericaEuropeElicos(data, paymentType, cou
           materialFee += course?.coursePricing?.material_fee * weeks;
           materialFeeWeeks += weeks;
         }
-
-      } else {
-        // Else courses -> "062149K/062148M"
-        materialFee += course?.coursePricing?.material_fee;
       }
+    }
+    if(!discount21Week.courses_discount.includes(course?.coursePricing?.course?.cricos_code)) {
+        // Courses -> "062149K/062148M"
+        materialFee += course?.coursePricing?.material_fee;
     }
   }
 

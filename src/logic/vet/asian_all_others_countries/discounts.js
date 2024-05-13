@@ -12,7 +12,6 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
     const horticulturePackageSpecial = getCourseDiscountPromotion(data, '113194A', 'horticulture_package_special')?.parameters?.courses;
     const horticultureCoursesCricosCodes = Object.keys(horticulturePackageSpecial);
 
-    console.log(courses);
     for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
         // Default finalTuition, change if have discount

@@ -17,7 +17,6 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
 
   // Courses with diferent tuition_installments_amount or tuition_installments_interval_weeks
   if (courses && Object.keys(courses).includes(courseCode)) {
-    console.log(courses[courseCode]);
     if(courses[courseCode]?.tuition_installments_amount) {
       tuition_installments_amount = courses[courseCode]?.tuition_installments_amount;
     }

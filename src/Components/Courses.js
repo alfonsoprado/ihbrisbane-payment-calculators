@@ -16,6 +16,38 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
     updateCourse(id, name, value);
   };
 
+  const durationField = (course) => {
+    if (!course?.coursePricing?.course?.duration_weeks) {
+      if (course?.coursePricing?.course?.start_dates_with_weeks?.length > 0) {
+        return <td className="text-center align-middle">
+          {course?.coursePricing?.course?.start_dates_with_weeks?.find(obj => obj.start_date === course?.startDate)?.duration_weeks}
+        </td>;
+      } else {
+        return <td>
+          <Form.Control
+            name="duration"
+            value={course?.duration}
+            isInvalid={!course?.duration}
+            onChange={(e) =>
+              handleChangeDuration(e, course.id)
+            }
+            type="number"
+            min={course?.coursePricing?.course?.minimum_duration_weeks || 1}
+            step="1"
+            placeholder="Weeks"
+          ></Form.Control>
+          <Form.Control.Feedback type="invalid">
+            The field is required.
+          </Form.Control.Feedback>
+        </td>;
+      }
+    } else {
+      return <td className="text-center align-middle">
+        {course?.coursePricing?.course?.duration_weeks}
+      </td>;
+    }
+  }
+
   return (
     <Card>
       <Card.Header><h4>Courses</h4></Card.Header>
@@ -59,27 +91,7 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
                 />
               </td>
               {
-                !course?.coursePricing?.course?.duration_weeks ?
-                  <td>
-                    <Form.Control
-                      name="duration"
-                      value={course?.duration}
-                      isInvalid={!course?.duration}
-                      onChange={(e) =>
-                        handleChangeDuration(e, course.id)
-                      }
-                      type="number"
-                      min={course?.coursePricing?.course?.minimum_duration_weeks || 1}
-                      step="1"
-                      placeholder="Weeks"
-                    ></Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                      The field is required.
-                    </Form.Control.Feedback>
-                  </td> :
-                  <td className="text-center align-middle">
-                    {course?.coursePricing?.course?.duration_weeks}
-                  </td>
+                durationField(course)
               }
               <td className="text-center align-middle" style={{
                 width: '110px'
