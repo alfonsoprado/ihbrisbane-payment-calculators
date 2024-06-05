@@ -62,7 +62,7 @@ function ApplicationForm({
                 cricosCode: course?.coursePricing?.course?.cricos_code,
                 courseCode: course?.coursePricing?.course?.course_code,
                 startDate: format(parseISO(course?.startDate), "dd/MM/yyyy"),
-                duration: course?.duration
+                duration: String(course?.duration)
             }))
         };
     }
