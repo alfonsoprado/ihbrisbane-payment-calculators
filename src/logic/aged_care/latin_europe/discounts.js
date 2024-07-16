@@ -5,7 +5,7 @@
     then the final discount is 10%, not 15%.
 
 */
-export function discountsAgedCare(data, paymentType, courses, specialCases) {
+export function latinAmericaEuropeDiscountsAgedCare(data, paymentType, courses, specialCases) {
     // Don't have discounts
     console.debug("Courses after discounts were applied:", courses);
 

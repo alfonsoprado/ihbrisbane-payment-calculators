@@ -11,9 +11,12 @@ import { minimumInstallmentThreshold } from "./minimum-installment-threshold";
 import { generateExtraFeesLatinAmericaEuropeElicos } from "./elicos/latin_europe/extra-fees";
 import { latinAmericaEuropeOption1Elicos } from "./elicos/latin_europe/option1";
 import { latinAmericaEuropeDiscountsElicos } from "./elicos/latin_europe/discounts";
-import { generateExtraFeesAgedCare } from "./aged_care/extra-fees";
-import { option1AgedCare } from "./aged_care/option1";
-import { discountsAgedCare } from "./aged_care/discounts";
+import { asianAllOthersCountriesDiscountsAgedCare } from "./aged_care/asian_all_others_countries/discounts";
+import { asianAllOthersCountriesDiscountsGenerateExtraFeesAgedCare } from "./aged_care/asian_all_others_countries/extra-fees";
+import { asianAllOthersCountriesDiscountsOption1AgedCare } from "./aged_care/asian_all_others_countries/option1";
+import { latinAmericaEuropeDiscountsAgedCare } from "./aged_care/latin_europe/discounts";
+import { latinAmericaEuropeGenerateExtraFeesAgedCare } from "./aged_care/latin_europe/extra-fees";
+import { latinAmericaEuropeOption1AgedCare } from "./aged_care/latin_europe/option1";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -57,6 +60,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
 
     // Generate Extra Fees
     result = [
+      ...result,
       ...generateExtraFeesVET(data, paymentType, courses, specialCases)
     ];
 
@@ -104,6 +108,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
 
     // Generate Extra Fees
     result = [
+      ...result,
       ...generateExtraFeesLatinAmericaEuropeElicos(data, paymentType, courses, specialCases)
     ];
 
@@ -124,23 +129,43 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
    */
   } else if (data?.payment_calculator?.type === 'aged_care') {
     // Discounts by regions
-    if (["latin_america_europe", "asian_all_other_countries"].includes(data?.region?.code)) {
-      discountsAgedCare(data, paymentType, courses, specialCases);
+    if (data?.region?.code === "asian_all_other_countries") {
+      asianAllOthersCountriesDiscountsAgedCare(data, paymentType, courses, specialCases);
+    } else if(data?.region?.code === "latin_america_europe") {
+      latinAmericaEuropeDiscountsAgedCare(data, paymentType, courses, specialCases);
     } else {
       console.error("Region doesn't exists.");
       return [];
     }
 
     // Generate Extra Fees
-    result = [
-      ...generateExtraFeesAgedCare(data, paymentType, courses, specialCases)
-    ];
+    if (data?.region?.code === "asian_all_other_countries") {
+      result = [
+        ...result,
+        ...asianAllOthersCountriesDiscountsGenerateExtraFeesAgedCare(data, paymentType, courses, specialCases)
+      ];
+    } else if(data?.region?.code === "latin_america_europe") {
+      result = [
+        ...result,
+        ...latinAmericaEuropeGenerateExtraFeesAgedCare(data, paymentType, courses, specialCases)
+      ];
+    } else {
+      console.error("Region doesn't exists.");
+      return [];
+    }
 
-    if (["latin_america_europe", "asian_all_other_countries"].includes(data?.region?.code)) {
+    if (data?.region?.code === "asian_all_other_countries") {
       if (paymentType === "option_1") {
         result = [
           ...result,
-          ...option1AgedCare(data, courses)
+          ...asianAllOthersCountriesDiscountsOption1AgedCare(data, courses)
+        ];
+      }
+    } else if(data?.region?.code === "latin_america_europe") {
+      if (paymentType === "option_1") {
+        result = [
+          ...result,
+          ...latinAmericaEuropeOption1AgedCare(data, courses, specialCases)
         ];
       }
     } else {
@@ -157,8 +182,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     ...result,
     ...generateTotalPayments(data, result, courses, paymentType)
   ];
-
-  console.debug(result);
 
   return addIdToArray(result);
 }

@@ -2,8 +2,8 @@ import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
   formatDate
-} from "../../helpers/dates";
-import { getPaymentOptionParameters } from "../../helpers/tools";
+} from "../../../helpers/dates";
+import { getPaymentOptionParameters } from "../../../helpers/tools";
 
 function generateCoeFee(data, courses) {
   const {
@@ -121,7 +121,7 @@ function generatePaymentType2(data, course, index) {
   return result;
 }
 
-export function option1AgedCare(data, courses) {
+export function asianAllOthersCountriesDiscountsOption1AgedCare(data, courses) {
   const {
     paymentType1,
     paymentType2,

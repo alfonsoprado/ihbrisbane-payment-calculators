@@ -1,6 +1,6 @@
-import { formatDate } from "../../helpers/dates";
+import { formatDate } from "../../../helpers/dates";
 
-export function generateExtraFeesAgedCare(data, paymentType, courses, specialCasesSelected) {
+export function asianAllOthersCountriesDiscountsGenerateExtraFeesAgedCare(data, paymentType, courses, specialCasesSelected) {
   let enrolmentFee = courses[0]?.coursePricing?.enrolment_fee;
   let materialFee = 0;
   for (const course of courses) {
