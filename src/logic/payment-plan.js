@@ -147,7 +147,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     } else if(data?.region?.code === "latin_america_europe") {
       result = [
         ...result,
-        ...latinAmericaEuropeGenerateExtraFeesAgedCare(data, paymentType, courses, specialCases)
+        // Include on age_care/latin_europe/option1.js
       ];
     } else {
       console.error("Region doesn't exists.");
@@ -165,7 +165,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       if (paymentType === "option_1") {
         result = [
           ...result,
-          ...latinAmericaEuropeOption1AgedCare(data, courses, specialCases)
+          ...latinAmericaEuropeOption1AgedCare(data, paymentType, courses, specialCases)
         ];
       }
     } else {

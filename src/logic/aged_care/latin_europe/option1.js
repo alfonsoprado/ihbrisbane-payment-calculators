@@ -4,6 +4,7 @@ import {
   formatDate
 } from "../../../helpers/dates";
 import { getPaymentOptionParameters } from "../../../helpers/tools";
+import { latinAmericaEuropeGenerateExtraFeesAgedCare } from "./extra-fees";
 
 function generatePaymentsOption1(data, course, startDate, coursePrice) {
   const courseName = course?.coursePricing?.course?.name;
@@ -73,7 +74,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   return payments;
 }
 
-export function latinAmericaEuropeOption1AgedCare(data, courses, specialCasesSelected) {
+export function latinAmericaEuropeOption1AgedCare(data, paymentType, courses, specialCasesSelected) {
   
   let {
     coe_fee,
@@ -87,10 +88,11 @@ export function latinAmericaEuropeOption1AgedCare(data, courses, specialCasesSel
     {
       dueDate: formatDate(new Date()),
       feeDescription: "COE Fee",
-      courseName: courses[0]?.coursePricing?.course?.name,
+      courseName: "",
       paymentAmount: coe_fee,
       code: "coe_fee"
-    }
+    },
+    ...latinAmericaEuropeGenerateExtraFeesAgedCare(data, paymentType, courses, specialCasesSelected)
   ];
 
   
