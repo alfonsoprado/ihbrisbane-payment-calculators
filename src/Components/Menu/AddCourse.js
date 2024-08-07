@@ -95,11 +95,23 @@ function AddCourse({ data, createCourse, courses }) {
       const coursesWithMultipleDates = JSON.parse(data?.payment_calculator?.parameters)?.courses_with_multiple_dates;
       return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && (!courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name) || coursesWithMultipleDates.includes(coursePricing?.course?.cricos_code)));
     } else if (data?.payment_calculator?.type === "aged_care") {
-      const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection;
-      const coursePricings = courses?.some(course => [courseOrderSelection?.first, courseOrderSelection?.second].includes(course.coursePricing?.course?.course_code)) ?
+      const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection_list;
+      const coursePricings = courses?.some(course => courseOrderSelection.includes(course.coursePricing?.course?.course_code)) ?
         data?.course_pricings :
-        data?.course_pricings?.filter(coursePricing => [courseOrderSelection?.first, courseOrderSelection?.second].includes(coursePricing?.course?.course_code));
+        data?.course_pricings?.filter(coursePricing => courseOrderSelection.includes(coursePricing?.course?.course_code));
       return coursePricings.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+    } else if (data?.payment_calculator?.type === "als_college") { 
+      const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection_list;
+      let coursePricings = data?.course_pricings?.filter(coursePricing => courseOrderSelection.includes(coursePricing?.course?.course_code));
+      if(courses?.some(course => ["CHC33021", "CHC43015"].includes(course.coursePricing?.course?.course_code))) {
+        coursePricings = data?.course_pricings.filter(coursePricing => !["RII60520", "AHC40422"].includes(coursePricing?.course?.course_code));
+      } else if(courses?.some(course => ["AHC40422"].includes(course.coursePricing?.course?.course_code))) {
+        coursePricings = data?.course_pricings.filter(coursePricing => !["CHC33021", "CHC43015", "RII60520"].includes(coursePricing?.course?.course_code));
+      } else if (courses?.some(course => ["RII60520"].includes(course.coursePricing?.course?.course_code))) {
+        coursePricings = [];
+      }
+      coursePricings = coursePricings.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+      return coursePricings;
     } else {
       return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code));
     }

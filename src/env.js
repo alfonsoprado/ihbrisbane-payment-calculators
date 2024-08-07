@@ -18,6 +18,7 @@ const online_vet = ENV === "production" ? productionPaymentCalculators['online_v
 const latin_america_europe_elicos = ENV === "production" ? productionPaymentCalculators['latin_america_europe_elicos'] : developPaymentCalculators['latin_america_europe_elicos'];
 const asian_all_other_countries_aged_care = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_aged_care'] : developPaymentCalculators['asian_all_other_countries_aged_care'];
 const latin_america_europe_aged_care = ENV === "production" ? productionPaymentCalculators['latin_america_europe_aged_care'] : developPaymentCalculators['latin_america_europe_aged_care'];
+const asian_all_other_countries_als_college = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_als_college'] : developPaymentCalculators['asian_all_other_countries_als_college'];
 
 export const payments_calculators = {
   // Internal
@@ -33,6 +34,8 @@ export const payments_calculators = {
   internal_asian_aged_care: `${asian_all_other_countries_aged_care}?internal=${internal}`,
   // Latin America/Europe
   internal_latin_america_europe_aged_care: `${latin_america_europe_aged_care}?internal=${internal}`,
+  // Asian all other countries als college
+  internal_asian_all_other_countries_als_college: `${asian_all_other_countries_als_college}?internal=${internal}`,
   // External
   // Asian all other countries
   external_asian_vet: asian_all_other_countries_vet,
@@ -46,15 +49,18 @@ export const payments_calculators = {
   external_asian_aged_care: asian_all_other_countries_aged_care,
   // Latin America/Europe
   external_latin_america_europe_aged_care: latin_america_europe_aged_care,
+  // Asian all other countries als college
+  external_asian_all_other_countries_als_college: asian_all_other_countries_als_college,
 };
 
 export const hero_banner = {
-  asian_all_other_countries_vet: `./in-person_vet_courses.png`,
+  asian_all_other_countries_vet: `./business_retail_courses.jpg`,
   latin_america_europe_vet: `./banner_latin_europe_vet.jpg`,
   asian_all_other_countries_aged_care: `./aged-care_courses.jpg`,
   latin_america_europe_aged_care: `./aged-care_courses.jpg`,
   online_vet: `./online_vet_courses.png`,
   latin_america_europe_elicos: `./banner_latin_europe_elicos.jpg`,
+  asian_all_other_countries_als_college: `./als_college_courses.jpg`,
 };
 
 export const ALS_STUDENT_HANDBOOK_URL = "http://ihbrisbane.synology.me:81/?resource=doc&doc_no=52400150";

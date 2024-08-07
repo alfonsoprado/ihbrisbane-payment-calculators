@@ -1,9 +1,21 @@
-export function getPaymentOptions(data, plural = false) {
+export function getPaymentOptions(data, selectedCourses) {
     let types = ['single', 'both'];
-    if (plural) {
+
+    if (selectedCourses.length > 1) {
         types = ['multiple', 'both'];
     }
-    return data?.payment_options?.filter(option => types.includes(option?.type)).sort((a, b) => a.order - b.order);
+
+    let payment_options =data?.payment_options?.filter(option => types.includes(option?.type)).sort((a, b) => a.order - b.order);
+
+    if(data?.payment_calculator?.type === "als_college") {
+        payment_options = payment_options.filter(option => {
+            const parameters = JSON.parse(option?.parameters);
+            return option?.code === 'pay_upfront' || selectedCourses.some(course => {
+                    return parameters?.show_courses?.includes(course?.coursePricing?.course?.course_code)
+            });
+        });
+    }
+    return payment_options;
 }
 
 export function getPaymentOptionParameters(data, option, type) {

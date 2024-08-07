@@ -2,13 +2,13 @@ import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
   formatDate
-} from "../../../helpers/dates";
-import { getPaymentOptionParameters } from "../../../helpers/tools";
+} from "../../../../helpers/dates";
+import { getPaymentOptionParameters } from "../../../../helpers/tools";
 
 function generateCoeFee(data, courses) {
   const {
     coe_fee
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+  } = getPaymentOptionParameters(data, 'option_1-aged_care', 'both');
 
   let result = [];
 
@@ -41,19 +41,19 @@ function generateCoeFee(data, courses) {
   return result;
 }
 
-function generatePaymentType1(data, course, index) {
+function generatePaymentOption1AgedCare(data, course, index) {
   const {
     coe_fee,
-    paymentType1
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+    paymentOption1AgedCare
+  } = getPaymentOptionParameters(data, 'option_1-aged_care', 'both');
 
-  const secondTuitionInstallmentFee = course?.finalTuition * paymentType1?.second_tuition_installment_percentage;
+  const secondTuitionInstallmentFee = course?.finalTuition * paymentOption1AgedCare?.second_tuition_installment_percentage;
   // Second tuition: 3 days before friday payment
   const secondTuitionInstallmentDate = findFridayOfPreviousWeeks(course?.startDate, 1);
 
-  const thirdTuitionInstallmentFee = course?.finalTuition * paymentType1?.second_tuition_installment_percentage - (index === 0 ? coe_fee?.first : coe_fee?.nth);
+  const thirdTuitionInstallmentFee = course?.finalTuition * paymentOption1AgedCare?.second_tuition_installment_percentage - (index === 0 ? coe_fee?.first : coe_fee?.nth);
   // Third tuition: n weeks after course start date
-  const thirdTuitionInstallmentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, paymentType1?.third_tuition_installment_n_weeks_after_course_start);
+  const thirdTuitionInstallmentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, paymentOption1AgedCare?.third_tuition_installment_n_weeks_after_course_start);
 
 
   const result = [
@@ -76,22 +76,22 @@ function generatePaymentType1(data, course, index) {
   return result;
 }
 
-function generatePaymentType2(data, course, index) {
+function generatePaymentOption2AgedCare(data, course, index) {
   const {
     coe_fee,
-    paymentType2,
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+    paymentOption2AgedCare,
+  } = getPaymentOptionParameters(data, 'option_1-aged_care', 'both');
 
-  const secondTuitionInstallmentFee = course?.finalTuition * paymentType2?.second_tuition_installment_percentage;
+  const secondTuitionInstallmentFee = course?.finalTuition * paymentOption2AgedCare?.second_tuition_installment_percentage;
   // Second tuition: 3 days before friday payment
   const secondTuitionInstallmentDate = findFridayOfPreviousWeeks(course?.startDate, 1);
 
-  const thirdTuitionInstallmentFee = course?.finalTuition * paymentType2?.third_tuition_installment_percentage;
+  const thirdTuitionInstallmentFee = course?.finalTuition * paymentOption2AgedCare?.third_tuition_installment_percentage;
   // Third tuition: n weeks after course start date
-  const thirdTuitionInstallmentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, paymentType2?.third_tuition_installment_n_weeks_after_course_start);
+  const thirdTuitionInstallmentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, paymentOption2AgedCare?.third_tuition_installment_n_weeks_after_course_start);
 
   const fourthTuitionInstallmentFee = course?.finalTuition - secondTuitionInstallmentFee - thirdTuitionInstallmentFee - (index === 0 ? coe_fee?.first : coe_fee?.nth);
-  const fourthTuitionInstallmentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, paymentType2?.fourth_tuition_installment_n_weeks_after_course_start);
+  const fourthTuitionInstallmentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, paymentOption2AgedCare?.fourth_tuition_installment_n_weeks_after_course_start);
 
 
   const result = [
@@ -121,11 +121,11 @@ function generatePaymentType2(data, course, index) {
   return result;
 }
 
-export function asianAllOthersCountriesDiscountsOption1AgedCare(data, courses) {
+export function asianAllOthersCountriesOption1AgedCare(data, courses) {
   const {
-    paymentType1,
-    paymentType2,
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+    paymentOption1AgedCare,
+    paymentOption2AgedCare,
+  } = getPaymentOptionParameters(data, 'option_1-aged_care', 'both');
 
   let result = [
     ...generateCoeFee(data, courses) // First tuition installment
@@ -134,17 +134,17 @@ export function asianAllOthersCountriesDiscountsOption1AgedCare(data, courses) {
   for (let i = 0; i < courses.length; i++) {
     const course_code = courses[i]?.coursePricing?.course?.course_code;
 
-    if (paymentType1?.course_codes?.includes(course_code)) {
+    if (paymentOption1AgedCare?.course_codes?.includes(course_code)) {
       result = [
         ...result,
-        ...generatePaymentType1(data, courses[i], i)
+        ...generatePaymentOption1AgedCare(data, courses[i], i)
       ]
-    }
-
-    if (paymentType2?.course_codes?.includes(course_code)) {
+    } 
+    
+    if (paymentOption2AgedCare?.course_codes?.includes(course_code)) {
       result = [
         ...result,
-        ...generatePaymentType2(data, courses[i], i)
+        ...generatePaymentOption2AgedCare(data, courses[i], i)
       ]
     }
   }

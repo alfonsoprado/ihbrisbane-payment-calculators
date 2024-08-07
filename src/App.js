@@ -65,7 +65,8 @@ function App({ paymentCalculator }) {
   const [application, setApplication] = useState(defaultValuesApplication);
   const [applicationEnabled, setApplicationEnabled] = useState(false);
 
-  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[paymentCalculator ? paymentCalculator : PAYMENT_CALCULATOR]}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${PAYMENT_CALCULATOR_API_URL}/${payments_calculators[paymentCalculator ? paymentCalculator : PAYMENT_CALCULATOR]}`, fetcher);
+
 
   useEffect(() => {
     // Errors
@@ -146,28 +147,27 @@ function App({ paymentCalculator }) {
     // Aged Care
     if (data?.payment_calculator?.type === 'aged_care') {
       const paymentCalculatorParameters = JSON.parse(data?.payment_calculator?.parameters);
-      const firstCourseCode = paymentCalculatorParameters?.course_order_selection?.first;
-      const secondCourseCode = paymentCalculatorParameters?.course_order_selection?.second;
-      const firstCourseName = data?.course_pricings?.find(coursePricing => coursePricing?.course?.course_code === firstCourseCode)?.course?.name;
-      const secondCourseName = data?.course_pricings?.find(coursePricing => coursePricing?.course?.course_code === secondCourseCode)?.course?.name;
+      const firstCourseCodesList = paymentCalculatorParameters?.course_order_selection_list;
+      const firstCourseNameList = firstCourseCodesList.map(courseCode => data?.course_pricings?.find(coursePricing => courseCode === coursePricing?.course?.course_code)?.course?.name);
 
       const courseCodes = courses.map(course => course?.coursePricing?.course?.course_code);
 
-      if (courseCodes?.length > 0 && courseCodes?.every(courseCode => firstCourseCode !== courseCode && secondCourseCode !== courseCode)) {
-        errors.push(`There have to be at least a course which is either "${firstCourseName}" or "${secondCourseName}".`);
-      } else if (courseCodes.includes(firstCourseCode) &&
-        !courseCodes.includes(secondCourseCode) &&
-        firstCourseCode !== courseCodes[0]) {
-        errors.push(`The first course has to be "${firstCourseName}"`);
-      } else if (courseCodes.includes(secondCourseCode) &&
-        !courseCodes.includes(firstCourseCode) &&
-        secondCourseCode !== courseCodes[0]) {
-        errors.push(`The first course has to be "${secondCourseName}"`);
-      } else if (courseCodes.includes(firstCourseCode) && 
-        courseCodes.includes(secondCourseCode) &&  
-        !(firstCourseCode === courseCodes[0] &&
-        secondCourseCode === courseCodes[1])) {
-          errors.push(`The order of the first and second course have to be "${firstCourseName}" and "${secondCourseName} respectively`);
+      if (courseCodes?.length > 0 && courseCodes?.every(courseCode => !firstCourseCodesList.includes(courseCode))) {
+        errors.push(`The first course have to be one of the following courses: "${firstCourseNameList.join(", ")}".`);
+      } 
+
+      // Aged Care
+      if (courseCodes.includes('CHC33021') &&
+        courseCodes.includes('CHC43015') &&  
+        !('CHC33021' === courseCodes[0] &&
+        'CHC43015' === courseCodes[1])) {
+          errors.push(`The order of the first and second course have to be "Certificate III in Individual Support" and "Certificate IV in Ageing Support" respectively.`);
+      } else if((courseCodes.includes('CHC33021') || courseCodes.includes('CHC43015')) && !['CHC33021', 'CHC43015'].includes(courseCodes[0]) ) {
+        let firstCourseName = "Certificate III in Individual Support";
+        if(courseCodes.includes('CHC43015')) {
+          firstCourseName = "Certificate IV in Ageing Support";
+        }
+        errors.push(`The first course has to be "${firstCourseName}".`);
       }
     }
 
@@ -176,13 +176,7 @@ function App({ paymentCalculator }) {
     }
 
     setErrorMessage(errors);
-  }, [data, courses]);
-
-  useEffect(() => {
-    if (data && !paymentType) {
-      setPaymentType(getPaymentOptions(data, true)[0]?.code);
-    }
-  }, [data, paymentType]);
+  }, [data, courses]); 
 
   // Only develop: it is only happens when the payment calculator is changed
   useEffect(() => {
@@ -195,6 +189,12 @@ function App({ paymentCalculator }) {
     setApplication(defaultValuesApplication);
     setApplicationEnabled(false);
   }, [paymentCalculator]);
+
+  useEffect(() => {
+    if(courses.length === 0) {
+      setPaymentType("");
+    }
+  }, [courses])
 
   const cleanPaymentPlan = () => {
     setPaymentPlan([]);

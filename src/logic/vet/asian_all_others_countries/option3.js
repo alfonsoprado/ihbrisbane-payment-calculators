@@ -5,8 +5,8 @@ import {
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 import { alignExternalPaymentsWithInternalFormat } from "./utils";
 
-export function asianAllOthersCountriesOption3VET(data, courses) {
-  const parameters = getPaymentOptionParameters(data, 'option_3', 'multiple');
+export function asianAllOthersCountriesOption3VET(data, courses, paymentType = 'option_3') {
+  const parameters = getPaymentOptionParameters(data, paymentType, 'multiple');
 
   // Stage 1 - Internal & external
   const paymentsS1 = [

@@ -4,6 +4,7 @@ import DownloadPDF from "../DownloadPDFButton";
 import { parseISO, format } from 'date-fns';
 import AppModal from "../AppModal";
 import { PAYMENT_PLAN_PDF_API_URL } from "../../env";
+import { useEffect } from "react";
 
 function PaymentOptions({
   data,
@@ -19,6 +20,13 @@ function PaymentOptions({
   updateSpecialCases,
   resetAll
 }) {
+  // Default payment type option
+  useEffect(() => {
+    if (data && !paymentType) {
+      updatePaymentType(getPaymentOptions(data, courses)[0]?.code);
+    }
+  }, [data, paymentType]);
+
   const generateDataPDF = () => {
     const paymentPlan = createPaymentPlan();
     const dataPDF = {
@@ -75,20 +83,7 @@ function PaymentOptions({
             <Form.Group>
               <Form.Label><b>Payment Type</b></Form.Label>
               {
-                courses.length > 1 ? getPaymentOptions(data, true).map(option => {
-                  return (
-                    <Form.Check
-                      key={option.code}
-                      type="radio"
-                      value={option.code}
-                      checked={paymentType === option.code}
-                      onChange={handlePaymentType}
-                      label={option.name}
-                      name="radios"
-                      id={option.code}
-                    />
-                  )
-                }) : getPaymentOptions(data, false).map((option) => {
+                getPaymentOptions(data, courses).map(option => {
                   return (
                     <Form.Check
                       key={option.code}

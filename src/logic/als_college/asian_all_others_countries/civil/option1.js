@@ -2,16 +2,15 @@ import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
   formatDate
-} from "../../../helpers/dates";
-import { getPaymentOptionParameters } from "../../../helpers/tools";
+} from "../../../../helpers/dates";
+import { getPaymentOptionParameters } from "../../../../helpers/tools";
 
 function generatePaymentsOption1(data, course, startDate, coursePrice, paymentType) {
   const courseName = course?.coursePricing?.course?.name;
 
   const {
-    tuition_installments_amount: TIA, // $1000 AUS
-    third_tuition_installment_n_weeks_after_course_start: TTIWACS, // 10 weeks
-    tuition_installments_interval_weeks_after_third_tuition: TIIWATT, // Month = 4 weeks
+    tuition_installments_amount: TIA, 
+    tuition_installments_interval_weeks_after_third_tuition: TIIWATT, 
   } = getPaymentOptionParameters(data, paymentType, 'both');
 
   const payments = [];
@@ -31,19 +30,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice, paymentTy
     remainingAmount -= TIA;
   }
 
-  let paymentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, TTIWACS);
-  if (TIA <= remainingAmount) {
-    // Third tuition: n weeks after course start date, n = TTIWACS = 10 weeks
-    payments.push({
-      dueDate: formatDate(paymentDate),
-      courseName,
-      feeDescription: "Tuition installment",
-      paymentAmount: TIA,
-      code: "tuition_installment"
-    });
-    remainingAmount -= TIA;
-  }
-
+  let paymentDate = secondTuitionInstallmentDate;
   // Every month payment
   while (TIA <= remainingAmount) {
     paymentDate = findFridayOfFollowingWeeks(paymentDate, TIIWATT);
@@ -71,17 +58,13 @@ function generatePaymentsOption1(data, course, startDate, coursePrice, paymentTy
   return payments;
 }
 
-export function asianAllOthersCountriesOption1VET(data, courses, paymentType) {
+export function asianAllOthersCountriesOption1Civil(data, courses, paymentType = 'option_1') {
   const {
-    first_tuition_installment_single_course_amount, // $300 AUS
-    first_tuition_installment_multiple_courses_amount, // $500 AUS
+    coe_fee
   } = getPaymentOptionParameters(data, paymentType, 'both');
 
   // First tuition
-  let firstTuitionInstallment = first_tuition_installment_single_course_amount;
-  if (courses.length > 1) {
-    firstTuitionInstallment = first_tuition_installment_multiple_courses_amount;
-  }
+  let firstTuitionInstallment = coe_fee;
 
   let result = [
     {
@@ -93,18 +76,15 @@ export function asianAllOthersCountriesOption1VET(data, courses, paymentType) {
     }
   ];
 
-  for (const [index, course] of courses.entries()) {
-    let startDate = course?.startDate;
-    // Remove amount of the first tuition of the first price
-    let tuition_fee = course?.finalTuition;
-    if (index === 0) {
-      tuition_fee -= firstTuitionInstallment;
-    }
-    result = [
-      ...result,
-      ...generatePaymentsOption1(data, course, startDate, tuition_fee, paymentType)
-    ];
-  }
+  let startDate = courses[0]?.startDate;
+  // Remove amount of the first tuition of the first price
+  let tuition_fee = courses[0]?.finalTuition - firstTuitionInstallment;
+
+  result = [
+    ...result,
+    ...generatePaymentsOption1(data, courses[0], startDate, tuition_fee, paymentType)
+  ];
+
 
   return result;
 }

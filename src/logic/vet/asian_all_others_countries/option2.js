@@ -6,11 +6,11 @@ import {
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 import { alignExternalPaymentsWithInternalFormat } from "./utils";
 
-function generatePaymentSingleCourse(data, course) {
+function generatePaymentSingleCourse(data, course, paymentType) {
   const { startDate, finalTuition } = course;
   const name = course?.coursePricing?.course?.name;
 
-  const parameters = getPaymentOptionParameters(data, 'option_2', 'single');
+  const parameters = getPaymentOptionParameters(data, paymentType, 'single');
 
   const result = [
     {
@@ -46,8 +46,8 @@ function generatePaymentSingleCourse(data, course) {
   return result;
 }
 
-function generatePaymentMultipleCourses(data, courses) {
-  const parameters = getPaymentOptionParameters(data, 'option_2', 'multiple');
+function generatePaymentMultipleCourses(data, courses, paymentType) {
+  const parameters = getPaymentOptionParameters(data, paymentType, 'multiple');
 
   // Stage 1 - Internal & external
   const paymentsS1 = [
@@ -96,13 +96,13 @@ function generatePaymentMultipleCourses(data, courses) {
   }
 }
 
-export function asianAllOthersCountriesOption2VET(data, courses) {
+export function asianAllOthersCountriesOption2VET(data, courses, paymentType = 'option_2') {
   let result = [];
   if (courses.length === 1) {
-    result = generatePaymentSingleCourse(data, courses[0]);
+    result = generatePaymentSingleCourse(data, courses[0], paymentType);
   }
   else {
-    result = generatePaymentMultipleCourses(data, courses);
+    result = generatePaymentMultipleCourses(data, courses, paymentType);
   }
 
   return result;
