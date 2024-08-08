@@ -11,6 +11,15 @@ export function formatDate(date, formatDate = "dd/MM/yyyy") {
   return format(date, formatDate);
 }
 
+export function stringToDate(dateInitial, formatDate = "yyyy-MM-dd") {
+  return parse(dateInitial, formatDate, new Date());
+}
+
+export function changeFormat(currentDate, currentFormant = "yyyy-MM-dd", newFormat = "dd/MM/yyyy") {
+  const date = stringToDate(currentDate, currentFormant);
+  return formatDate(date, newFormat);
+}
+
 export function findFinishDateCourse(dateInitial, weeksInTheFuture = 0) {
   if (typeof dateInitial === "string") {
     dateInitial = parse(dateInitial, "yyyy-MM-dd", new Date());

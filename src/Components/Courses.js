@@ -2,10 +2,10 @@ import { Card, Table, Button, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Select from 'react-select';
-import { findFinishDateCourse, formatDate } from "../helpers/dates";
+import { findFinishDateCourse, formatDate, changeFormat } from "../helpers/dates";
 import AppModal from "./AppModal";
 
-function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
+function Courses({ data, courses, removeCourse, updateCourse, removeAllCourses }) {
   const handleChangeStartDate = (e, id) => {
     const { value } = e;
     updateCourse(id, "startDate", value);
@@ -48,6 +48,47 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
     }
   }
 
+  const startDateField = (course) => {
+    let labelDate = course?.startDate;
+    if(data?.region?.code === 'latin_america_europe') {
+      labelDate = changeFormat(labelDate);
+    } 
+
+    return <td className="text-center align-middle" style={{
+      width: '160px'
+    }}>
+      <Select
+        options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
+          let labelDate = start_date;
+          if(data?.region?.code === 'latin_america_europe') {
+            labelDate = changeFormat(labelDate);
+          } 
+
+          return {
+            value: start_date,
+            label: changeFormat(start_date)
+          }
+        })}
+        value={{ label: labelDate, value: course?.startDate }}
+        onChange={(e) => handleChangeStartDate(e, course.id)}
+      />
+    </td>
+  }
+
+  const endDateField = (course) => {
+    let date = "";
+    if(course) {
+      date = formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd");
+      if(data?.region?.code === 'latin_america_europe') {
+        date = changeFormat(date);
+      } 
+    }
+
+    return (<td className="text-center align-middle" style={{
+      width: '110px'
+    }}>{date}</td>);
+  }
+
   return (
     <Card>
       <Card.Header><h4>Courses</h4></Card.Header>
@@ -79,25 +120,12 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
               {
                 durationField(course)
               }
-              <td className="text-center align-middle" style={{
-                width: '160px'
-              }}>
-                <Select
-                  options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
-                    return {
-                      value: start_date,
-                      label: start_date
-                    }
-                  })}
-                  value={{ label: course?.startDate, value: course?.startDate }}
-                  onChange={(e) => handleChangeStartDate(e, course.id)}
-                />
-              </td>
-              <td className="text-center align-middle" style={{
-                width: '110px'
-              }}>
-                {course ? formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd") : ""}
-              </td>
+              {
+                startDateField(course)
+              }
+              {
+                endDateField(course)
+              }
               <td className="text-center align-middle">
                 <Button
                   variant="danger"

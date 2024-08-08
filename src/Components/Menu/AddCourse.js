@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
 import Select from 'react-select';
-import { findFinishDateCourse, formatDate } from "../../helpers/dates";
+import { changeFormat, findFinishDateCourse, formatDate } from "../../helpers/dates";
 import { scrollTo } from "../../helpers/tools";
 
 const groupStyles = {
@@ -161,10 +161,10 @@ function AddCourse({ data, createCourse, courses }) {
               options={coursePricing?.value?.course?.start_dates?.map((start_date) => {
                 return {
                   value: start_date,
-                  label: start_date
+                  label: data?.region?.code === 'latin_america_europe' ? changeFormat(start_date) : start_date
                 }
               })}
-              value={startDate}
+              value={startDate }
               onChange={handleChangeStartDate} />
           </Form.Group>
           {

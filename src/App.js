@@ -332,6 +332,7 @@ function App({ paymentCalculator }) {
         <Col sm={8}>
           <ErrorAlert errorMessages={errorMessages} />
           <Courses
+            data={data}
             courses={courses}
             updateCourse={updateCourse}
             removeCourse={removeCourse}
