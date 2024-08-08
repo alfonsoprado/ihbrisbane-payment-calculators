@@ -66,7 +66,7 @@ function Courses({ data, courses, removeCourse, updateCourse, removeAllCourses }
 
           return {
             value: start_date,
-            label: changeFormat(start_date)
+            label: labelDate
           }
         })}
         value={{ label: labelDate, value: course?.startDate }}
