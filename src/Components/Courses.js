@@ -55,9 +55,9 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
         <thead className="table-dark">
           <tr>
             <th>Name</th>
+            <th>Duration</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Duration</th>
             <th>Options</th>
           </tr>
         </thead>
@@ -76,6 +76,9 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
                   {course?.coursePricing?.course?.name}
                 </b>
               </td>
+              {
+                durationField(course)
+              }
               <td className="text-center align-middle" style={{
                 width: '160px'
               }}>
@@ -95,9 +98,6 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
               }}>
                 {course ? formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd") : ""}
               </td>
-              {
-                durationField(course)
-              }
               <td className="text-center align-middle">
                 <Button
                   variant="danger"
