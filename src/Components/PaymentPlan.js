@@ -14,7 +14,7 @@ function PaymentPlan({ data, paymentPlan }) {
             <th>Due date</th>
             <th>Fee Description</th>
             {
-              (data?.payment_calculator?.allow === 'internal' || data?.region?.code === 'latin_america_europe' || data?.payment_calculator?.type === 'aged_care') && <th>Course Name</th>
+              (data?.payment_calculator?.allow === 'internal' || data?.region?.code === 'latin_america_europe' || data?.payment_calculator?.type === 'als_college') && <th>Course Name</th>
             }
             <th>Payment Amount</th>
           </tr>
@@ -25,7 +25,7 @@ function PaymentPlan({ data, paymentPlan }) {
               <td>{row.dueDate}</td>
               <td>{row.feeDescription}</td>
               {
-                (data?.payment_calculator?.allow === 'internal' || data?.region?.code === 'latin_america_europe' || data?.payment_calculator?.type === 'aged_care') && <td>{row.courseName}</td>
+                (data?.payment_calculator?.allow === 'internal' || data?.region?.code === 'latin_america_europe' || data?.payment_calculator?.type === 'als_college') && <td>{row.courseName}</td>
               }
               <td>${row.paymentAmount}</td>
             </tr>
