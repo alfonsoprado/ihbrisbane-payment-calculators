@@ -8,7 +8,7 @@ import { generatePaymentPlan } from "./logic/payment-plan";
 import useSWR from 'swr';
 import { checkForOverlaps, findFinishDateCourse, formatDate } from "./helpers/dates";
 import ApplicationForm from "./Components/ApplicationForm";
-import { getPaymentCalculatorParameters, getPaymentOptions, scrollTo } from "./helpers/tools";
+import { getPaymentCalculatorParameters, scrollTo } from "./helpers/tools";
 import { PAYMENT_CALCULATOR, PAYMENT_CALCULATOR_API_URL, hero_banner, payments_calculators } from "./env";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBug } from "@fortawesome/free-solid-svg-icons";

@@ -78,17 +78,17 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       if (paymentType === "option_1") {
         result = [
           ...result,
-          ...asianAllOthersCountriesOption1VET(data, courses)
+          ...asianAllOthersCountriesOption1VET(data, courses, paymentType)
         ];
       } else if (paymentType === "option_2") {
         result = [
           ...result,
-          ...asianAllOthersCountriesOption2VET(data, courses)
+          ...asianAllOthersCountriesOption2VET(data, courses, paymentType)
         ];
       } else if (paymentType === "option_3") {
         result = [
           ...result,
-          ...asianAllOthersCountriesOption3VET(data, courses)
+          ...asianAllOthersCountriesOption3VET(data, courses, paymentType)
         ];
       }
     } else if (data?.region?.code === "latin_america_europe") {
