@@ -12,55 +12,51 @@ export const APPLICATION_FORM_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/a
 export const PAYMENT_PLAN_PDF_API_URL = `${PAYMENT_CALCULATOR_API_URL}/pdf/payment_plan`;
 
 const internal = ENV === "production" ? productionPaymentCalculators['internal'] : developPaymentCalculators['internal'];
-const asian_all_other_countries_vet = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_vet'] : developPaymentCalculators['asian_all_other_countries_vet'];
-const latin_america_europe_vet = ENV === "production" ? productionPaymentCalculators['latin_america_europe_vet'] : developPaymentCalculators['latin_america_europe_vet'];
+
+// Online Classes
 const online_vet = ENV === "production" ? productionPaymentCalculators['online_vet'] : developPaymentCalculators['online_vet'];
-const latin_america_europe_elicos = ENV === "production" ? productionPaymentCalculators['latin_america_europe_elicos'] : developPaymentCalculators['latin_america_europe_elicos'];
-const asian_all_other_countries_aged_care = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_aged_care'] : developPaymentCalculators['asian_all_other_countries_aged_care'];
-const latin_america_europe_aged_care = ENV === "production" ? productionPaymentCalculators['latin_america_europe_aged_care'] : developPaymentCalculators['latin_america_europe_aged_care'];
+// Asian Market
+const asian_all_other_countries_vet = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_vet'] : developPaymentCalculators['asian_all_other_countries_vet'];
 const asian_all_other_countries_als_college = ENV === "production" ? productionPaymentCalculators['asian_all_other_countries_als_college'] : developPaymentCalculators['asian_all_other_countries_als_college'];
+// LATAM/Europe Market
+const latin_america_europe_vet = ENV === "production" ? productionPaymentCalculators['latin_america_europe_vet'] : developPaymentCalculators['latin_america_europe_vet'];
+const latin_america_europe_elicos = ENV === "production" ? productionPaymentCalculators['latin_america_europe_elicos'] : developPaymentCalculators['latin_america_europe_elicos'];
+const latin_america_europe_aged_care = ENV === "production" ? productionPaymentCalculators['latin_america_europe_aged_care'] : developPaymentCalculators['latin_america_europe_aged_care'];
 
 export const payments_calculators = {
   // Internal
-  // Asian/All other countries
-  internal_asian_vet: `${asian_all_other_countries_vet}?internal=${internal}`,
-  // Latin America/Europe
-  internal_latin_america_europe_vet: `${latin_america_europe_vet}?internal=${internal}`,
-  // Open VET
+  // Online Classes
   internal_online_vet: `${online_vet}?internal=${internal}`,
-  // Latin America/Europe Elicos
-  internal_latin_america_europe_elicos: `${latin_america_europe_elicos}?internal=${internal}`,
-  // Asian/All other countries
-  internal_asian_aged_care: `${asian_all_other_countries_aged_care}?internal=${internal}`,
-  // Latin America/Europe
-  internal_latin_america_europe_aged_care: `${latin_america_europe_aged_care}?internal=${internal}`,
-  // Asian all other countries als college
+  // Asian Market
+  internal_asian_vet: `${asian_all_other_countries_vet}?internal=${internal}`,
   internal_asian_all_other_countries_als_college: `${asian_all_other_countries_als_college}?internal=${internal}`,
+  // LATAM/Europe Market
+  internal_latin_america_europe_vet: `${latin_america_europe_vet}?internal=${internal}`,
+  internal_latin_america_europe_elicos: `${latin_america_europe_elicos}?internal=${internal}`,
+  internal_latin_america_europe_aged_care: `${latin_america_europe_aged_care}?internal=${internal}`,
+  
   // External
-  // Asian all other countries
-  external_asian_vet: asian_all_other_countries_vet,
-  // Latin America/Europe
-  external_latin_america_europe_vet: latin_america_europe_vet,
-  // Open Vet
+  // Online Classes
   external_online_vet: online_vet,
-  // Latin America/Europe Elicos
-  external_latin_america_europe_elicos: latin_america_europe_elicos,
-  // Asian all other countries
-  external_asian_aged_care: asian_all_other_countries_aged_care,
-  // Latin America/Europe
-  external_latin_america_europe_aged_care: latin_america_europe_aged_care,
-  // Asian all other countries als college
+  // Asian Market
+  external_asian_vet: asian_all_other_countries_vet,
   external_asian_all_other_countries_als_college: asian_all_other_countries_als_college,
+  // LATAM/Europe LATAM
+  external_latin_america_europe_elicos: latin_america_europe_elicos,
+  external_latin_america_europe_aged_care: latin_america_europe_aged_care,
+  external_latin_america_europe_vet: latin_america_europe_vet,
 };
 
 export const hero_banner = {
-  asian_all_other_countries_vet: `./business_retail_courses.jpg`,
-  latin_america_europe_vet: `./banner_latin_europe_vet.jpg`,
-  asian_all_other_countries_aged_care: `./aged-care_courses.jpg`,
-  latin_america_europe_aged_care: `./aged-care_courses.jpg`,
+  // Online classes
   online_vet: `./online_vet_courses.png`,
-  latin_america_europe_elicos: `./banner_latin_europe_elicos.jpg`,
+  // Asian Market
+  asian_all_other_countries_vet: `./business_retail_courses.jpg`,
   asian_all_other_countries_als_college: `./als_college_courses.jpg`,
+  // LATAM/Europe
+  latin_america_europe_vet: `./banner_latin_europe_vet.jpg`,
+  latin_america_europe_aged_care: `./aged-care_courses.jpg`,
+  latin_america_europe_elicos: `./banner_latin_europe_elicos.jpg`,
 };
 
 export const ALS_STUDENT_HANDBOOK_URL = "http://ihbrisbane.synology.me:81/?resource=doc&doc_no=52400150";
