@@ -56,8 +56,8 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
           <tr>
             <th>Name</th>
             <th>Start date</th>
-            <th>Duration</th>
             <th>End date</th>
+            <th>Duration</th>
             <th>Options</th>
           </tr>
         </thead>
@@ -90,14 +90,14 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
                   onChange={(e) => handleChangeStartDate(e, course.id)}
                 />
               </td>
-              {
-                durationField(course)
-              }
               <td className="text-center align-middle" style={{
                 width: '110px'
               }}>
                 {course ? formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd") : ""}
               </td>
+              {
+                durationField(course)
+              }
               <td className="text-center align-middle">
                 <Button
                   variant="danger"
