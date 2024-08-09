@@ -53,7 +53,7 @@ function AddCourse({ data, createCourse, courses }) {
     if(coursePricing?.value?.course?.start_dates_with_weeks?.length > 0) {
       setDuration(coursePricing?.value?.course?.start_dates_with_weeks?.find(obj => obj.start_date === value)?.duration_weeks);
     }
-    setStartDate({ label: value, value });
+    setStartDate({ label: changeFormat(value), value });
   }
 
   const handleSubmit = (e) => {
@@ -164,7 +164,7 @@ function AddCourse({ data, createCourse, courses }) {
                   label: changeFormat(start_date)
                 }
               })}
-              value={startDate }
+              value={startDate}
               onChange={handleChangeStartDate} />
           </Form.Group>
           {
