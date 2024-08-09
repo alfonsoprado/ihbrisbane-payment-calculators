@@ -9,8 +9,12 @@ import { getCourseDiscountPromotion, getPaymentCalculatorDiscountPromotion, getS
 */
 export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
-    const horticulturePackageSpecial = getCourseDiscountPromotion(data, '113194A', 'horticulture_package_special')?.parameters?.courses;
-    const horticultureCoursesCricosCodes = Object.keys(horticulturePackageSpecial);
+    let horticulturePackageSpecial = null;
+    let horticultureCoursesCricosCodes = null;
+    if(data?.payment_calculator?.code === "als_college_courses_2024") {
+        horticulturePackageSpecial = getCourseDiscountPromotion(data, '113194A', 'horticulture_package_special')?.parameters?.courses;
+        horticultureCoursesCricosCodes = Object.keys(horticulturePackageSpecial);
+    }
 
     for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
@@ -20,7 +24,7 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
 
         // Discounts
         const extensionStudentEnable = specialCases.includes('es');
-        const horticulturePackageSpecialEnable = courses?.find(item => item?.coursePricing?.course?.cricos_code === '113194A') && courses?.find(item => horticultureCoursesCricosCodes.includes(item?.coursePricing?.course?.cricos_code) && item?.coursePricing?.course?.type === 'standard');
+        const horticulturePackageSpecialEnable = horticulturePackageSpecial ? courses?.find(item => item?.coursePricing?.course?.cricos_code === '113194A') && courses?.find(item => horticultureCoursesCricosCodes.includes(item?.coursePricing?.course?.cricos_code) && item?.coursePricing?.course?.type === 'standard') : false;
         const multipleCoursesEnable = courses.length > 1;
         const payUpfrontEnable = paymentType === 'pay_upfront';
 
