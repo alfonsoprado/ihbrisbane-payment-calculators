@@ -161,7 +161,7 @@ function AddCourse({ data, createCourse, courses }) {
               options={coursePricing?.value?.course?.start_dates?.map((start_date) => {
                 return {
                   value: start_date,
-                  label: data?.region?.code === 'latin_america_europe' ? changeFormat(start_date) : start_date
+                  label: changeFormat(start_date)
                 }
               })}
               value={startDate }

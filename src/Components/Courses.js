@@ -49,21 +49,15 @@ function Courses({ data, courses, removeCourse, updateCourse, removeAllCourses }
   }
 
   const startDateField = (course) => {
-    let labelDate = course?.startDate;
-    if(data?.region?.code === 'latin_america_europe') {
-      labelDate = changeFormat(labelDate);
-    } 
+    const labelDate = changeFormat(course?.startDate);
 
     return <td className="text-center align-middle" style={{
       width: '160px'
     }}>
       <Select
         options={course?.coursePricing?.course?.start_dates?.map((start_date) => {
-          let labelDate = start_date;
-          if(data?.region?.code === 'latin_america_europe') {
-            labelDate = changeFormat(labelDate);
-          } 
-
+          const labelDate = changeFormat(start_date);
+ 
           return {
             value: start_date,
             label: labelDate
@@ -78,10 +72,7 @@ function Courses({ data, courses, removeCourse, updateCourse, removeAllCourses }
   const endDateField = (course) => {
     let date = "";
     if(course) {
-      date = formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd");
-      if(data?.region?.code === 'latin_america_europe') {
-        date = changeFormat(date);
-      } 
+      date = changeFormat(formatDate(findFinishDateCourse(course?.startDate, course?.duration), "yyyy-MM-dd"));
     }
 
     return (<td className="text-center align-middle" style={{
