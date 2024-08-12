@@ -26,6 +26,9 @@ import { asianAllOthersCountriesGenerateExtraFeesALSCollege } from "./als_colleg
 import { asianAllOthersCountriesStandardPaymentPlanCivil } from "./als_college/asian_all_others_countries/civil/standard-payment-plan";
 import { asianAllOthersCountriesOption1Civil } from "./als_college/asian_all_others_countries/civil/option1";
 import { asianAllOthersCountriesDiscountsALSCollege } from "./als_college/asian_all_others_countries/civil/discounts";
+import { latinAmericaEuropeDiscountsADCCD } from "./civil_construction/latin_europe/discounts";
+import { latinAmericaEuropeGenerateExtraFeesADCCD } from "./civil_construction/latin_europe/extra-fees";
+import { latinAmericaEuropeOption1ADCCD } from "./civil_construction/latin_europe/option1";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -104,6 +107,31 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     }
 
   /**
+  * Advanced Diploma of Civil Construction Design
+  */
+  } else if(data?.payment_calculator?.type === "adccd") {
+      // Discounts by regions
+      if (data?.region?.code === "latin_america_europe") {
+        latinAmericaEuropeDiscountsADCCD(data, paymentType, courses, specialCases);
+      } else {
+        console.error("Region doesn't exists.");
+        return [];
+      }
+
+      // Making plan
+      if (data?.region?.code === "latin_america_europe") {
+        if (paymentType === "option_1") {
+          result = [
+            ...result,
+            ...latinAmericaEuropeOption1ADCCD(data, paymentType, courses, specialCases)
+          ];
+        }
+      } else {
+        console.error("Region doesn't exists.");
+        return []
+      }
+
+  /**
   * ALS COLLEGE PAYMENT CALCULATOR
   */
   } else if (data?.payment_calculator?.type === 'als_college') {
@@ -123,7 +151,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     }
 
     // Generate Extra Fees
-  
     if(["option_1-horticulture", "option_2-horticulture", "option_3-horticulture"].includes(paymentType)) {
       result = [
         ...result,
@@ -213,10 +240,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
    * AGED CARE PAYMENT CALCULATOR
    */
   } else if (data?.payment_calculator?.type === 'aged_care') {
-    // Discounts by regions
-    // if (data?.region?.code === "asian_all_other_countries") {
-    //   asianAllOthersCountriesAgedCare(data, paymentType, courses, specialCases);
-    // } else 
     if(data?.region?.code === "latin_america_europe") {
       latinAmericaEuropeDiscountsAgedCare(data, paymentType, courses, specialCases);
     } else {
@@ -224,13 +247,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       return [];
     }
 
-    // Generate Extra Fees
-    // if (data?.region?.code === "asian_all_other_countries") {
-    //   result = [
-    //     ...result,
-    //     ...asianAllOthersCountriesGenerateExtraFeesAgedCare(data, paymentType, courses, specialCases)
-    //   ];
-    // } else 
     if(data?.region?.code === "latin_america_europe") {
       result = [
         ...result,
@@ -241,14 +257,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       return [];
     }
 
-    //if (data?.region?.code === "asian_all_other_countries") {
-    //   if (paymentType === "option_1") {
-    //     result = [
-    //       ...result,
-    //       ...asianAllOthersCountriesOption1AgedCare(data, courses)
-    //     ];
-    //   }
-    // } else 
     if(data?.region?.code === "latin_america_europe") {
       if (paymentType === "option_1") {
         result = [

@@ -22,6 +22,7 @@ const asian_all_other_countries_als_college = ENV === "production" ? productionP
 const latin_america_europe_vet = ENV === "production" ? productionPaymentCalculators['latin_america_europe_vet'] : developPaymentCalculators['latin_america_europe_vet'];
 const latin_america_europe_elicos = ENV === "production" ? productionPaymentCalculators['latin_america_europe_elicos'] : developPaymentCalculators['latin_america_europe_elicos'];
 const latin_america_europe_aged_care = ENV === "production" ? productionPaymentCalculators['latin_america_europe_aged_care'] : developPaymentCalculators['latin_america_europe_aged_care'];
+const latin_america_europe_adccd = ENV === "production" ? productionPaymentCalculators['latin_america_europe_adccd'] : developPaymentCalculators['latin_america_europe_adccd'];
 
 export const payments_calculators = {
   // Internal
@@ -34,6 +35,7 @@ export const payments_calculators = {
   internal_latin_america_europe_vet: `${latin_america_europe_vet}?internal=${internal}`,
   internal_latin_america_europe_elicos: `${latin_america_europe_elicos}?internal=${internal}`,
   internal_latin_america_europe_aged_care: `${latin_america_europe_aged_care}?internal=${internal}`,
+  internal_latin_america_europe_adccd: `${latin_america_europe_adccd}?internal=${internal}`,
   
   // External
   // Online Classes
@@ -45,6 +47,7 @@ export const payments_calculators = {
   external_latin_america_europe_elicos: latin_america_europe_elicos,
   external_latin_america_europe_aged_care: latin_america_europe_aged_care,
   external_latin_america_europe_vet: latin_america_europe_vet,
+  external_latin_america_europe_adccd: latin_america_europe_adccd,
 };
 
 export const hero_banner = {
@@ -57,6 +60,7 @@ export const hero_banner = {
   latin_america_europe_vet: `./banner_latin_europe_vet.jpg`,
   latin_america_europe_aged_care: `./aged-care_courses.jpg`,
   latin_america_europe_elicos: `./banner_latin_europe_elicos.jpg`,
+  latin_america_europe_adccd: `./banner_latin_europe_vet.jpg`,
 };
 
 export const ALS_STUDENT_HANDBOOK_URL = "http://ihbrisbane.synology.me:81/?resource=doc&doc_no=52400150";
