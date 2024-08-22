@@ -142,8 +142,20 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
         asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases);
       } else if(paymentType === "option_1-aged_care") {
         asianAllOthersCountriesDiscountsAgedCare(data, paymentType, courses, specialCases);
-      } else if(["standard_payment_plan-civil", "option_1-civil", "pay_upfront"].includes(paymentType)) {
+      } else if(["standard_payment_plan-civil", "option_1-civil"].includes(paymentType)) {
         asianAllOthersCountriesDiscountsALSCollege(data, paymentType, courses, specialCases);
+      } else if("pay_upfront" === paymentType) {
+        const horticulture = courses.some(course => ["113194A"].includes(course?.coursePricing?.course?.cricos_code));
+        const ageCare = courses.some(course => ["115203M", "115204K"].includes(course?.coursePricing?.course?.cricos_code));
+        const civil = courses.some(course => ["116125A"].includes(course?.coursePricing?.course?.cricos_code));
+   
+        if(horticulture) {
+          asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases);
+        } else if(ageCare) {
+          asianAllOthersCountriesDiscountsAgedCare(data, paymentType, courses, specialCases);
+        } else if(civil) {
+          asianAllOthersCountriesDiscountsALSCollege(data, paymentType, courses, specialCases);
+        }
       }
     } else {
       console.error("Region doesn't exists.");
