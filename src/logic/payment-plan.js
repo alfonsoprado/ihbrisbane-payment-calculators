@@ -27,7 +27,6 @@ import { asianAllOthersCountriesStandardPaymentPlanCivil } from "./als_college/a
 import { asianAllOthersCountriesOption1Civil } from "./als_college/asian_all_others_countries/civil/option1";
 import { asianAllOthersCountriesDiscountsALSCollege } from "./als_college/asian_all_others_countries/civil/discounts";
 import { latinAmericaEuropeDiscountsADCCD } from "./civil_construction/latin_europe/discounts";
-import { latinAmericaEuropeGenerateExtraFeesADCCD } from "./civil_construction/latin_europe/extra-fees";
 import { latinAmericaEuropeOption1ADCCD } from "./civil_construction/latin_europe/option1";
 
 function addIdToArray(result) {

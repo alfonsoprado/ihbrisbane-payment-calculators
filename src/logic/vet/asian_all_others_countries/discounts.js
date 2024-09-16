@@ -39,21 +39,6 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
             console.debug("A discount was applied to:", course);
         }
 
-        // Horticulture Package Special
-        if (horticulturePackageSpecialEnable) {
-            console.debug("Discount: Horticulture Package Special");
-            const cricos_code = course?.coursePricing?.course?.cricos_code;
-            // It is course in the Horticulture Package Special and is standard course
-            if (horticultureCoursesCricosCodes?.includes(cricos_code) && course?.coursePricing?.course?.type === 'standard') {
-                // Doesn't exists a course with more weight than the current course 
-                if (!courses?.some(item => horticulturePackageSpecial[item?.coursePricing?.course?.cricos_code]?.weight > horticulturePackageSpecial[cricos_code]?.weight)) {
-                    course.finalTuition = horticulturePackageSpecial[cricos_code]?.value;
-                    course.discountsApplied.push(horticulturePackageSpecial[cricos_code]);
-                    console.debug("A discount was applied to:", course);
-                }
-            }
-        }
-
         // PaymentType: Pay upfront and 2 course o more
         if (payUpfrontEnable && courses.length > 1 && !horticulturePackageSpecialEnable) {
             console.debug("PaymentType: Pay upfront");
