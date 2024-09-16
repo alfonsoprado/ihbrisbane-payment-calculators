@@ -1,4 +1,4 @@
-import { getCourseDiscountPromotion, getPaymentCalculatorDiscountPromotion, getSpecialCases } from "../../../helpers/tools";
+import { getPaymentCalculatorDiscountPromotion, getSpecialCases } from "../../../helpers/tools";
 
 /*
     Do not forget, when applying discounts using percentages, 
@@ -9,12 +9,6 @@ import { getCourseDiscountPromotion, getPaymentCalculatorDiscountPromotion, getS
 */
 export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases) {
     const allSpecialCasesAvailable = getSpecialCases(data, courses);
-    let horticulturePackageSpecial = null;
-    let horticultureCoursesCricosCodes = null;
-    if(data?.payment_calculator?.code === "als_college_courses_2024") {
-        horticulturePackageSpecial = getCourseDiscountPromotion(data, '113194A', 'horticulture_package_special')?.parameters?.courses;
-        horticultureCoursesCricosCodes = Object.keys(horticulturePackageSpecial);
-    }
 
     for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
@@ -24,12 +18,11 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
 
         // Discounts
         const extensionStudentEnable = specialCases.includes('es');
-        const horticulturePackageSpecialEnable = horticulturePackageSpecial ? courses?.find(item => item?.coursePricing?.course?.cricos_code === '113194A') && courses?.find(item => horticultureCoursesCricosCodes.includes(item?.coursePricing?.course?.cricos_code) && item?.coursePricing?.course?.type === 'standard') : false;
         const multipleCoursesEnable = courses.length > 1;
         const payUpfrontEnable = paymentType === 'pay_upfront';
 
         // Extension Student
-        if (extensionStudentEnable && !horticulturePackageSpecialEnable && !(payUpfrontEnable && courses.length > 1)) {
+        if (extensionStudentEnable && !(payUpfrontEnable && courses.length > 1)) {
             console.debug("Discount: Extension Student");
             const specialCaseES = allSpecialCasesAvailable?.find(sc => sc?.code === 'es');
             // Every course
@@ -40,7 +33,7 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
         }
 
         // PaymentType: Pay upfront and 2 course o more
-        if (payUpfrontEnable && courses.length > 1 && !horticulturePackageSpecialEnable) {
+        if (payUpfrontEnable && courses.length > 1) {
             console.debug("PaymentType: Pay upfront");
             const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data, 'pay_upfront_discount');
             const discountPercentage = discountPromotionLastCourse.percentage;
@@ -50,11 +43,12 @@ export function asianAllOthersCountriesDiscountsVET(data, paymentType, courses, 
         }
 
         // Multiple courses
-        if (multipleCoursesEnable && !horticulturePackageSpecialEnable) {
+        if (multipleCoursesEnable) {
             console.debug("Discount: Multiple courses");
             // It is the last course
             if (i === courses.length - 1) {
                 const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data, 'multi_course_last_discount');
+                console.log("Now", discountPromotionLastCourse);
                 course.finalTuition -= discountPromotionLastCourse?.amount;
                 course.discountsApplied.push(discountPromotionLastCourse);
                 console.debug("A discount was applied to:", course);
