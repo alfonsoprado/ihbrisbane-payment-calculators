@@ -7,7 +7,7 @@ import { getCourseDiscountPromotion } from "../../../../helpers/tools";
     then the final discount is 10%, not 15%.
 
 */
-export function asianAllOthersCountriesDiscountsALSCollege(data, paymentType, courses, specialCases) {
+export function asianAllOthersCountriesDiscountsCivil(data, paymentType, courses, specialCases) {
     const discountFirstWeeksCourse = getCourseDiscountPromotion(data, "116125A", "first_weeks_course");
     const datesDFWC = discountFirstWeeksCourse?.parameters?.dates;
 

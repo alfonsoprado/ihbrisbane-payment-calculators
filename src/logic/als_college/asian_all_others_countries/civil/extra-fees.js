@@ -1,6 +1,6 @@
 import { formatDate } from "../../../../helpers/dates";
 
-export function asianAllOthersCountriesGenerateExtraFeesALSCollege(data, paymentType, courses, specialCasesSelected) {
+export function asianAllOthersCountriesGenerateExtraFeesCivil(data, paymentType, courses, specialCasesSelected) {
   let enrolmentFee = courses[0]?.coursePricing?.enrolment_fee;
   let materialFee = 0;
   for (const course of courses) {

@@ -16,7 +16,7 @@ export function generateTotalPayments(data, result, courses, paymentType) {
     dueDate: "",
     feeDescription: "Total",
     courseName: "",
-    paymentAmount: result.reduce((prev, row) => prev + row.paymentAmount, 0),
+    paymentAmount: Math.round(result.reduce((prev, row) => prev + row.paymentAmount, 0) * 10) / 10,
     code: 'total'
   };
   if(paymentType === 'pay_upfront') {
@@ -26,7 +26,7 @@ export function generateTotalPayments(data, result, courses, paymentType) {
         dueDate: "",
         feeDescription: "Total",
         courseName: "",
-        paymentAmount: result.reduce((prev, row) => prev + row.paymentAmount, 0) + coursesTuitions.reduce((prev, row) => prev + row.paymentAmount, 0),
+        paymentAmount: Math.round((result.reduce((prev, row) => prev + row.paymentAmount, 0) + coursesTuitions.reduce((prev, row) => prev + row.paymentAmount, 0)) * 10) / 10,
         code: 'total' 
       }
     ];

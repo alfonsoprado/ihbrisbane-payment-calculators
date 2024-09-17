@@ -22,12 +22,17 @@ import { asianAllOthersCountriesOption1AgedCare } from "./als_college/asian_all_
 
 import { latinAmericaEuropeDiscountsAgedCare } from "./aged_care/latin_europe/discounts";
 import { latinAmericaEuropeOption1AgedCare } from "./aged_care/latin_europe/option1";
-import { asianAllOthersCountriesGenerateExtraFeesALSCollege } from "./als_college/asian_all_others_countries/civil/extra-fees";
+import { asianAllOthersCountriesGenerateExtraFeesCivil } from "./als_college/asian_all_others_countries/civil/extra-fees";
 import { asianAllOthersCountriesStandardPaymentPlanCivil } from "./als_college/asian_all_others_countries/civil/standard-payment-plan";
 import { asianAllOthersCountriesOption1Civil } from "./als_college/asian_all_others_countries/civil/option1";
-import { asianAllOthersCountriesDiscountsALSCollege } from "./als_college/asian_all_others_countries/civil/discounts";
+import { asianAllOthersCountriesDiscountsCivil } from "./als_college/asian_all_others_countries/civil/discounts";
 import { latinAmericaEuropeDiscountsADCCD } from "./civil_construction/latin_europe/discounts";
 import { latinAmericaEuropeOption1ADCCD } from "./civil_construction/latin_europe/option1";
+import { asianAllOthersCountriesOption1Horticulture } from "./als_college/asian_all_others_countries/horticulture/option1";
+import { generateExtraFeesHorticulture } from "./als_college/asian_all_others_countries/horticulture/extra-fees";
+import { asianAllOthersCountriesDiscountsHorticulture } from "./als_college/asian_all_others_countries/horticulture/discounts";
+import { asianAllOthersCountriesOption2Horticulture } from "./als_college/asian_all_others_countries/horticulture/option2";
+import { asianAllOthersCountriesOption3Horticulture } from "./als_college/asian_all_others_countries/horticulture/option3";
 
 function addIdToArray(result) {
   return result.map((row, index) => {
@@ -134,26 +139,29 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
   * ALS COLLEGE PAYMENT CALCULATOR
   */
   } else if (data?.payment_calculator?.type === 'als_college') {
+    const horticulture = courses.some(course => ["113194A"].includes(course?.coursePricing?.course?.cricos_code));
+    const ageCare = courses.some(course => ["115203M", "115204K"].includes(course?.coursePricing?.course?.cricos_code));
+    const civil = courses.some(course => ["116125A"].includes(course?.coursePricing?.course?.cricos_code));
+    console.log(horticulture);
+    console.log(ageCare);
+    console.log(civil);
+
     // Discounts by regions
     if (data?.region?.code === "asian_all_other_countries") {
       //course
       if(["option_1-horticulture", "option_2-horticulture", "option_3-horticulture"].includes(paymentType)) {
-        asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases);
+        asianAllOthersCountriesDiscountsHorticulture(data, paymentType, courses, specialCases);
       } else if(paymentType === "option_1-aged_care") {
         asianAllOthersCountriesDiscountsAgedCare(data, paymentType, courses, specialCases);
       } else if(["standard_payment_plan-civil", "option_1-civil"].includes(paymentType)) {
-        asianAllOthersCountriesDiscountsALSCollege(data, paymentType, courses, specialCases);
+        asianAllOthersCountriesDiscountsCivil(data, paymentType, courses, specialCases);
       } else if("pay_upfront" === paymentType) {
-        const horticulture = courses.some(course => ["113194A"].includes(course?.coursePricing?.course?.cricos_code));
-        const ageCare = courses.some(course => ["115203M", "115204K"].includes(course?.coursePricing?.course?.cricos_code));
-        const civil = courses.some(course => ["116125A"].includes(course?.coursePricing?.course?.cricos_code));
-   
         if(horticulture) {
-          asianAllOthersCountriesDiscountsVET(data, paymentType, courses, specialCases);
+          asianAllOthersCountriesDiscountsHorticulture(data, paymentType, courses, specialCases);
         } else if(ageCare) {
           asianAllOthersCountriesDiscountsAgedCare(data, paymentType, courses, specialCases);
         } else if(civil) {
-          asianAllOthersCountriesDiscountsALSCollege(data, paymentType, courses, specialCases);
+          asianAllOthersCountriesDiscountsCivil(data, paymentType, courses, specialCases);
         }
       }
     } else {
@@ -165,18 +173,39 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     if(["option_1-horticulture", "option_2-horticulture", "option_3-horticulture"].includes(paymentType)) {
       result = [
         ...result,
-        ...generateExtraFeesVET(data, paymentType, courses, specialCases)
+        ...generateExtraFeesHorticulture(data, paymentType, courses, specialCases)
       ];
     } else if (paymentType === "option_1-aged_care") {
       result = [
         ...result,
         ...asianAllOthersCountriesGenerateExtraFeesAgedCare(data, paymentType, courses, specialCases)
       ];
-    } else if(["standard_payment_plan-civil", "option_1-civil", "pay_upfront"].includes(paymentType)) {
+    } else if(["standard_payment_plan-civil", "option_1-civil"].includes(paymentType)) {
       result = [
         ...result,
-        ...asianAllOthersCountriesGenerateExtraFeesALSCollege(data, paymentType, courses, specialCases)
+        ...asianAllOthersCountriesGenerateExtraFeesCivil(data, paymentType, courses, specialCases)
       ];
+    } else if(paymentType === "pay_upfront") {
+      console.log("pay_upfront");
+      console.log(horticulture);
+      console.log(ageCare);
+      console.log(civil);
+      if(horticulture) {
+        result = [
+          ...result,
+          ...generateExtraFeesHorticulture(data, paymentType, courses, specialCases)
+        ];
+      } else if(ageCare) {
+        result = [
+          ...result,
+          ...asianAllOthersCountriesGenerateExtraFeesAgedCare(data, paymentType, courses, specialCases)
+        ];
+      } else if(civil) {
+        result = [
+          ...result,
+          ...asianAllOthersCountriesGenerateExtraFeesCivil(data, paymentType, courses, specialCases)
+        ];
+      }
     }
 
     // Making plan
@@ -184,17 +213,17 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       if(paymentType === "option_1-horticulture") {
         result = [
           ...result,
-          ...asianAllOthersCountriesOption1VET(data, courses, paymentType)
+          ...asianAllOthersCountriesOption1Horticulture(data, courses, paymentType)
         ];
       } else if(paymentType === "option_2-horticulture") {
         result = [
           ...result,
-          ...asianAllOthersCountriesOption2VET(data, courses, paymentType)
+          ...asianAllOthersCountriesOption2Horticulture(data, courses, paymentType)
         ];
       } else if(paymentType === "option_3-horticulture") {
         result = [
           ...result,
-          ...asianAllOthersCountriesOption3VET(data, courses, paymentType)
+          ...asianAllOthersCountriesOption3Horticulture(data, courses, paymentType)
         ];
       } else if(paymentType === "option_1-aged_care") {
         result = [
