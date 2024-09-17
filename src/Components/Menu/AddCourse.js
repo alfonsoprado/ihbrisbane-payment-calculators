@@ -20,6 +20,7 @@ function AddCourse({ data, createCourse, courses }) {
   const [coursePricing, setCoursePricing] = useState("");
   const [startDate, setStartDate] = useState("");
   const [duration, setDuration] = useState("");
+  const [mostRecentDate, setMostRecentDate] = useState("");
   // use one time
   const [scrollToPaymentOptions, setScrollToPaymentOptions] = useState(true);
 
@@ -27,6 +28,16 @@ function AddCourse({ data, createCourse, courses }) {
     setCoursePricing("");
     setStartDate("");
     setDuration("");
+
+    if(courses?.length > 0) {
+      const mostRecentDate = courses.reduce((latest, current) => {
+        const currentDate = new Date(current?.finishDate);
+        return currentDate > latest ? currentDate : latest;
+      }, new Date(courses[0].finishDate));
+      setMostRecentDate(mostRecentDate.toISOString().split('T')[0]);
+    }
+    
+
   }, [courses]);
 
   const handleChangeDuration = (e) => {
@@ -158,7 +169,12 @@ function AddCourse({ data, createCourse, courses }) {
           <Form.Group className="mb-2">
             <Form.Label><b>Start date:</b></Form.Label>
             <Select
-              options={coursePricing?.value?.course?.start_dates?.map((start_date) => {
+              options={coursePricing?.value?.course?.start_dates?.filter((start_date) => {
+                  if(!courses?.length) {
+                    return true;
+                  }
+                  return new Date(start_date) > new Date(mostRecentDate)
+              })?.map((start_date) => {
                 return {
                   value: start_date,
                   label: changeFormat(start_date)
