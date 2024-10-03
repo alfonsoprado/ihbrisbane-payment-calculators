@@ -14,16 +14,15 @@ function Menu({
   updatePaymentType,
   specialCases,
   updateSpecialCases,
-  resetAll
+  available,
+  checkAvailability,
+  resetAll,
 }) {
   return (
     <>
-      <AddCourse
-        data={data}
-        createCourse={createCourse}
-        courses={courses} />
-      {
-        courses.length > 0 && <PaymentOptions
+      <AddCourse data={data} createCourse={createCourse} courses={courses} />
+      {courses.length > 0 && (
+        <PaymentOptions
           data={data}
           errorMessages={errorMessages}
           cleanPaymentPlan={cleanPaymentPlan}
@@ -32,13 +31,14 @@ function Menu({
           createPaymentPlan={createPaymentPlan}
           courses={courses}
           paymentType={paymentType}
-          updatePaymentType={updatePaymentType} 
+          updatePaymentType={updatePaymentType}
           specialCases={specialCases}
           updateSpecialCases={updateSpecialCases}
+          available={available}
+          checkAvailability={checkAvailability}
           resetAll={resetAll}
-          />
-      }
-
+        />
+      )}
     </>
   );
 }

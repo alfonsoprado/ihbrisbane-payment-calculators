@@ -1,7 +1,15 @@
-import { Card, Form, Row, Col, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import {
+  Card,
+  Form,
+  Row,
+  Col,
+  Button,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
 import { getPaymentOptions, getSpecialCases } from "../../helpers/tools";
 import DownloadPDF from "../DownloadPDFButton";
-import { parseISO, format } from 'date-fns';
+import { parseISO, format } from "date-fns";
 import AppModal from "../AppModal";
 import { PAYMENT_PLAN_PDF_API_URL } from "../../env";
 import { useEffect } from "react";
@@ -18,7 +26,9 @@ function PaymentOptions({
   updatePaymentType,
   specialCases,
   updateSpecialCases,
-  resetAll
+  available,
+  checkAvailability,
+  resetAll,
 }) {
   // Default payment type option
   useEffect(() => {
@@ -32,19 +42,22 @@ function PaymentOptions({
     const dataPDF = {
       paymentCalculatorType: data?.payment_calculator?.type,
       regionCode: data?.region?.code,
-      courses: courses.map(course => {
+      courses: courses.map((course) => {
         return {
           name: course?.coursePricing?.course?.name,
           cricosCode: course?.coursePricing?.course?.cricos_code,
           courseCode: course?.coursePricing?.course?.course_code,
           startDate: format(parseISO(course?.startDate), "dd/MM/yyyy"),
-          finishDate: format(parseISO(course?.finishDate), "dd/MM/yyyy")
-        }
+          finishDate: format(parseISO(course?.finishDate), "dd/MM/yyyy"),
+        };
       }),
-      paymentPlan: paymentType === "pay_upfront" ? paymentPlan : paymentPlan.filter(row => row.code !== "tuition")
-    }
+      paymentPlan:
+        paymentType === "pay_upfront"
+          ? paymentPlan
+          : paymentPlan.filter((row) => row.code !== "tuition"),
+    };
     return dataPDF;
-  }
+  };
 
   const handlePaymentType = (event) => {
     updatePaymentType(event.target.value);
@@ -56,21 +69,28 @@ function PaymentOptions({
     if (checked && !specialCases.includes(name)) {
       updateSpecialCases([...specialCases, name]);
     } else {
-      updateSpecialCases(specialCases?.filter(specialCase => specialCase !== name));
+      updateSpecialCases(
+        specialCases?.filter((specialCase) => specialCase !== name)
+      );
     }
     cleanPaymentPlan();
   };
 
+  const handleCheckAvailability = () => {
+    checkAvailability();
+  };
+
   const handlePaymentPlan = () => {
     showPaymentPlanTable();
-  }
+  };
 
   const specialCasesOptions = getSpecialCases(data, courses);
 
-  const buttonDisable = errorMessages?.length > 0 ||
+  const buttonDisable =
+    errorMessages?.length > 0 ||
     !paymentType ||
-    courses?.length === 0;
-
+    courses?.length === 0 ||
+    !available;
 
   return (
     <Card id="payment_options" className="mb-3">
@@ -81,61 +101,69 @@ function PaymentOptions({
         <Row className="mb-3">
           <Col>
             <Form.Group>
-              <Form.Label><b>Payment Type</b></Form.Label>
-              {
-                getPaymentOptions(data, courses).map(option => {
-                  return (
-                    <Form.Check
-                      key={option.code}
-                      type="radio"
-                      value={option.code}
-                      checked={paymentType === option.code}
-                      onChange={handlePaymentType}
-                      label={option.name}
-                      name="radios"
-                      id={option.code}
-                    />
-                  )
-                })
-              }
+              <Form.Label>
+                <b>Payment Type</b>
+              </Form.Label>
+              {getPaymentOptions(data, courses).map((option) => {
+                return (
+                  <Form.Check
+                    key={option.code}
+                    type="radio"
+                    value={option.code}
+                    checked={paymentType === option.code}
+                    onChange={handlePaymentType}
+                    label={option.name}
+                    name="radios"
+                    id={option.code}
+                  />
+                );
+              })}
             </Form.Group>
           </Col>
           <Col>
             <Form.Group>
-              { specialCasesOptions.length > 0 && <Form.Label><b>Special Cases</b></Form.Label> }
-              {
-                specialCasesOptions.map((specialCase) => {
-                  return (
-                    <OverlayTrigger
-                      key={specialCase?.code}
-                      placement='left'
-                      overlay={
-                        <Tooltip id='tooltip-left'>
-                          {specialCase?.info}
-                        </Tooltip>
-                      }
-                    >
-                      <Form.Group controlId={specialCase?.code}>
-                        <Form.Check
-                          type="checkbox"
-                          name={specialCase?.code}
-                          label={specialCase?.name}
-                          checked={specialCases.includes(specialCase?.code)}
-                          onChange={handleSpecialCases}
-                        />
-                      </Form.Group>
-                    </OverlayTrigger>
-                  );
-                })
-              }
+              {specialCasesOptions.length > 0 && (
+                <Form.Label>
+                  <b>Special Cases</b>
+                </Form.Label>
+              )}
+              {specialCasesOptions.map((specialCase) => {
+                return (
+                  <OverlayTrigger
+                    key={specialCase?.code}
+                    placement="left"
+                    overlay={
+                      <Tooltip id="tooltip-left">{specialCase?.info}</Tooltip>
+                    }
+                  >
+                    <Form.Group controlId={specialCase?.code}>
+                      <Form.Check
+                        type="checkbox"
+                        name={specialCase?.code}
+                        label={specialCase?.name}
+                        checked={specialCases.includes(specialCase?.code)}
+                        onChange={handleSpecialCases}
+                      />
+                    </Form.Group>
+                  </OverlayTrigger>
+                );
+              })}
             </Form.Group>
           </Col>
         </Row>
         <div className="d-grid gap-2">
+          {errorMessages?.length === 0 && (
+            <Button
+              className="mt-2"
+              variant="primary"
+              onClick={handleCheckAvailability}
+            >
+              Check Availability
+            </Button>
+          )}
           <Button
             onClick={handlePaymentPlan}
-            disabled={buttonDisable}
-            className="mt-2"
+            disabled={buttonDisable && !available}
             variant="dark"
           >
             Check Payment Plan
@@ -145,12 +173,15 @@ function PaymentOptions({
             url={PAYMENT_PLAN_PDF_API_URL}
             generateDataPDF={generateDataPDF}
             title="Payment Plan"
-            disabled={buttonDisable} />
+            disabled={buttonDisable}
+          />
           <Button
             variant="dark"
             disabled={buttonDisable}
             onClick={showApplicationForm}
-          >Complete Application Details</Button>
+          >
+            Complete Application Details
+          </Button>
           <AppModal
             title="Reset All"
             content="Are you sure you want to reset all?"
