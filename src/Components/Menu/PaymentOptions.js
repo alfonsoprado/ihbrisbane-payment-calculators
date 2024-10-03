@@ -87,10 +87,7 @@ function PaymentOptions({
   const specialCasesOptions = getSpecialCases(data, courses);
 
   const buttonDisable =
-    errorMessages?.length > 0 ||
-    !paymentType ||
-    courses?.length === 0 ||
-    !available;
+    errorMessages?.length > 0 || !paymentType || courses?.length === 0;
 
   return (
     <Card id="payment_options" className="mb-3">
@@ -152,18 +149,17 @@ function PaymentOptions({
           </Col>
         </Row>
         <div className="d-grid gap-2">
-          {errorMessages?.length === 0 && (
-            <Button
-              className="mt-2"
-              variant="primary"
-              onClick={handleCheckAvailability}
-            >
-              Check Availability
-            </Button>
-          )}
+          <Button
+            className="mt-2"
+            variant="primary"
+            onClick={handleCheckAvailability}
+            disabled={buttonDisable}
+          >
+            Check Availability
+          </Button>
           <Button
             onClick={handlePaymentPlan}
-            disabled={buttonDisable && !available}
+            disabled={buttonDisable || !available}
             variant="dark"
           >
             Check Payment Plan
@@ -173,11 +169,11 @@ function PaymentOptions({
             url={PAYMENT_PLAN_PDF_API_URL}
             generateDataPDF={generateDataPDF}
             title="Payment Plan"
-            disabled={buttonDisable}
+            disabled={buttonDisable || !available}
           />
           <Button
             variant="dark"
-            disabled={buttonDisable}
+            disabled={buttonDisable || !available}
             onClick={showApplicationForm}
           >
             Complete Application Details

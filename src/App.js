@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBug } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import util from "lodash";
+import SuccessAlert from "./SuccessAlert";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -66,6 +67,7 @@ const middleCenterStyle = {
 function App({ paymentCalculator }) {
   const [counterCoursesAdded, setCounterCoursesAdded] = useState(0);
   const [errorMessages, setErrorMessage] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
   const [courses, setCourses] = useState([]);
   const [paymentType, setPaymentType] = useState("");
   const [specialCases, setSpecialCases] = useState([]);
@@ -233,6 +235,7 @@ function App({ paymentCalculator }) {
       setApplicationEnabled(false);
     }
 
+    setSuccessMessage("");
     setErrorMessage(errors);
     setAvailable(false);
   }, [data, courses]);
@@ -350,114 +353,96 @@ function App({ paymentCalculator }) {
 
         const quotas = response?.data;
 
-        const quotaAvailable = quotas.some((quota) => {
-          const quotaInDateRange = quota?.quota_dates?.some((qd) => {
-            return (
-              startDateCourse >= new Date(qd.start_date) &&
-              startDateCourse <= new Date(qd.end_date) &&
-              qd.quota_available &&
-              qd.quota_amount_used < qd.quota_amount
-            );
-          });
-          console.log(quotaInDateRange);
+        const quotaAvailable = quotas
+          .filter((quota) => quota?.quota_dates?.length > 0)
+          .filter((quota) => quota?.quota_conditions?.length > 0)
+          .some((quota) => {
+            const quotaInDateRange = quota?.quota_dates?.some((qd) => {
+              return (
+                startDateCourse >= new Date(qd.start_date) &&
+                startDateCourse <= new Date(qd.end_date) &&
+                qd.quota_available &&
+                qd.quota_amount_used < qd.quota_amount
+              );
+            });
 
-          if (!quotaInDateRange) {
-            return false;
-          }
-
-          const quotaConditionMet = quota?.quota_conditions?.every((qc) => {
-            const isCourses = qc.courses.length > 0;
-            const isCategories = qc.categories.length > 0;
-
-            let totalWeeksCourses, totalCourses;
-            if (!isCourses && !isCategories) {
-              console.log();
-              totalWeeksCourses = courses.reduce(
-                (totalWeeks, course) => totalWeeks + course?.duration,
-                0
-              );
-              totalCourses = courses.length;
-            } else if (isCourses && !isCategories) {
-              console.log(
-                "isCourses && !isCategories",
-                isCourses && !isCategories
-              );
-              const quotaCoursesId = qc?.courses?.map(
-                (qcCourse) => qcCourse?.course?.id
-              );
-              console.log("quotaCoursesId", quotaCoursesId);
-              const coursesInQuotasCourses = util.intersection(
-                coursesIds,
-                quotaCoursesId
-              );
-              console.log("coursesInQuotasCourses", coursesInQuotasCourses);
-              totalCourses = coursesInQuotasCourses.length;
-              console.log("totalCourses", totalCourses);
-              totalWeeksCourses = coursesInQuotasCourses.reduce(
-                (totalWeeks, courseId) => {
-                  return (
-                    totalWeeks +
-                    courses
-                      ?.map((course) => course?.coursePricing?.course)
-                      .find((course) => course?.id === courseId)?.duration_weeks
-                  );
-                },
-                0
-              );
-              console.log("totalWeeksCourses", totalWeeksCourses);
-            } else if (!isCourses && isCategories) {
-              console.log(
-                "!isCourses && isCategories",
-                !isCourses && isCategories
-              );
-              const quotaCoursesId = [];
-              for (const item of qc?.categories) {
-                const quotaCourses = item?.category?.courses ?? [];
-                for (const quotaCourse of quotaCourses) {
-                  if (!quotaCoursesId.includes(quotaCourse)) {
-                    quotaCoursesId.push(quotaCourse?.id);
-                  }
-                }
-              }
-              console.log("quotaCoursesId", quotaCoursesId);
-              const coursesInQuotasCourses = util.intersection(
-                coursesIds,
-                quotaCoursesId
-              );
-              totalCourses = coursesInQuotasCourses.length;
-              console.log("totalCourses", totalCourses);
-              totalWeeksCourses = coursesInQuotasCourses.reduce(
-                (totalWeeks, courseId) => {
-                  return (
-                    totalWeeks +
-                    courses
-                      ?.map((course) => course?.coursePricing?.course)
-                      .find((course) => course?.id === courseId)?.duration_weeks
-                  );
-                },
-                0
-              );
-              console.log("totalWeeksCourses", totalWeeksCourses);
-            } else {
-              throw new Error(
-                "QuotaError: There can not be courses and categories at the same time."
-              );
+            if (!quotaInDateRange) {
+              return false;
             }
 
-            return (
-              totalCourses >= qc?.min_courses &&
-              totalWeeksCourses >= qc?.min_weeks
-            );
-          });
+            const quotaConditionMet = quota?.quota_conditions?.every((qc) => {
+              const isCourses = qc.courses.length > 0;
+              const isCategories = qc.categories.length > 0;
 
-          console.log("quotaInDateRange", quotaInDateRange);
-          console.log("quotaConditionMet", quotaConditionMet);
-          console.log(
-            "quotaInDateRange && quotaConditionMet",
-            quotaInDateRange && quotaConditionMet
-          );
-          return quotaInDateRange && quotaConditionMet;
-        });
+              let totalWeeksCourses, totalCourses;
+              if (!isCourses && !isCategories) {
+                totalWeeksCourses = courses.reduce(
+                  (totalWeeks, course) => totalWeeks + course?.duration,
+                  0
+                );
+                totalCourses = courses.length;
+              } else if (isCourses && !isCategories) {
+                const quotaCoursesId = qc?.courses?.map(
+                  (qcCourse) => qcCourse?.course?.id
+                );
+                const coursesInQuotasCourses = util.intersection(
+                  coursesIds,
+                  quotaCoursesId
+                );
+                totalCourses = coursesInQuotasCourses.length;
+                totalWeeksCourses = coursesInQuotasCourses.reduce(
+                  (totalWeeks, courseId) => {
+                    return (
+                      totalWeeks +
+                      courses
+                        ?.map((course) => course?.coursePricing?.course)
+                        .find((course) => course?.id === courseId)
+                        ?.duration_weeks
+                    );
+                  },
+                  0
+                );
+              } else if (!isCourses && isCategories) {
+                const quotaCoursesId = [];
+                for (const item of qc?.categories) {
+                  const quotaCourses = item?.category?.courses ?? [];
+                  for (const quotaCourse of quotaCourses) {
+                    if (!quotaCoursesId.includes(quotaCourse)) {
+                      quotaCoursesId.push(quotaCourse?.id);
+                    }
+                  }
+                }
+                const coursesInQuotasCourses = util.intersection(
+                  coursesIds,
+                  quotaCoursesId
+                );
+                totalCourses = coursesInQuotasCourses.length;
+                totalWeeksCourses = coursesInQuotasCourses.reduce(
+                  (totalWeeks, courseId) => {
+                    return (
+                      totalWeeks +
+                      courses
+                        ?.map((course) => course?.coursePricing?.course)
+                        .find((course) => course?.id === courseId)
+                        ?.duration_weeks
+                    );
+                  },
+                  0
+                );
+              } else {
+                throw new Error(
+                  "QuotaError: There can not be courses and categories at the same time."
+                );
+              }
+
+              return (
+                totalCourses >= qc?.min_courses &&
+                totalWeeksCourses >= qc?.min_weeks
+              );
+            });
+
+            return quotaInDateRange && quotaConditionMet;
+          });
 
         if (!quotaAvailable) {
           setErrorMessage([
@@ -465,11 +450,14 @@ function App({ paymentCalculator }) {
             ...errorMessages,
           ]);
         } else {
+          setSuccessMessage(
+            "There are quotas available, you can continue with the application."
+          );
           setAvailable(true);
         }
       } catch (err) {
         setErrorMessage([
-          "Server error, could not validate available quotas, please contact the administrator",
+          "Server error, could not validate available quotas, please contact the administrator.",
           ...errorMessages,
         ]);
       }
@@ -576,6 +564,7 @@ function App({ paymentCalculator }) {
         </Col>
         <Col sm={8}>
           <ErrorAlert errorMessages={errorMessages} />
+          <SuccessAlert message={successMessage} />
           <Courses
             data={data}
             courses={courses}
