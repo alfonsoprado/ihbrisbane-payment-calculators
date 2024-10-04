@@ -1,18 +1,19 @@
 import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
-  formatDate
+  formatDate,
 } from "../../../helpers/dates";
+import { formatCourse } from "../../../helpers/ihbrisbane";
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 import { latinAmericaEuropeGenerateExtraFeesADCCD } from "./extra-fees";
 
 function generatePaymentsOption1(data, course, startDate, coursePrice) {
-  const courseName = course?.coursePricing?.course?.name;
+  const courseName = formatCourse(course?.coursePricing?.course);
 
   let {
     tuition_installments_amount, // $1000
     tuition_installments_interval_weeks, // 1 Month = 4 weeks
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+  } = getPaymentOptionParameters(data, "option_1", "both");
 
   const payments = [];
 
@@ -25,18 +26,21 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
     courseName,
     feeDescription: "Tuition installment",
     paymentAmount: tuition_installments_amount,
-    code: "tuition_installment"
+    code: "tuition_installment",
   });
   remainingAmount -= tuition_installments_amount;
   // Every month payment
   while (tuition_installments_amount <= remainingAmount) {
-    paymentDate = findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks);
+    paymentDate = findFridayOfFollowingWeeks(
+      paymentDate,
+      tuition_installments_interval_weeks
+    );
     payments.push({
       dueDate: formatDate(paymentDate),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: tuition_installments_amount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
     remainingAmount -= tuition_installments_amount;
   }
@@ -44,32 +48,47 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   // Last month, if there is a residual payment
   if (remainingAmount !== 0) {
     payments.push({
-      dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks)),
+      dueDate: formatDate(
+        findFridayOfFollowingWeeks(
+          paymentDate,
+          tuition_installments_interval_weeks
+        )
+      ),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: remainingAmount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
   }
 
   return payments;
 }
 
-export function latinAmericaEuropeOption1ADCCD(data, paymentType, courses, specialCases) {
+export function latinAmericaEuropeOption1ADCCD(
+  data,
+  paymentType,
+  courses,
+  specialCases
+) {
   const {
-    first_tuition_installment_amount // $1000 AUS
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+    first_tuition_installment_amount, // $1000 AUS
+  } = getPaymentOptionParameters(data, "option_1", "both");
 
   // First tuition
   let result = [
     {
       dueDate: formatDate(new Date()),
       feeDescription: "Tuition installment",
-      courseName: courses[0]?.coursePricing?.course?.name,
+      courseName: formatCourse(courses[0]?.coursePricing?.course),
       paymentAmount: first_tuition_installment_amount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     },
-    ...latinAmericaEuropeGenerateExtraFeesADCCD(data, paymentType, courses, specialCases)
+    ...latinAmericaEuropeGenerateExtraFeesADCCD(
+      data,
+      paymentType,
+      courses,
+      specialCases
+    ),
   ];
 
   for (const [index, course] of courses.entries()) {
@@ -81,7 +100,7 @@ export function latinAmericaEuropeOption1ADCCD(data, paymentType, courses, speci
     }
     result = [
       ...result,
-      ...generatePaymentsOption1(data, course, startDate, tuition_fee)
+      ...generatePaymentsOption1(data, course, startDate, tuition_fee),
     ];
   }
 

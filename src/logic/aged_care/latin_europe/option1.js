@@ -1,13 +1,14 @@
 import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
-  formatDate
+  formatDate,
 } from "../../../helpers/dates";
+import { formatCourse } from "../../../helpers/ihbrisbane";
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 import { latinAmericaEuropeGenerateExtraFeesAgedCare } from "./extra-fees";
 
 function generatePaymentsOption1(data, course, startDate, coursePrice) {
-  const courseName = course?.coursePricing?.course?.name;
+  const courseName = formatCourse(course?.coursePricing?.course);
   const courseCode = course?.coursePricing?.course?.course_code;
 
   let {
@@ -18,18 +19,21 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
     tuition_installments_amount,
     tuition_installments_interval_weeks,
     courses,
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+  } = getPaymentOptionParameters(data, "option_1", "both");
 
   // Courses with diferent tuition_installments_amount or tuition_installments_interval_weeks
   if (aged_care_courses.includes(courseCode)) {
-    first_tuition_installment_amount = aged_care_first_tuition_installment_amount;
+    first_tuition_installment_amount =
+      aged_care_first_tuition_installment_amount;
     tuition_installments_amount = aged_care_tuition_installments_amount;
   } else {
-    if(courses[courseCode]?.tuition_installments_amount) {
-      tuition_installments_amount = courses[courseCode]?.tuition_installments_amount;
+    if (courses[courseCode]?.tuition_installments_amount) {
+      tuition_installments_amount =
+        courses[courseCode]?.tuition_installments_amount;
     }
-    if(courses[courseCode]?.tuition_installments_interval_weeks) {
-      tuition_installments_interval_weeks = courses[courseCode]?.tuition_installments_interval_weeks;
+    if (courses[courseCode]?.tuition_installments_interval_weeks) {
+      tuition_installments_interval_weeks =
+        courses[courseCode]?.tuition_installments_interval_weeks;
     }
   }
 
@@ -43,19 +47,26 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
     dueDate: formatDate(paymentDate),
     courseName,
     feeDescription: "Tuition installment",
-    paymentAmount: aged_care_courses.includes(courseCode) ? first_tuition_installment_amount : tuition_installments_amount,
-    code: "tuition_installment"
+    paymentAmount: aged_care_courses.includes(courseCode)
+      ? first_tuition_installment_amount
+      : tuition_installments_amount,
+    code: "tuition_installment",
   });
-  remainingAmount -= aged_care_courses.includes(courseCode) ? first_tuition_installment_amount : tuition_installments_amount;
+  remainingAmount -= aged_care_courses.includes(courseCode)
+    ? first_tuition_installment_amount
+    : tuition_installments_amount;
   // Every month payment
   while (tuition_installments_amount <= remainingAmount) {
-    paymentDate = findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks);
+    paymentDate = findFridayOfFollowingWeeks(
+      paymentDate,
+      tuition_installments_interval_weeks
+    );
     payments.push({
       dueDate: formatDate(paymentDate),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: tuition_installments_amount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
     remainingAmount -= tuition_installments_amount;
   }
@@ -63,24 +74,34 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   // Last month, if there is a residual payment
   if (remainingAmount !== 0) {
     payments.push({
-      dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks)),
+      dueDate: formatDate(
+        findFridayOfFollowingWeeks(
+          paymentDate,
+          tuition_installments_interval_weeks
+        )
+      ),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: remainingAmount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
   }
 
   return payments;
 }
 
-export function latinAmericaEuropeOption1AgedCare(data, paymentType, courses, specialCasesSelected) {
-  
-  let {
-    coe_fee,
-    aged_care_courses
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
-  
+export function latinAmericaEuropeOption1AgedCare(
+  data,
+  paymentType,
+  courses,
+  specialCasesSelected
+) {
+  let { coe_fee, aged_care_courses } = getPaymentOptionParameters(
+    data,
+    "option_1",
+    "both"
+  );
+
   let aged_care_courses_selected = 0;
 
   // First tuition
@@ -90,20 +111,27 @@ export function latinAmericaEuropeOption1AgedCare(data, paymentType, courses, sp
       feeDescription: "COE Fee",
       courseName: "",
       paymentAmount: coe_fee,
-      code: "coe_fee"
+      code: "coe_fee",
     },
-    ...latinAmericaEuropeGenerateExtraFeesAgedCare(data, paymentType, courses, specialCasesSelected)
+    ...latinAmericaEuropeGenerateExtraFeesAgedCare(
+      data,
+      paymentType,
+      courses,
+      specialCasesSelected
+    ),
   ];
 
-  
   for (const course of courses) {
     let startDate = course?.startDate;
-    // Remove amount of the first tuition of the first price 
+    // Remove amount of the first tuition of the first price
     let tuition_fee = course?.finalTuition;
     const courseCode = course?.coursePricing?.course?.course_code;
     const materialFee = course?.coursePricing?.material_fee;
 
-    if (aged_care_courses.includes(courseCode) && aged_care_courses_selected === 0) {
+    if (
+      aged_care_courses.includes(courseCode) &&
+      aged_care_courses_selected === 0
+    ) {
       tuition_fee -= coe_fee;
       aged_care_courses_selected += 1;
     }
@@ -112,11 +140,11 @@ export function latinAmericaEuropeOption1AgedCare(data, paymentType, courses, sp
       {
         dueDate: formatDate(findFridayOfPreviousWeeks(startDate, 1)),
         feeDescription: "Material Fee",
-        courseName: course?.coursePricing?.course?.name,
-        paymentAmount: specialCasesSelected?.includes('mw') ? 0 : materialFee,
-        code: 'material_fee'
+        courseName: formatCourse(course?.coursePricing?.course),
+        paymentAmount: specialCasesSelected?.includes("mw") ? 0 : materialFee,
+        code: "material_fee",
       },
-      ...generatePaymentsOption1(data, course, startDate, tuition_fee)
+      ...generatePaymentsOption1(data, course, startDate, tuition_fee),
     ];
   }
 

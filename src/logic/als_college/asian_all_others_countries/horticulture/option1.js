@@ -1,73 +1,87 @@
 import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
-  formatDate
+  formatDate,
 } from "../../../../helpers/dates";
+import { formatCourse } from "../../../../helpers/ihbrisbane";
 import { getPaymentOptionParameters } from "../../../../helpers/tools";
 
 function generateCoeFee(data, courses) {
-  const {
-    coe_fee
-  } = getPaymentOptionParameters(data, 'option_1-horticulture', 'both');
+  const { coe_fee } = getPaymentOptionParameters(
+    data,
+    "option_1-horticulture",
+    "both"
+  );
 
   let result = [];
 
   for (let i = 0; i < courses.length; i++) {
+    const courseName = formatCourse(courses[i]?.coursePricing?.course);
+
     if (i === 0) {
       result = [
         ...result,
         {
           dueDate: formatDate(new Date()),
           feeDescription: "Tuition installment",
-          courseName: courses[i]?.coursePricing?.course?.name,
+          courseName,
           paymentAmount: coe_fee?.first,
-          code: "tuition_installment"
-        }
-      ]
+          code: "tuition_installment",
+        },
+      ];
     } else {
       result = [
         ...result,
         {
           dueDate: formatDate(new Date()),
           feeDescription: "Tuition installment",
-          courseName: courses[i]?.coursePricing?.course?.name,
+          courseName,
           paymentAmount: coe_fee?.nth,
-          code: "tuition_installment"
-        }
-      ]
+          code: "tuition_installment",
+        },
+      ];
     }
   }
 
   return result;
 }
 
-function generatePaymentsOption1(data, course, startDate, coursePrice, paymentType) {
-  const courseName = course?.coursePricing?.course?.name;
+function generatePaymentsOption1(
+  data,
+  course,
+  startDate,
+  coursePrice,
+  paymentType
+) {
+  const courseName = formatCourse(course?.coursePricing?.course);
 
   const {
     tuition_installments_amount: TIA, // $1000 AUS
     third_tuition_installment_n_weeks_after_course_start: TTIWACS, // 10 weeks
     tuition_installments_interval_weeks_after_third_tuition: TIIWATT, // Month = 4 weeks
-  } = getPaymentOptionParameters(data, paymentType, 'both');
+  } = getPaymentOptionParameters(data, paymentType, "both");
 
   const payments = [];
 
   let remainingAmount = coursePrice;
 
-// Second tuition: 3 days before friday payment
-  const secondTuitionInstallmentDate  = findFridayOfPreviousWeeks(startDate, 1);
+  // Second tuition: 3 days before friday payment
+  const secondTuitionInstallmentDate = findFridayOfPreviousWeeks(startDate, 1);
   if (TIA <= remainingAmount) {
     payments.push({
       dueDate: formatDate(secondTuitionInstallmentDate),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: TIA,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
     remainingAmount -= TIA;
   }
 
-  let paymentDate = findFridayOfFollowingWeeks(secondTuitionInstallmentDate, TTIWACS);
+  let paymentDate = findFridayOfFollowingWeeks(
+    secondTuitionInstallmentDate,
+    TTIWACS
+  );
   if (TIA <= remainingAmount) {
     // Third tuition: n weeks after course start date, n = TTIWACS = 10 weeks
     payments.push({
@@ -75,7 +89,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice, paymentTy
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: TIA,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
     remainingAmount -= TIA;
   }
@@ -88,7 +102,7 @@ function generatePaymentsOption1(data, course, startDate, coursePrice, paymentTy
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: TIA,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
     remainingAmount -= TIA;
   }
@@ -100,20 +114,26 @@ function generatePaymentsOption1(data, course, startDate, coursePrice, paymentTy
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: remainingAmount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
   }
 
   return payments;
 }
 
-export function asianAllOthersCountriesOption1Horticulture(data, courses, paymentType) {
-  const {
-    coe_fee
-  } = getPaymentOptionParameters(data, 'option_1-horticulture', 'both');
+export function asianAllOthersCountriesOption1Horticulture(
+  data,
+  courses,
+  paymentType
+) {
+  const { coe_fee } = getPaymentOptionParameters(
+    data,
+    "option_1-horticulture",
+    "both"
+  );
 
   let result = [
-    ...generateCoeFee(data, courses) // First tuition installment
+    ...generateCoeFee(data, courses), // First tuition installment
   ];
 
   for (const [index, course] of courses.entries()) {
@@ -127,10 +147,15 @@ export function asianAllOthersCountriesOption1Horticulture(data, courses, paymen
     }
     result = [
       ...result,
-      ...generatePaymentsOption1(data, course, startDate, tuition_fee, paymentType)
+      ...generatePaymentsOption1(
+        data,
+        course,
+        startDate,
+        tuition_fee,
+        paymentType
+      ),
     ];
   }
 
   return result;
 }
-

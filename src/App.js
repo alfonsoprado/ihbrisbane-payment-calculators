@@ -24,6 +24,7 @@ import { faBug } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import util from "lodash";
 import SuccessAlert from "./SuccessAlert";
+import { formatCourse } from "./helpers/ihbrisbane";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -185,12 +186,12 @@ function App({ paymentCalculator }) {
       );
       const firstCourseCodesList =
         paymentCalculatorParameters?.course_order_selection_list;
-      const firstCourseNameList = firstCourseCodesList.map(
-        (courseCode) =>
-          data?.course_pricings?.find(
-            (coursePricing) => courseCode === coursePricing?.course?.course_code
-          )?.course?.name
-      );
+      const firstCourseNameList = firstCourseCodesList.map((courseCode) => {
+        const course = data?.course_pricings?.find(
+          (coursePricing) => courseCode === coursePricing?.course?.course_code
+        )?.course;
+        return formatCourse(course);
+      });
 
       const courseCodes = courses.map(
         (course) => course?.coursePricing?.course?.course_code
@@ -304,6 +305,7 @@ function App({ paymentCalculator }) {
       .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
     setCourses(updatedItems);
     cleanPaymentPlan();
+    setApplicationEnabled(false);
   };
 
   const updateApplication = (propName, newValue) => {
@@ -321,11 +323,13 @@ function App({ paymentCalculator }) {
         .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
     );
     cleanPaymentPlan();
+    setApplicationEnabled(false);
   };
 
   const removeAllCourses = () => {
     setCourses([]);
     cleanPaymentPlan();
+    setApplicationEnabled(false);
   };
 
   const resetApplication = () => {
@@ -357,6 +361,10 @@ function App({ paymentCalculator }) {
           .filter((quota) => quota?.quota_dates?.length > 0)
           .filter((quota) => quota?.quota_conditions?.length > 0)
           .some((quota) => {
+            if (!quota.enabled) {
+              return false;
+            }
+
             const quotaInDateRange = quota?.quota_dates?.some((qd) => {
               return (
                 startDateCourse >= new Date(qd.start_date) &&
@@ -376,6 +384,7 @@ function App({ paymentCalculator }) {
 
               let totalWeeksCourses, totalCourses;
               if (!isCourses && !isCategories) {
+                console.log("ACA");
                 totalWeeksCourses = courses.reduce(
                   (totalWeeks, course) => totalWeeks + course?.duration,
                   0

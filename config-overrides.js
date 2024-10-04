@@ -1,5 +1,3 @@
-const webpack = require("webpack");
-
 module.exports = function override(config) {
   config.resolve.fallback = {
     http: false,

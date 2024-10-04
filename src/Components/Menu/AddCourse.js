@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
-import Select from 'react-select';
-import { changeFormat, findFinishDateCourse, formatDate } from "../../helpers/dates";
+import Select from "react-select";
+import {
+  changeFormat,
+  findFinishDateCourse,
+  formatDate,
+} from "../../helpers/dates";
 import { scrollTo } from "../../helpers/tools";
+import { formatCourse } from "../../helpers/ihbrisbane";
 
 const groupStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
 };
 
 const formatGroupLabel = (data) => (
@@ -29,15 +34,13 @@ function AddCourse({ data, createCourse, courses }) {
     setStartDate("");
     setDuration("");
 
-    if(courses?.length > 0) {
+    if (courses?.length > 0) {
       const mostRecentDate = courses.reduce((latest, current) => {
         const currentDate = new Date(current?.finishDate);
         return currentDate > latest ? currentDate : latest;
       }, new Date(courses[0].finishDate));
-      setMostRecentDate(mostRecentDate.toISOString().split('T')[0]);
+      setMostRecentDate(mostRecentDate.toISOString().split("T")[0]);
     }
-    
-
   }, [courses]);
 
   const handleChangeDuration = (e) => {
@@ -47,12 +50,15 @@ function AddCourse({ data, createCourse, courses }) {
 
   const handleChangeCoursePricing = (e) => {
     const value = e.value;
-    setCoursePricing({ label: value?.course?.name, value });
+    setCoursePricing({ label: formatCourse(value?.course), value });
     setStartDate("");
     let duration_weeks = "";
     if (value?.course?.duration_weeks) {
       duration_weeks = value?.course?.duration_weeks;
-    } else if (!value?.course?.duration_weeks && value?.course?.minimum_duration_weeks) {
+    } else if (
+      !value?.course?.duration_weeks &&
+      value?.course?.minimum_duration_weeks
+    ) {
       duration_weeks = value?.course?.minimum_duration_weeks;
     }
 
@@ -61,11 +67,15 @@ function AddCourse({ data, createCourse, courses }) {
 
   const handleChangeStartDate = (e) => {
     const value = e.value;
-    if(coursePricing?.value?.course?.start_dates_with_weeks?.length > 0) {
-      setDuration(coursePricing?.value?.course?.start_dates_with_weeks?.find(obj => obj.start_date === value)?.duration_weeks);
+    if (coursePricing?.value?.course?.start_dates_with_weeks?.length > 0) {
+      setDuration(
+        coursePricing?.value?.course?.start_dates_with_weeks?.find(
+          (obj) => obj.start_date === value
+        )?.duration_weeks
+      );
     }
     setStartDate({ label: changeFormat(value), value });
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,7 +84,10 @@ function AddCourse({ data, createCourse, courses }) {
       coursePricing: coursePricing?.value,
       startDate: startDate?.value,
       duration: duration,
-      finishDate: formatDate(findFinishDateCourse(startDate?.value, duration), "yyyy-MM-dd")
+      finishDate: formatDate(
+        findFinishDateCourse(startDate?.value, duration),
+        "yyyy-MM-dd"
+      ),
     };
     createCourse(form);
     // Clean values
@@ -91,65 +104,149 @@ function AddCourse({ data, createCourse, courses }) {
   const coursesCategory = () => {
     return data?.categories?.map((category) => {
       return {
-        options: coursesOption(data, category, courses).map(coursePricing => {
+        options: coursesOption(data, category, courses).map((coursePricing) => {
           return {
             value: coursePricing,
-            label: coursePricing?.course?.name
-          }
-        }), label: category?.name
+            label: formatCourse(coursePricing?.course),
+          };
+        }),
+        label: category?.name,
       };
     });
-  }
+  };
 
   const coursesOption = (data, category) => {
     if (data?.payment_calculator?.type === "elicos") {
-      const coursesWithMultipleDates = JSON.parse(data?.payment_calculator?.parameters)?.courses_with_multiple_dates;
-      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && (!courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name) || coursesWithMultipleDates.includes(coursePricing?.course?.cricos_code)));
+      const coursesWithMultipleDates = JSON.parse(
+        data?.payment_calculator?.parameters
+      )?.courses_with_multiple_dates;
+      return data?.course_pricings?.filter(
+        (coursePricing) =>
+          coursePricing?.course?.category?.id === category?.id &&
+          (!courses.find(
+            (item) =>
+              formatCourse(item?.coursePricing?.course) ===
+              formatCourse(coursePricing?.course)
+          ) ||
+            coursesWithMultipleDates.includes(
+              coursePricing?.course?.cricos_code
+            ))
+      );
     } else if (data?.payment_calculator?.type === "aged_care") {
-      const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection_list;
-      const coursePricings = courses?.some(course => courseOrderSelection.includes(course.coursePricing?.course?.course_code)) ?
-        data?.course_pricings :
-        data?.course_pricings?.filter(coursePricing => courseOrderSelection.includes(coursePricing?.course?.course_code));
-      return coursePricings.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
-    } else if (data?.payment_calculator?.type === "als_college") { 
-      const courseOrderSelection = JSON.parse(data?.payment_calculator?.parameters)?.course_order_selection_list;
-      let coursePricings = data?.course_pricings?.filter(coursePricing => courseOrderSelection.includes(coursePricing?.course?.course_code));
-      if(courses?.some(course => ["CHC33021", "CHC43015"].includes(course.coursePricing?.course?.course_code))) {
-        coursePricings = data?.course_pricings.filter(coursePricing => !["RII60520", "AHC40422"].includes(coursePricing?.course?.course_code));
-      } else if(courses?.some(course => ["AHC40422"].includes(course.coursePricing?.course?.course_code))) {
-        coursePricings = data?.course_pricings.filter(coursePricing => !["CHC33021", "CHC43015", "RII60520"].includes(coursePricing?.course?.course_code));
-      } else if (courses?.some(course => ["RII60520"].includes(course.coursePricing?.course?.course_code))) {
+      const courseOrderSelection = JSON.parse(
+        data?.payment_calculator?.parameters
+      )?.course_order_selection_list;
+      const coursePricings = courses?.some((course) =>
+        courseOrderSelection.includes(course.coursePricing?.course?.course_code)
+      )
+        ? data?.course_pricings
+        : data?.course_pricings?.filter((coursePricing) =>
+            courseOrderSelection.includes(coursePricing?.course?.course_code)
+          );
+      return coursePricings.filter(
+        (coursePricing) =>
+          coursePricing?.course?.category?.id === category?.id &&
+          !courses.find(
+            (item) =>
+              formatCourse(item?.coursePricing?.course) ===
+              formatCourse(coursePricing?.course)
+          )
+      );
+    } else if (data?.payment_calculator?.type === "als_college") {
+      const courseOrderSelection = JSON.parse(
+        data?.payment_calculator?.parameters
+      )?.course_order_selection_list;
+      let coursePricings = data?.course_pricings?.filter((coursePricing) =>
+        courseOrderSelection.includes(coursePricing?.course?.course_code)
+      );
+      if (
+        courses?.some((course) =>
+          ["CHC33021", "CHC43015"].includes(
+            course.coursePricing?.course?.course_code
+          )
+        )
+      ) {
+        coursePricings = data?.course_pricings.filter(
+          (coursePricing) =>
+            !["RII60520", "AHC40422"].includes(
+              coursePricing?.course?.course_code
+            )
+        );
+      } else if (
+        courses?.some((course) =>
+          ["AHC40422"].includes(course.coursePricing?.course?.course_code)
+        )
+      ) {
+        coursePricings = data?.course_pricings.filter(
+          (coursePricing) =>
+            !["CHC33021", "CHC43015", "RII60520"].includes(
+              coursePricing?.course?.course_code
+            )
+        );
+      } else if (
+        courses?.some((course) =>
+          ["RII60520"].includes(course.coursePricing?.course?.course_code)
+        )
+      ) {
         coursePricings = [];
       }
-      coursePricings = coursePricings.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.name === coursePricing?.course?.name));
+      coursePricings = coursePricings.filter(
+        (coursePricing) =>
+          coursePricing?.course?.category?.id === category?.id &&
+          !courses.find(
+            (item) =>
+              formatCourse(item?.coursePricing?.course) ===
+              formatCourse(coursePricing?.course)
+          )
+      );
       return coursePricings;
     } else {
-      return data?.course_pricings?.filter(coursePricing => coursePricing?.course?.category?.id === category?.id && !courses.find((item) => item?.coursePricing?.course?.cricos_code === coursePricing?.course?.cricos_code));
+      return data?.course_pricings?.filter(
+        (coursePricing) =>
+          coursePricing?.course?.category?.id === category?.id &&
+          !courses.find(
+            (item) =>
+              item?.coursePricing?.course?.cricos_code ===
+              coursePricing?.course?.cricos_code
+          )
+      );
     }
-  }
+  };
 
   const durationField = () => {
-    if (!coursePricing?.value || coursePricing?.value?.course?.duration_weeks || coursePricing?.value?.course?.start_dates_with_weeks?.length > 0) {
-      return <Form.Group className="mb-2">
-        <Form.Label className="me-2"><b>Duration weeks:</b></Form.Label>
-        {duration}
-      </Form.Group>
+    if (
+      !coursePricing?.value ||
+      coursePricing?.value?.course?.duration_weeks ||
+      coursePricing?.value?.course?.start_dates_with_weeks?.length > 0
+    ) {
+      return (
+        <Form.Group className="mb-2">
+          <Form.Label className="me-2">
+            <b>Duration weeks:</b>
+          </Form.Label>
+          {duration}
+        </Form.Group>
+      );
     } else {
-      return <Form.Group className="mb-2">
-        <Form.Label><b>Duration weeks:</b></Form.Label>
-        <Form.Control
-          name="duration"
-          onChange={handleChangeDuration}
-          required
-          value={duration}
-          type="number"
-          min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
-          step="1"
-          placeholder="Number of weeks"
-        ></Form.Control>
-      </Form.Group>
+      return (
+        <Form.Group className="mb-2">
+          <Form.Label>
+            <b>Duration weeks:</b>
+          </Form.Label>
+          <Form.Control
+            name="duration"
+            onChange={handleChangeDuration}
+            required
+            value={duration}
+            type="number"
+            min={coursePricing?.value?.course?.minimum_duration_weeks || 1}
+            step="1"
+            placeholder="Number of weeks"
+          ></Form.Control>
+        </Form.Group>
+      );
     }
-  }
+  };
 
   return (
     <Card className="mb-3">
@@ -159,41 +256,46 @@ function AddCourse({ data, createCourse, courses }) {
       <Card.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-2">
-            <Form.Label><b>Course:</b></Form.Label>
+            <Form.Label>
+              <b>Course:</b>
+            </Form.Label>
             <Select
               formatGroupLabel={formatGroupLabel}
               options={coursesCategory()}
               value={coursePricing}
-              onChange={handleChangeCoursePricing} />
+              onChange={handleChangeCoursePricing}
+            />
           </Form.Group>
           <Form.Group className="mb-2">
-            <Form.Label><b>Start date:</b></Form.Label>
+            <Form.Label>
+              <b>Start date:</b>
+            </Form.Label>
             <Select
-              options={coursePricing?.value?.course?.start_dates?.filter((start_date) => {
-                  if(!courses?.length) {
+              options={coursePricing?.value?.course?.start_dates
+                ?.filter((start_date) => {
+                  if (!courses?.length) {
                     return true;
                   }
-                  return new Date(start_date) > new Date(mostRecentDate)
-              })?.map((start_date) => {
-                return {
-                  value: start_date,
-                  label: changeFormat(start_date)
-                }
-              })}
+                  return new Date(start_date) > new Date(mostRecentDate);
+                })
+                ?.map((start_date) => {
+                  return {
+                    value: start_date,
+                    label: changeFormat(start_date),
+                  };
+                })}
               value={startDate}
-              onChange={handleChangeStartDate} />
+              onChange={handleChangeStartDate}
+            />
           </Form.Group>
-          {
-            durationField()
-          }
+          {durationField()}
           <div className="d-grid gap-2">
             <Button
-              disabled={
-                !coursePricing ||
-                !startDate ||
-                !duration
-              }
-              className="mt-2" variant="dark" type="submit">
+              disabled={!coursePricing || !startDate || !duration}
+              className="mt-2"
+              variant="dark"
+              type="submit"
+            >
               Add Course
             </Button>
           </div>

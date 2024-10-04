@@ -1,27 +1,30 @@
 import {
   findFridayOfPreviousWeeks,
   findFridayOfFollowingWeeks,
-  formatDate
+  formatDate,
 } from "../../../helpers/dates";
+import { formatCourse } from "../../../helpers/ihbrisbane";
 import { getPaymentOptionParameters } from "../../../helpers/tools";
 
 function generatePaymentsOption1(data, course, startDate, coursePrice) {
-  const courseName = course?.coursePricing?.course?.name;
+  const courseName = formatCourse(course?.coursePricing?.course);
   const courseCode = course?.coursePricing?.course?.course_code;
 
   let {
     tuition_installments_amount, // $320
     tuition_installments_interval_weeks, // 1 Month = 4 weeks
     courses,
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+  } = getPaymentOptionParameters(data, "option_1", "both");
 
   // Courses with diferent tuition_installments_amount or tuition_installments_interval_weeks
   if (courses && Object.keys(courses).includes(courseCode)) {
-    if(courses[courseCode]?.tuition_installments_amount) {
-      tuition_installments_amount = courses[courseCode]?.tuition_installments_amount;
+    if (courses[courseCode]?.tuition_installments_amount) {
+      tuition_installments_amount =
+        courses[courseCode]?.tuition_installments_amount;
     }
-    if(courses[courseCode]?.tuition_installments_interval_weeks) {
-      tuition_installments_interval_weeks = courses[courseCode]?.tuition_installments_interval_weeks;
+    if (courses[courseCode]?.tuition_installments_interval_weeks) {
+      tuition_installments_interval_weeks =
+        courses[courseCode]?.tuition_installments_interval_weeks;
     }
   }
 
@@ -36,18 +39,21 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
     courseName,
     feeDescription: "Tuition installment",
     paymentAmount: tuition_installments_amount,
-    code: "tuition_installment"
+    code: "tuition_installment",
   });
   remainingAmount -= tuition_installments_amount;
   // Every month payment
   while (tuition_installments_amount <= remainingAmount) {
-    paymentDate = findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks);
+    paymentDate = findFridayOfFollowingWeeks(
+      paymentDate,
+      tuition_installments_interval_weeks
+    );
     payments.push({
       dueDate: formatDate(paymentDate),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: tuition_installments_amount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
     remainingAmount -= tuition_installments_amount;
   }
@@ -55,11 +61,16 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   // Last month, if there is a residual payment
   if (remainingAmount !== 0) {
     payments.push({
-      dueDate: formatDate(findFridayOfFollowingWeeks(paymentDate, tuition_installments_interval_weeks)),
+      dueDate: formatDate(
+        findFridayOfFollowingWeeks(
+          paymentDate,
+          tuition_installments_interval_weeks
+        )
+      ),
       courseName,
       feeDescription: "Tuition installment",
       paymentAmount: remainingAmount,
-      code: "tuition_installment"
+      code: "tuition_installment",
     });
   }
 
@@ -68,18 +79,18 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
 
 export function latinAmericaEuropeOption1VET(data, courses) {
   const {
-    first_tuition_installment_amount // $100 AUS
-  } = getPaymentOptionParameters(data, 'option_1', 'both');
+    first_tuition_installment_amount, // $100 AUS
+  } = getPaymentOptionParameters(data, "option_1", "both");
 
   // First tuition
   let result = [
     {
       dueDate: formatDate(new Date()),
       feeDescription: "Tuition installment",
-      courseName: courses[0]?.coursePricing?.course?.name,
+      courseName: formatCourse(courses[0]?.coursePricing?.course),
       paymentAmount: first_tuition_installment_amount,
-      code: "tuition_installment"
-    }
+      code: "tuition_installment",
+    },
   ];
 
   for (const [index, course] of courses.entries()) {
@@ -91,7 +102,7 @@ export function latinAmericaEuropeOption1VET(data, courses) {
     }
     result = [
       ...result,
-      ...generatePaymentsOption1(data, course, startDate, tuition_fee)
+      ...generatePaymentsOption1(data, course, startDate, tuition_fee),
     ];
   }
 

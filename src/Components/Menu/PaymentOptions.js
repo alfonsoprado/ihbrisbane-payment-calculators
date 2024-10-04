@@ -13,6 +13,7 @@ import { parseISO, format } from "date-fns";
 import AppModal from "../AppModal";
 import { PAYMENT_PLAN_PDF_API_URL } from "../../env";
 import { useEffect } from "react";
+import { formatCourse } from "../../helpers/ihbrisbane";
 
 function PaymentOptions({
   data,
@@ -44,7 +45,7 @@ function PaymentOptions({
       regionCode: data?.region?.code,
       courses: courses.map((course) => {
         return {
-          name: course?.coursePricing?.course?.name,
+          name: formatCourse(course?.coursePricing?.course),
           cricosCode: course?.coursePricing?.course?.cricos_code,
           courseCode: course?.coursePricing?.course?.course_code,
           startDate: format(parseISO(course?.startDate), "dd/MM/yyyy"),
