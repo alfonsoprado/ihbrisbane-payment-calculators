@@ -15,7 +15,6 @@ function Menu({
   specialCases,
   updateSpecialCases,
   available,
-  checkAvailability,
   resetAll,
 }) {
   return (
@@ -35,7 +34,6 @@ function Menu({
           specialCases={specialCases}
           updateSpecialCases={updateSpecialCases}
           available={available}
-          checkAvailability={checkAvailability}
           resetAll={resetAll}
         />
       )}

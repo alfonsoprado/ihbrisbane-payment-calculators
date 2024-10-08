@@ -28,7 +28,6 @@ function PaymentOptions({
   specialCases,
   updateSpecialCases,
   available,
-  checkAvailability,
   resetAll,
 }) {
   // Default payment type option
@@ -36,7 +35,7 @@ function PaymentOptions({
     if (data && !paymentType) {
       updatePaymentType(getPaymentOptions(data, courses)[0]?.code);
     }
-  }, [data, paymentType]);
+  }, [data, paymentType, courses, updatePaymentType]);
 
   const generateDataPDF = () => {
     const paymentPlan = createPaymentPlan();
@@ -75,10 +74,6 @@ function PaymentOptions({
       );
     }
     cleanPaymentPlan();
-  };
-
-  const handleCheckAvailability = () => {
-    checkAvailability();
   };
 
   const handlePaymentPlan = () => {
@@ -150,14 +145,6 @@ function PaymentOptions({
           </Col>
         </Row>
         <div className="d-grid gap-2">
-          <Button
-            className="mt-2"
-            variant="primary"
-            onClick={handleCheckAvailability}
-            disabled={buttonDisable}
-          >
-            Check Availability
-          </Button>
           <Button
             onClick={handlePaymentPlan}
             disabled={buttonDisable || !available}

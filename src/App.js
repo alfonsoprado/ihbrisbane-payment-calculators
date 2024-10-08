@@ -67,7 +67,7 @@ const middleCenterStyle = {
 
 function App({ paymentCalculator }) {
   const [counterCoursesAdded, setCounterCoursesAdded] = useState(0);
-  const [errorMessages, setErrorMessage] = useState([]);
+  const [errorMessages, setErrorMessages] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [courses, setCourses] = useState([]);
   const [paymentType, setPaymentType] = useState("");
@@ -108,17 +108,25 @@ function App({ paymentCalculator }) {
     }
 
     if (courseWithoutDuration) {
-      errors.push("There is at least one course whose doesn't have duration.");
+      errors.push({
+        message: "There is at least one course whose doesn't have duration.",
+        type: "input_error",
+      });
     }
 
     if (!notEmpty) {
-      errors.push("The fields of the courses cannot be empty.");
+      errors.push({
+        message: "The fields of the courses cannot be empty.",
+        type: "input_error",
+      });
     }
 
     if (checkForOverlaps(courses)) {
-      errors.push(
-        "There is at least one course whose date range overlaps with another course."
-      );
+      errors.push({
+        message:
+          "There is at least one course whose date range overlaps with another course.",
+        type: "input_error",
+      });
     }
 
     // VET Errors
@@ -145,7 +153,10 @@ function App({ paymentCalculator }) {
       }
 
       if (intensiveCourse === 1 && standardCourse === 0) {
-        errors.push("We don't accept standalone INTENSIVE course.");
+        errors.push({
+          message: "We don't accept standalone INTENSIVE course.",
+          type: "input_error",
+        });
       }
     }
 
@@ -173,9 +184,10 @@ function App({ paymentCalculator }) {
         has_elicos_course &&
         duration_weeks_day_courses_elicos < minimum_weeks?.quantiy_weeks
       ) {
-        errors.push(
-          `The total duration of each course must be greater than ${minimum_weeks?.quantiy_weeks} weeks to be eligible for a payment plan (unless combined with other courses).`
-        );
+        errors.push({
+          message: `The total duration of each course must be greater than ${minimum_weeks?.quantiy_weeks} weeks to be eligible for a payment plan (unless combined with other courses).`,
+          type: "input_error",
+        });
       }
     }
 
@@ -203,11 +215,12 @@ function App({ paymentCalculator }) {
           (courseCode) => !firstCourseCodesList.includes(courseCode)
         )
       ) {
-        errors.push(
-          `The first course have to be one of the following courses: "${firstCourseNameList.join(
+        errors.push({
+          message: `The first course have to be one of the following courses: "${firstCourseNameList.join(
             ", "
-          )}".`
-        );
+          )}".`,
+          type: "input_error",
+        });
       }
 
       // Aged Care
@@ -216,9 +229,10 @@ function App({ paymentCalculator }) {
         courseCodes.includes("CHC43015") &&
         !("CHC33021" === courseCodes[0] && "CHC43015" === courseCodes[1])
       ) {
-        errors.push(
-          `The order of the first and second course have to be "Certificate III in Individual Support" and "Certificate IV in Ageing Support" respectively.`
-        );
+        errors.push({
+          message: `The order of the first and second course have to be "Certificate III in Individual Support" and "Certificate IV in Ageing Support" respectively.`,
+          type: "input_error",
+        });
       } else if (
         (courseCodes.includes("CHC33021") ||
           courseCodes.includes("CHC43015")) &&
@@ -228,7 +242,10 @@ function App({ paymentCalculator }) {
         if (courseCodes.includes("CHC43015")) {
           firstCourseName = "Certificate IV in Ageing Support";
         }
-        errors.push(`The first course has to be "${firstCourseName}".`);
+        errors.push({
+          message: `The first course has to be "${firstCourseName}".`,
+          type: "input_error",
+        });
       }
     }
 
@@ -236,9 +253,11 @@ function App({ paymentCalculator }) {
       setApplicationEnabled(false);
     }
 
+    const quotaEnabled = data?.quota_enabled;
+
     setSuccessMessage("");
-    setErrorMessage(errors);
-    setAvailable(false);
+    setErrorMessages(errors);
+    setAvailable(!quotaEnabled);
   }, [data, courses]);
 
   // Only develop: it is only happens when the payment calculator is changed
@@ -454,9 +473,12 @@ function App({ paymentCalculator }) {
           });
 
         if (!quotaAvailable) {
-          setErrorMessage([
-            "There are no available quotas for your current selection. Please try other dates or modify the number of selected courses.",
-            ...errorMessages,
+          setErrorMessages([
+            {
+              message:
+                "There are no available quotas for your current selection. Please try other dates or modify the number of selected courses.",
+              type: "quota_error",
+            },
           ]);
         } else {
           setSuccessMessage(
@@ -465,9 +487,12 @@ function App({ paymentCalculator }) {
           setAvailable(true);
         }
       } catch (err) {
-        setErrorMessage([
-          "Server error, could not validate available quotas, please contact the administrator.",
-          ...errorMessages,
+        setErrorMessages([
+          {
+            message:
+              "Server error, could not validate available quotas, please contact the administrator.",
+            type: "server_error",
+          },
         ]);
       }
     };
@@ -580,6 +605,9 @@ function App({ paymentCalculator }) {
             updateCourse={updateCourse}
             removeCourse={removeCourse}
             removeAllCourses={removeAllCourses}
+            checkAvailability={checkAvailability}
+            errorMessages={errorMessages}
+            quotaEnabled={data?.quota_enabled}
           />
         </Col>
       </Row>

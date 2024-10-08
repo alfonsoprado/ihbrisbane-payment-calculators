@@ -1,5 +1,3 @@
-import { getCourseDiscountPromotion } from "../../../../helpers/tools";
-
 /*
     Do not forget, when applying discounts using percentages, 
     the rule is to use the largest percentage, it is not cumulative. 
@@ -7,21 +5,16 @@ import { getCourseDiscountPromotion } from "../../../../helpers/tools";
     then the final discount is 10%, not 15%.
 
 */
-export function asianAllOthersCountriesDiscountsCivil(data, paymentType, courses, specialCases) {
-    const discountFirstWeeksCourse = getCourseDiscountPromotion(data, "116125A", "first_weeks_course");
-    const datesDFWC = discountFirstWeeksCourse?.parameters?.dates;
+export function asianAllOthersCountriesDiscountsCivil(
+  data,
+  paymentType,
+  courses,
+  specialCases
+) {
+  for (const course of courses) {
+    course.discountsApplied = [];
+    course.finalTuition = course.tuition;
+  }
 
-    for (const course of courses) {
-        course.discountsApplied = [];
-        course.finalTuition = course.tuition;
-
-        if(course?.coursePricing?.course?.cricos_code === "116125A" && datesDFWC.includes(course?.startDate)) {
-            const totalAmountTuitionFeeDFWC = course?.tuition - discountFirstWeeksCourse?.amount;
-            course.finalTuition =  totalAmountTuitionFeeDFWC;
-            course.discountsApplied.push(discountFirstWeeksCourse);
-        }
-    }
-
-    console.debug("Courses after discounts were applied:", courses);
+  console.debug("Courses after discounts were applied:", courses);
 }
-

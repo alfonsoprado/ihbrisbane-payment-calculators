@@ -8,8 +8,8 @@ function ErrorAlert({ errorMessages }) {
   return (
     <Alert key="danger" variant="danger">
       <ul className="m-0">
-        {errorMessages.map((message) => (
-          <li key={message}>{message}</li>
+        {errorMessages.map((error) => (
+          <li key={error}>{error?.message}</li>
         ))}
       </ul>
     </Alert>

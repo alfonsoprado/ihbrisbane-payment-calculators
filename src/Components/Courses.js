@@ -10,7 +10,15 @@ import {
 import AppModal from "./AppModal";
 import { formatCourse } from "../helpers/ihbrisbane";
 
-function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
+function Courses({
+  courses,
+  removeCourse,
+  updateCourse,
+  removeAllCourses,
+  checkAvailability,
+  errorMessages,
+  quotaEnabled,
+}) {
   const handleChangeStartDate = (e, id) => {
     const { value } = e;
     updateCourse(id, "startDate", value);
@@ -20,6 +28,12 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
     const { name, value } = e.target;
     updateCourse(id, name, value);
   };
+
+  const handleCheckAvailability = () => {
+    checkAvailability();
+  };
+
+  console.log("quota_enabled", quotaEnabled);
 
   const durationField = (course) => {
     if (!course?.coursePricing?.course?.duration_weeks) {
@@ -159,15 +173,30 @@ function Courses({ courses, removeCourse, updateCourse, removeAllCourses }) {
         </tbody>
       </Table>
       {courses?.length > 0 && (
-        <AppModal
-          title="Remove all the courses"
-          content="Are you sure you want to remove all the courses?"
-          actionTextButton="Remove All"
-          actionVariantButton="danger"
-          showTextButton="Remove All"
-          showVariantButton="danger"
-          onAction={removeAllCourses}
-        />
+        <>
+          <div className="btn-group-vertical" role="group">
+            {quotaEnabled && (
+              <Button
+                disabled={errorMessages.some(
+                  (error) => error.type === "input_error"
+                )}
+                variant="primary rounded-0"
+                onClick={handleCheckAvailability}
+              >
+                Check Availability
+              </Button>
+            )}
+            <AppModal
+              title="Remove all the courses"
+              content="Are you sure you want to remove all the courses?"
+              actionTextButton="Remove All"
+              actionVariantButton="danger"
+              showTextButton="Remove All"
+              showVariantButton="danger rounded-0"
+              onAction={removeAllCourses}
+            />
+          </div>
+        </>
       )}
     </Card>
   );
