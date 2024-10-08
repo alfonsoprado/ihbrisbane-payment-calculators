@@ -562,7 +562,7 @@ function App({ paymentCalculator }) {
             {data?.payment_calculator?.allow === "internal" && (
               <Card.Header>
                 <h4 className="my-1">
-                  {data?.payment_calculator?.name}: {data?.region?.name}
+                  {data?.region?.name}: {data?.payment_calculator?.name}
                 </h4>
               </Card.Header>
             )}

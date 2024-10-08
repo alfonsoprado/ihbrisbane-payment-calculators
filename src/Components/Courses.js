@@ -175,7 +175,7 @@ function Courses({
       {courses?.length > 0 && (
         <>
           <div className="btn-group-vertical" role="group">
-            {quotaEnabled && (
+            {quotaEnabled ? (
               <Button
                 disabled={errorMessages.some(
                   (error) => error.type === "input_error"
@@ -185,7 +185,7 @@ function Courses({
               >
                 Check Availability
               </Button>
-            )}
+            ) : null}
             <AppModal
               title="Remove all the courses"
               content="Are you sure you want to remove all the courses?"
