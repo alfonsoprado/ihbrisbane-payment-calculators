@@ -16,7 +16,7 @@ E3=$DIR/external/yqofYnOlpNYqofYn
 E4=$DIR/external/latin-america-and-europe-elicos-onshore
 E5=$DIR/external/als-college
 E6=$DIR/external/latin-america-europe-aged-care
-E7=$DIR/external/latam-europe-adccd
+E7=$DIR/external/latin-america-and-europe-adccd
 
 
 NODE_ENV=production REACT_APP_PC=internal_asian_vet npm run build
