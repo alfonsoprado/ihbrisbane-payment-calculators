@@ -98,7 +98,5 @@ export function asianAllOthersCountriesStandardPaymentPlanCivil(
     },
   ];
 
-  console.log(courses[0]);
-
   return result;
 }

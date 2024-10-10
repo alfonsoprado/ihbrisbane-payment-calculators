@@ -403,7 +403,6 @@ function App({ paymentCalculator }) {
 
               let totalWeeksCourses, totalCourses;
               if (!isCourses && !isCategories) {
-                console.log("ACA");
                 totalWeeksCourses = courses.reduce(
                   (totalWeeks, course) => totalWeeks + course?.duration,
                   0

@@ -33,8 +33,6 @@ function Courses({
     checkAvailability();
   };
 
-  console.log("quota_enabled", quotaEnabled);
-
   const durationField = (course) => {
     if (!course?.coursePricing?.course?.duration_weeks) {
       if (course?.coursePricing?.course?.start_dates_with_weeks?.length > 0) {
