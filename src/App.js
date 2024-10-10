@@ -476,13 +476,13 @@ function App({ paymentCalculator }) {
           setErrorMessages([
             {
               message:
-                "There are no available quotas for your current selection. Please try other dates or modify the number of selected courses.",
+                "Sorry, but we are not currently accepting applications for this combination of courses for these dates. Please reach out to our marketing team for help with what is available.",
               type: "quota_error",
             },
           ]);
         } else {
           setSuccessMessage(
-            "There are quotas available, you can continue with the application."
+            "Thank you - we are accepting this combination; please continue with your application."
           );
           setAvailable(true);
         }
