@@ -15,6 +15,12 @@ export function generateExtraFeesLatinAmericaEuropeElicos(
   let enrolmentFee = 0;
   let total_weeks_ge_ietls = 0;
 
+  for (const course of coursesSelected) {
+    if (course?.coursePricing?.enrolment_fee > enrolmentFee) {
+      enrolmentFee = course?.coursePricing?.enrolment_fee;
+    }
+  }
+
   const total_weeks_ge_ietls_day = coursesSelected.reduce((weeks, cs) => {
     if (
       cs?.coursePricing?.course?.type === "day" &&
@@ -26,10 +32,10 @@ export function generateExtraFeesLatinAmericaEuropeElicos(
   }, 0);
   if (total_weeks_ge_ietls_day >= discount21Week.required_weeks) {
     total_weeks_ge_ietls = 0;
+    enrolmentFee = 0;
   } else {
     total_weeks_ge_ietls += total_weeks_ge_ietls_day;
   }
-  console.log("total_weeks_ge_ietls", total_weeks_ge_ietls);
 
   const total_weeks_ge_ietls_evening = coursesSelected.reduce((weeks, cs) => {
     if (
@@ -40,12 +46,11 @@ export function generateExtraFeesLatinAmericaEuropeElicos(
     }
     return weeks;
   }, 0);
-  console.log("total_weeks_ge_ietls_evening", total_weeks_ge_ietls_evening);
+
   total_weeks_ge_ietls += total_weeks_ge_ietls_evening;
   if (total_weeks_ge_ietls >= 24) {
     total_weeks_ge_ietls = 24;
   }
-  console.log("total_weeks_ge_ietls", total_weeks_ge_ietls);
 
   const total_fee_cambridge = coursesSelected.reduce((fee, cs) => {
     if (cs?.coursePricing?.course?.cricos_code === "062149K/062148M") {
