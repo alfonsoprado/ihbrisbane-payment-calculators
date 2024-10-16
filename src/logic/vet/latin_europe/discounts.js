@@ -1,26 +1,50 @@
-import { getPaymentCalculatorDiscountPromotion } from "../../../helpers/tools";
+import {
+  getPaymentCalculatorDiscountPromotion,
+  getSpecialCases,
+} from "../../../helpers/tools";
 
-export function latinAmericaEuropeDiscountsVET(data, paymentType, courses, specialCases) {
-    for (let i = 0; i < courses.length; i++) {
-        const course = courses[i];
-        // Default finalTuition, change if have discount
-        course.finalTuition = course?.tuition;
-        course.discountsApplied = [];
+export function latinAmericaEuropeDiscountsVET(
+  data,
+  paymentType,
+  courses,
+  specialCases
+) {
+  const allSpecialCasesAvailable = getSpecialCases(data, courses);
 
-        // Discounts
-        const multipleCoursesEnable = courses.length > 1;
+  for (let i = 0; i < courses.length; i++) {
+    const course = courses[i];
+    // Default finalTuition, change if have discount
+    course.finalTuition = course?.tuition;
+    course.discountsApplied = [];
 
-        // Multiple courses
-        if(multipleCoursesEnable) {
-            console.debug("Discount: Multiple courses");
-            // It is the last course
-            if(i === courses.length - 1) {
-                const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(data,'multi_course_last_discount');
-                course.finalTuition -= discountPromotionLastCourse?.amount;
-                course.discountsApplied.push(discountPromotionLastCourse);
-                console.debug("A discount was applied to:", course);
-            }
-        }
+    // Discounts
+    const extensionStudentEnable = specialCases.includes("es");
+    const payUpfrontEnable = paymentType === "pay_upfront";
+
+    // Extension Student
+    if (extensionStudentEnable && !payUpfrontEnable) {
+      console.debug("Discount: Extension Student");
+      const specialCaseES = allSpecialCasesAvailable?.find(
+        (sc) => sc?.code === "es"
+      );
+      // Every course
+      const discountPercentage = parseFloat(specialCaseES?.percentage);
+      course.finalTuition = course.finalTuition * (1 - discountPercentage);
+      course.discountsApplied.push(specialCaseES);
+      console.debug("A discount was applied to:", course);
     }
-    console.debug("Courses after discounts were applied:", courses); 
+
+    if (payUpfrontEnable) {
+      console.debug("PaymentType: Pay upfront");
+      const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(
+        data,
+        "pay_upfront_discount"
+      );
+      const discountPercentage = discountPromotionLastCourse.percentage;
+      course.finalTuition = course.finalTuition * (1 - discountPercentage);
+      course.discountsApplied.push(discountPromotionLastCourse);
+      console.debug("A discount was applied to:", course);
+    }
+  }
+  console.debug("Courses after discounts were applied:", courses);
 }

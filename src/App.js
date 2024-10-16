@@ -130,10 +130,7 @@ function App({ paymentCalculator }) {
     }
 
     // VET Errors
-    if (
-      data?.payment_calculator?.type === "vet" &&
-      data?.region?.code === "online"
-    ) {
+    if (data?.payment_calculator?.type === "vet") {
       let intensiveCourse = 0;
       let standardCourse = 0;
 

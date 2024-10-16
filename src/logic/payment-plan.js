@@ -6,7 +6,6 @@ import { asianAllOthersCountriesOption1VET } from "./vet/asian_all_others_countr
 import { asianAllOthersCountriesOption2VET } from "./vet/asian_all_others_countries/option2";
 import { asianAllOthersCountriesOption3VET } from "./vet/asian_all_others_countries/option3";
 import { asianAllOthersCountriesDiscountsVET } from "./vet/asian_all_others_countries/discounts";
-import { openVetDiscountsVET } from "./vet/open_vet/discounts";
 
 import { latinAmericaEuropeDiscountsVET } from "./vet/latin_europe/discounts";
 import { latinAmericaEuropeOption1VET } from "./vet/latin_europe/option1";
@@ -72,8 +71,6 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
       );
     } else if (data?.region?.code === "latin_america_europe") {
       latinAmericaEuropeDiscountsVET(data, paymentType, courses, specialCases);
-    } else if (data?.region?.code === "online") {
-      openVetDiscountsVET(data, paymentType, courses, specialCases);
     } else {
       console.error("Region doesn't exists.");
       return [];
@@ -86,7 +83,7 @@ export function generatePaymentPlan(data, courses, paymentType, specialCases) {
     ];
 
     // Making plan
-    if (["asian_all_other_countries", "online"].includes(data?.region?.code)) {
+    if (["asian_all_other_countries"].includes(data?.region?.code)) {
       if (paymentType === "option_1") {
         result = [
           ...result,

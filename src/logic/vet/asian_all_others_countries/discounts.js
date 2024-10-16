@@ -26,11 +26,10 @@ export function asianAllOthersCountriesDiscountsVET(
 
     // Discounts
     const extensionStudentEnable = specialCases.includes("es");
-    const multipleCoursesEnable = courses.length > 1;
     const payUpfrontEnable = paymentType === "pay_upfront";
 
     // Extension Student
-    if (extensionStudentEnable && !(payUpfrontEnable && courses.length > 1)) {
+    if (extensionStudentEnable && !payUpfrontEnable) {
       console.debug("Discount: Extension Student");
       const specialCaseES = allSpecialCasesAvailable?.find(
         (sc) => sc?.code === "es"
@@ -42,8 +41,8 @@ export function asianAllOthersCountriesDiscountsVET(
       console.debug("A discount was applied to:", course);
     }
 
-    // PaymentType: Pay upfront and 2 course o more
-    if (payUpfrontEnable && courses.length > 1) {
+    // PaymentType: Pay upfront
+    if (payUpfrontEnable) {
       console.debug("PaymentType: Pay upfront");
       const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(
         data,
@@ -51,19 +50,6 @@ export function asianAllOthersCountriesDiscountsVET(
       );
       const discountPercentage = discountPromotionLastCourse.percentage;
       course.finalTuition = course.finalTuition * (1 - discountPercentage);
-      course.discountsApplied.push(discountPromotionLastCourse);
-      console.debug("A discount was applied to:", course);
-    }
-
-    // Multiple courses
-    if (multipleCoursesEnable && i === courses.length - 1) {
-      // It is the last course
-      console.debug("Discount: Multiple courses");
-      const discountPromotionLastCourse = getPaymentCalculatorDiscountPromotion(
-        data,
-        "multi_course_last_discount"
-      );
-      course.finalTuition -= discountPromotionLastCourse?.amount;
       course.discountsApplied.push(discountPromotionLastCourse);
       console.debug("A discount was applied to:", course);
     }

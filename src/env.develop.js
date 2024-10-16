@@ -1,7 +1,5 @@
 const internal = "d1efad72dc5b17dc66a46767c32fff40";
 
-const online_vet = "9b50e7c3-862e-4957-8141-7ba73d72e1b0";
-
 const asian_all_other_countries_vet = "9b50e7c3-6be6-409a-91f8-0223e68e756c";
 const asian_all_other_countries_als_college =
   "9ca8d605-2967-4660-b8a7-031fb4b62651";
@@ -16,8 +14,6 @@ const main_url = "http://ihbrisbane.test";
 export const developPaymentCalculators = {
   main_url,
   internal,
-  // Online Classes
-  online_vet,
   // Asian market
   asian_all_other_countries_vet,
   asian_all_other_countries_als_college,

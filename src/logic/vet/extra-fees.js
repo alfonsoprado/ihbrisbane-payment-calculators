@@ -19,7 +19,7 @@ export function generateExtraFeesVET(data, paymentType, courses, specialCasesSel
       dueDate: formatDate(new Date()),
       feeDescription: "Enrolment Fee",
       courseName: "",
-      paymentAmount: specialCasesSelected?.includes('ew') || (specialCasesSelected?.includes('es') && data?.region?.code !== "online") ? 0 : enrolmentFee,
+      paymentAmount: specialCasesSelected?.includes('ew') || (specialCasesSelected?.includes('es')) ? 0 : enrolmentFee,
       code: 'enrolment_fee'
     },
     {
