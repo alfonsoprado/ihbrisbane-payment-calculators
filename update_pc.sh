@@ -10,8 +10,8 @@ I6=$DIR/internal/latam-eu-aged-care
 I7=$DIR/internal/latam-eu-adccd
 
 E1=$DIR/external/asia-others-vet
-E2=$DIR/external/latam-eu-vet-onshore
-E4=$DIR/external/latam-eu-elicos-onshore
+E2=$DIR/external/latam-eu-vet
+E4=$DIR/external/latam-eu-elicos
 E5=$DIR/external/asia-others-als-college
 E6=$DIR/external/latam-eu-aged-care
 E7=$DIR/external/latam-eu-adccd
@@ -45,7 +45,7 @@ mv build $E2
 NODE_ENV=production REACT_APP_PC=external_latam_eu_elicos npm run build
 rm -rf $E4
 mv build $E4
-NODE_ENV=production REACT_APP_PC=external_asia_others_college npm run build
+NODE_ENV=production REACT_APP_PC=external_asia_others_als_college npm run build
 rm -rf $E5
 mv build $E5
 NODE_ENV=production REACT_APP_PC=external_latam_eu_aged_care npm run build

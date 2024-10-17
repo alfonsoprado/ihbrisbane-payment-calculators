@@ -14,9 +14,7 @@ export function generateExtraFeesHorticulture(
     if (course?.coursePricing?.enrolment_fee > enrolmentFee) {
       enrolmentFee = course?.coursePricing?.enrolment_fee;
     }
-    if (course?.coursePricing?.material_fee > materialFee) {
-      materialFee = course?.coursePricing?.material_fee;
-    }
+    materialFee += course?.coursePricing?.material_fee;
   }
 
   let extraFees = [
