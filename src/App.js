@@ -543,14 +543,7 @@ function App({ paymentCalculator }) {
       <Row className="mt-2">
         {data?.payment_calculator?.allow === "external" && (
           <Col sm={12}>
-            <Image
-              src={
-                hero_banner[
-                  `${data?.region?.code}_${data?.payment_calculator?.type}`
-                ]
-              }
-              fluid
-            />
+            <Image src={hero_banner[`${data?.code}`]} fluid />
           </Col>
         )}
         <Col className="mt-2" sm={12}>
