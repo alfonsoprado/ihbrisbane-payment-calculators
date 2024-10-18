@@ -469,13 +469,19 @@ function App({ paymentCalculator }) {
           });
 
         if (!quotaAvailable) {
-          setErrorMessages([
-            {
-              message:
-                "Sorry, but we are not currently accepting applications for this combination of courses for these dates. Please reach out to our marketing team for help with what is available.",
+          const quotaErrorMessages = [];
+          if (data?.quota_error_message) {
+            quotaErrorMessages.push({
+              message: data?.quota_error_message,
               type: "quota_error",
-            },
-          ]);
+            });
+          }
+          quotaErrorMessages.push({
+            message:
+              "Sorry, but we are not currently accepting applications for this combination of courses for these dates. Please reach out to our marketing team for help with what is available.",
+            type: "quota_error",
+          });
+          setErrorMessages(quotaErrorMessages);
         } else {
           setSuccessMessage(
             "Thank you - we are accepting this combination; please continue with your application."
