@@ -11,7 +11,8 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   const courseCode = course?.coursePricing?.course?.course_code;
 
   let {
-    tuition_installments_amount, // $320
+    tuition_installments_amount,
+    first_tuition_installment_amount_course_n,
     tuition_installments_interval_weeks, // 1 Month = 4 weeks
     courses,
   } = getPaymentOptionParameters(data, "option_1", "both");
@@ -33,15 +34,19 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
   let remainingAmount = coursePrice;
 
   // Monthly instalments starting from one week before the course start date
+  const first_tuition_installment_amount =
+    first_tuition_installment_amount_course_n
+      ? first_tuition_installment_amount_course_n
+      : tuition_installments_amount;
   let paymentDate = findFridayOfPreviousWeeks(startDate, 1);
   payments.push({
     dueDate: formatDate(paymentDate),
     courseName,
     feeDescription: "Tuition installment",
-    paymentAmount: tuition_installments_amount,
+    paymentAmount: first_tuition_installment_amount,
     code: "tuition_installment",
   });
-  remainingAmount -= tuition_installments_amount;
+  remainingAmount -= first_tuition_installment_amount;
   // Every month payment
   while (tuition_installments_amount <= remainingAmount) {
     paymentDate = findFridayOfFollowingWeeks(
@@ -78,9 +83,11 @@ function generatePaymentsOption1(data, course, startDate, coursePrice) {
 }
 
 export function latinAmericaEuropeOption1VET(data, courses) {
-  const {
-    first_tuition_installment_amount, // $100 AUS
-  } = getPaymentOptionParameters(data, "option_1", "both");
+  const { first_tuition_installment_amount } = getPaymentOptionParameters(
+    data,
+    "option_1",
+    "both"
+  );
 
   // First tuition
   let result = [
