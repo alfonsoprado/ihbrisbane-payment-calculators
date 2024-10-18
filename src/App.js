@@ -96,6 +96,7 @@ function App({ paymentCalculator }) {
     // General Errors
     let notEmpty = true;
     let courseWithoutDuration = false;
+    let hasCourseCurrentYear = false;
 
     for (const course of courses) {
       if (!notEmpty) {
@@ -105,6 +106,18 @@ function App({ paymentCalculator }) {
       if (!course?.duration || course?.duration === "0") {
         courseWithoutDuration = true;
       }
+
+      const courseStartDate = new Date(course?.startDate);
+      if (courseStartDate.getFullYear() === parseInt(data?.year)) {
+        hasCourseCurrentYear = true;
+      }
+    }
+
+    if (!hasCourseCurrentYear && courses?.length > 0) {
+      errors.push({
+        message: `There must be at least one course that belongs to the year ${data?.year}.`,
+        type: "input_error",
+      });
     }
 
     if (courseWithoutDuration) {
